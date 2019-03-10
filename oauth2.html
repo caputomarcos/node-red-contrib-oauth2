@@ -1,0 +1,200 @@
+<script type="text/x-red" data-template-name="oauth2">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"/> <span data-i18n="oauth2.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]oauth2.placeholder.name" style="width:70%;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-container"><i class="fa fa-ellipsis-h"></i> <span data-i18n="oauth2.label.container"></span></label>
+        <input type="text" id="node-input-container" data-i18n="[placeholder]oauth2.placeholder.container" style="width:70%;"/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-grant_type"><i class="fa fa-wrench"></i> <span data-i18n="oauth2.label.grant_type"></span></label>
+        <select type="text" id="node-input-grant_type" style="width:70%;">
+            <option value="client_credentials" data-i18n="oauth2.opts.client_credentials"></option>
+            <option value="password" data-i18n="oauth2.opts.password_credentials"></option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-access_token_url"><i class="fa fa-link fa-fw"/> <span data-i18n="oauth2.label.access_token_url"></span></label>
+        <input type="text" id="node-input-access_token_url" data-i18n="[placeholder]oauth2.placeholder.access_token_url" style="width:70%;">
+    </div>
+    <div class="form-row" id="node-password_credentials">
+        <div class="form-row">
+            <label for="node-input-username"><i class="fa fa-user fa-fw"/> <span data-i18n="oauth2.label.username"></span></label>
+            <input type="text" id="node-input-username" data-i18n="[placeholder]oauth2.placeholder.username" style="width:70%;">
+        </div>
+        <div class="form-row">
+            <label for="node-input-password"><i class="fa  fa-lock fa-fw"/> <span data-i18n="oauth2.label.password"></span></label>
+            <input type="password" id="node-input-password" data-i18n="[placeholder]oauth2.placeholder.password" style="width:70%;">
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-client_id"><i class="fa fa-user fa-fw"/> <span data-i18n="oauth2.label.client_id"></span></label>
+        <input type="text" id="node-input-client_id" data-i18n="[placeholder]oauth2.placeholder.client_id" style="width:70%;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-client_secret"><i class="fa fa-lock fa-fw"/> <span data-i18n="oauth2.label.client_secret"></span></label>
+        <input type="password" id="node-input-client_secret" data-i18n="[placeholder]oauth2.placeholder.client_secret" style="width:70%;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-scope"><i class="fa fa-code fa-fw"/> <span data-i18n="oauth2.label.scope"></span></label>
+        <input type="text" id="node-input-scope" data-i18n="[placeholder]oauth2.placeholder.scope" style="width:70%;">
+    </div>
+
+
+
+</script>
+
+<script type="text/x-red" data-help-name="oauth2">
+<p>An OAuth2 client which sends an oauth2Response object as output.</p>
+<h3>Inputs</h3>
+    Any message to trigger producing an oauth2Response.
+    <dl class="message-properties">
+        <dt class="optional">container
+         <dd>The name of the container that will receive the message oauth2Response object.</dd>
+        </dt>
+        <dt class="optional">p.s. msg.payload.oauth2Response <span class="container-type">object</span></dt></p>
+    </dl>
+<h3>Outputs</h3>
+<ol class="node-ports">
+    <li>Standard output
+        <dl class="message-properties">
+            <dt>msg.payload.oauth2Response <span class="container-type">object</span></dt>
+            <dd>
+                <pre>
+                    <code>
+{
+  _msgid: '616aca2e.a19a14',
+  topic: 'Get Token',
+  payload: {
+    authorization: 'Bearer 2d261fcfe5ee17f9ab586e14336c27d826d96255',
+    oauth2Response: {
+      statusCode: 200,
+      statusMessage: 'OK',
+      body: {
+        access_token: '2d261fcfe5ee17f9ab586e14336c27d826d96255',
+        token_type: 'Bearer',
+        expires_in: 3599,
+        refresh_token: 'e95d37bb889ac5838a40bbf144e49acb28c10038',
+        scope: '*'
+      }
+    }
+  }
+}
+                    </code>
+                </pre>
+            </dd>
+        </dl>
+    </li>
+    <li>Standard output error
+        <dl class="message-properties">
+            <pre>
+                <code>
+{
+  _msgid: '9f97a5b8.ff13f8',
+  topic: 'Get Token',
+  payload: {
+    oauth2Response: {
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+      body: {
+        message: 'Invalid grant: user credentials are invalid',
+        error: {
+          statusCode: 400,
+          status: 400,
+          code: 400,
+          message: 'Invalid grant: user credentials are invalid',
+          name: 'invalid_grant'
+        }
+      }
+    }
+  }
+}
+                </code>
+            </pre>
+        </dl>
+    </li>
+    <li>Generic error
+        <dl class="message-properties">
+            <dt>msg.err <span class="container-type">object</span></dt>
+            <dd>Err object describing the cause of a failed operation.</dd>
+        </dl>
+        <dl>
+        <pre><code>
+{
+  _msgid: 'd45ffa20.0f28e8',
+  topic: 'Get Token',
+  payload: 1552255377233,
+  err: {
+    code: 'ECONNRESET',
+    path: null,
+    host: 'localhost',
+    port: '8000'
+  }
+}
+        </pre></code>
+        </dl>
+    </li>
+</ol>
+<h3>Details</h3>
+<p>This node is intended to be used for communicating with OAuth2 protected APIs. Once you configured it,
+for each incoming message the node will emit a message containing the <code>msg.payload.oauth2Response</code>
+value which can be passed to other nodes sending messages to an OAuth protected API.</p>
+<h3>References</h3>
+<ul>
+    <li><a href="https://tools.ietf.org/html/rfc6749">The OAuth 2.0 Authorization Framework</a> -
+    The OAuth 2.0 authorization framework enables a third-party
+    application to obtain limited access to an HTTP service, either on
+    behalf of a resource owner by orchestrating an approval interaction
+    between the resource owner and the HTTP service, or by allowing the
+    third-party application to obtain access on its own behalf.  This
+    specification replaces and obsoletes the OAuth 1.0 protocol described
+    in RFC 5849.</li>
+</ul>
+
+
+
+
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType("oauth2", {
+        color: "#ffffff",
+        category: 'security',
+        defaults: {
+            name: {value: ""},
+            container: {value: "payload", required: true},
+            access_token_url: {value: "", required: true},
+            grant_type: {value: "password", required: true},
+            username: {value: ""},
+            password: {value: ""},
+            client_id: {value: "", required: true},
+            client_secret: {value: "", required: true},
+            scope: {value: "", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "oauth2.png",
+        align: "right",
+        label: function () {
+            return this.name || this._("oauth2.oauth2");
+        },
+        labelStyle: function () {
+            return this.name ? "node_label_italic" : "";
+        },
+        oneditprepare: function () {
+            if (this.container === undefined) {
+                $("#node-input-container").val("payload");
+            }
+            $("#node-input-container").typedInput({default: 'msg', types: ['msg']});
+            $("#node-input-grant_type").on("change", function () {
+                if ($("#node-input-grant_type").val() === "password") {
+                    $("#node-password_credentials").show();
+                } else {
+                    $("#node-password_credentials").hide();
+                }
+            });
+        }
+    });
+
+</script>

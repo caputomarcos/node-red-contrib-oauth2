@@ -1,0 +1,13 @@
+{
+  "license": "MIT License",
+  "name": "node-red-contrib-oauth2",
+  "node-red": {
+    "nodes": {
+      "oauth2": "oauth2.js"
+    }
+  },
+  "dependencies": {
+    "request": "*"
+  },
+  "version": "1.0.0"
+}
