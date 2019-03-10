@@ -12,56 +12,59 @@ The name of the container that will receive the message oauth2Response object.
 
     p.s. msg.payload.oauth2Response object
 
+
 Outputs
 -------
 1. Standard output
 
     msg.payload.oauth2Response object
-         
-                    
-    {
-      _msgid: '616aca2e.a19a14',
-      topic: 'Get Token',
-      payload: {
-        authorization: 'Bearer 2d261fcfe5ee17f9ab586e14336c27d826d96255',
-        oauth2Response: {
-          statusCode: 200,
-          statusMessage: 'OK',
-          body: {
-            access_token: '2d261fcfe5ee17f9ab586e14336c27d826d96255',
-            token_type: 'Bearer',
-            expires_in: 3599,
-            refresh_token: 'e95d37bb889ac5838a40bbf144e49acb28c10038',
-            scope: '*'
+
+
+
+      {
+        _msgid: '616aca2e.a19a14',
+        topic: 'Get Token',
+        payload: {
+          authorization: 'Bearer 2d261fcfe5ee17f9ab586e14336c27d826d96255',
+          oauth2Response: {
+            statusCode: 200,
+            statusMessage: 'OK',
+            body: {
+              access_token: '2d261fcfe5ee17f9ab586e14336c27d826d96255',
+              token_type: 'Bearer',
+              expires_in: 3599,
+              refresh_token: 'e95d37bb889ac5838a40bbf144e49acb28c10038',
+              scope: '*'
+            }
           }
         }
       }
-    }
     
 
 2. Standard output error
 
 
-    {
-      _msgid: '9f97a5b8.ff13f8',
-      topic: 'Get Token',
-      payload: {
-        oauth2Response: {
-          statusCode: 400,
-          statusMessage: 'Bad Request',
-          body: {
-            message: 'Invalid grant: user credentials are invalid',
-            error: {
-              statusCode: 400,
-              status: 400,
-              code: 400,
+
+      {
+        _msgid: '9f97a5b8.ff13f8',
+        topic: 'Get Token',
+        payload: {
+          oauth2Response: {
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            body: {
               message: 'Invalid grant: user credentials are invalid',
-              name: 'invalid_grant'
+              error: {
+                statusCode: 400,
+                status: 400,
+                code: 400,
+                message: 'Invalid grant: user credentials are invalid',
+                name: 'invalid_grant'
+              }
             }
           }
         }
       }
-    }
                 
             
 Generic error

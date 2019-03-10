@@ -1,6 +1,8 @@
 {
-  "license": "MIT License",
   "name": "node-red-contrib-oauth2",
+  "version": "1.0.0",
+  "private": false,
+  "scripts": {},
   "node-red": {
     "nodes": {
       "oauth2": "oauth2.js"
@@ -9,5 +11,21 @@
   "dependencies": {
     "request": "*"
   },
-  "version": "1.0.0"
+  "description": "node-red-contrib-oauth2 - An OAuth2 client which sends an oauth2Response object as output.",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caputomarcos/node-red-contrib-oauth2.git"
+  },
+  "keywords": [
+    "node-red",
+    "oauth2",
+    "security"
+  ],
+  "author": "Marcos Caputo <caputo.marcos@gmail.com>",
+  "license": "MIT License",
+  "bugs": {
+    "url": "https://github.com/caputomarcos/node-red-contrib-oauth2/issues"
+  },
+  "homepage": "https://github.com/caputomarcos/node-red-contrib-oauth2#readme"
 }

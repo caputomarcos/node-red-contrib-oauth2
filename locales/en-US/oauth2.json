@@ -26,9 +26,6 @@
             "password_credentials": "Password",
             "in": "compared to last input value",
             "out": "compared to last valid output value"
-        },
-        "warn": {
-            "nonumber": "no number found in payload"
         }
     }
 }
