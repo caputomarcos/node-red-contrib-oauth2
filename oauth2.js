@@ -57,12 +57,23 @@ module.exports = function (RED) {
       // set an empty form
       let Form = {};
 
+      // TODO - ??? =)
+      let Method = "Post";
+      let Authorization = '';
       // Choice a grant_type
       if (node.grant_type === "set_by_credentials" && msg.oauth2Request) {
         node.access_token_url = msg.oauth2Request.access_token_url;
+        node.client_id = msg.oauth2Request.credentials.client_id;
+        node.client_secret = msg.oauth2Request.credentials.client_secret;
         Form = msg.oauth2Request.credentials;
-      } else if (node.grant_type === "password") {8
-        // TODO -   change grant_type from password_credentials to password! workaround? =)
+        if (msg.oauth2Request.username && msg.oauth2Request.password) {
+          // TODO - ??? =)
+          Authorization = 'Basic ' + Buffer.from(`${msg.oauth2Request.username}:${msg.oauth2Request.password}`).toString('base64');
+        } else {
+          // TODO - ??? =)
+          Authorization = 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64');
+        }
+      } else if (node.grant_type === "password") {
         Form = {
           'username': node.username,
           'password': node.password,
@@ -70,6 +81,8 @@ module.exports = function (RED) {
           'client_id': node.client_id,
           'client_secret': node.client_secret
         };
+        // TODO - ??? =)
+        Authorization = 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64');
       } else if (node.grant_type === "client_credentials") {
         Form = {
           'grant_type': node.grant_type,
@@ -77,23 +90,25 @@ module.exports = function (RED) {
           'client_secret': node.client_secret,
           'scope': node.scope
         };
+        // TODO - ??? =)
+        Authorization = 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64');
       }
 
       let Body = querystring.stringify(Form);
+
       // set Headers
+      // TODO - improve 'Authorization': 'Basic ' ??? =)
       let Headers = {
         // 'Accept': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length': Buffer.byteLength(Body),
-        'Authorization': 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64')
-
+        'Authorization': Authorization
       };
-
 
       // Put all together
       let Options = {
+        method: Method,
         url: node.access_token_url,
-        method: 'POST',
         headers: Headers,
         body: Body,
         json: false
