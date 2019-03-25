@@ -24,8 +24,7 @@
         "opts": {
             "client_credentials": "Client Credentials",
             "password_credentials": "Password",
-            "in": "compared to last input value",
-            "out": "compared to last valid output value"
+            "set_by_credentials": "- Set by msg.credentials -"
         }
     }
 }

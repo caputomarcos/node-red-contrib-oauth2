@@ -36,7 +36,7 @@ module.exports = function (RED) {
 
     // Store local copies of the node configuration (as defined in the .html)
     this.name = oauth2Node.name || "";
-    this.container = oauth2Node.container || "payload";
+    this.container = oauth2Node.container || "oauth2Response";
     this.access_token_url = oauth2Node.access_token_url || "";
     this.grant_type = oauth2Node.grant_type || "password";
     this.username = oauth2Node.username || "";
@@ -58,7 +58,10 @@ module.exports = function (RED) {
       let Form = {};
 
       // Choice a grant_type
-      if (node.grant_type === "password") {
+      if (node.grant_type === "set_by_credentials" && msg.oauth2Request) {
+        node.access_token_url = msg.oauth2Request.access_token_url;
+        Form = msg.oauth2Request.credentials;
+      } else if (node.grant_type === "password") {8
         // TODO -   change grant_type from password_credentials to password! workaround? =)
         Form = {
           'username': node.username,
@@ -98,6 +101,7 @@ module.exports = function (RED) {
 
       // make a post request
       request.post(Options, function (err, response, body) {
+        if (msg.oauth2Request) delete msg.oauth2Request;
         let oauth2Body = JSON.parse(body ? body : JSON.stringify("{}"));
         if (response && response.statusCode && response.statusCode === 200) {
           msg[node.container] = {
