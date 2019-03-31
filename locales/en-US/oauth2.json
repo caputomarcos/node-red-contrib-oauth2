@@ -24,7 +24,7 @@
         "opts": {
             "client_credentials": "Client Credentials",
             "password_credentials": "Password",
-            "set_by_credentials": "- Set by msg.credentials -"
+            "set_by_credentials": "- Set by msg.oauth2Request -"
         }
     }
 }
