@@ -156,9 +156,9 @@ module.exports = function (RED) {
             msg.err = {message: err.message, stack: err.stack};
           }
           node.send(msg);
-        };
+        }
         catch(err) {
-          console.log(Date.now())
+          console.log(new Date()).toISOString();
           console.log(err.message);
           console.log(body);
         };
