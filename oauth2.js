@@ -158,9 +158,10 @@ module.exports = function (RED) {
           node.send(msg);
         }
         catch(err) {
-          console.log(new Date()).toISOString();
-          console.log(err.message);
-          console.log(body);
+          var d = new Date();
+          var n = d.toISOString();
+          console.log(n + ': ' + err.message);
+          console.log(n + ': ' + body.replace((/  |\r\n|\n|\r/gm),""));
         };
       });
     });
