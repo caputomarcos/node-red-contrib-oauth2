@@ -77,9 +77,9 @@ module.exports = function (RED) {
         Form = {
           'username': node.username,
           'password': node.password,
-          'grant_type': node.grant_type,
-          'client_id': node.client_id,
-          'client_secret': node.client_secret
+          'grant_type': node.grant_type
+          // 'client_id': node.client_id,
+          // 'client_secret': node.client_secret
         };
         // TODO - ??? =)
         Authorization = 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64');
