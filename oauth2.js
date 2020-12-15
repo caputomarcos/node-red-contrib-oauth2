@@ -44,6 +44,7 @@ module.exports = function (RED) {
     this.client_id = oauth2Node.client_id || "";
     this.client_secret = oauth2Node.client_secret || "";
     this.scope = oauth2Node.scope || "";
+    this.headers = oauth2Node.headers||{};
 
     // copy "this" object in case we need it in context of callbacks of other functions.
     let node = this;
@@ -53,7 +54,6 @@ module.exports = function (RED) {
 
     // respond to inputs....
     this.on("input", function (msg) {
-
       // set an empty form
       let Form = {};
 
@@ -105,6 +105,16 @@ module.exports = function (RED) {
         'Authorization': Authorization
       };
 
+      if (oauth2Node.headers) {
+        console.log(oauth2Node.headers);
+        for (var h in oauth2Node.headers) {
+            if (oauth2Node.headers[h] && !Headers.hasOwnProperty(h)) {
+              Headers[h] = oauth2Node.headers[h];
+              console.log(Headers);
+            }
+        }
+      }
+  
       // Put all together
       let Options = {
         method: Method,
@@ -118,7 +128,7 @@ module.exports = function (RED) {
       request.post(Options, function (err, response, body) {
         if (msg.oauth2Request) delete msg.oauth2Request;
         let oauth2Body = JSON.parse(body ? body : JSON.stringify("{}"));
-        if (response && response.statusCode && response.statusCode === 200) {
+        if (response && response.statusCode < 299 && response.statusCode > 200)  {
           msg[node.container] = {
             authorization: `${oauth2Body.token_type} ${oauth2Body.access_token}`,
             oauth2Response: {
@@ -133,7 +143,7 @@ module.exports = function (RED) {
             shape: "dot",
             text: `HTTP ${response.statusCode}, has token!`
           });
-        } else if (response && response.statusCode && response.statusCode !== 200) {
+        } else if (response && response.statusCode > 299 ) {
           msg[node.container] = {
             oauth2Response: {
               statusCode: response.statusCode,
@@ -146,14 +156,14 @@ module.exports = function (RED) {
             shape: "dot",
             text: `HTTP ${response.statusCode}, hasn't token!`
           });
-        }
-        if (err && err.code) {
-          node.status({fill: "red", shape: "dot", text: `ERR ${err.code}`});
-          msg.err = JSON.parse(JSON.stringify(err));
-        } else if (err && err.message && err.stack) {
-          node.status({fill: "red", shape: "dot", text: `ERR ${err.message}`});
-          msg.err = {message: err.message, stack: err.stack};
-        }
+        };
+        // if (err && err.code) {
+        //   node.status({fill: "red", shape: "dot", text: `ERR ${err.code}`});
+        //   msg.err = JSON.parse(JSON.stringify(err));
+        // } else if (err && err.message && err.stack) {
+        //   node.status({fill: "red", shape: "dot", text: `ERR ${err.message}`});
+        //   msg.err = {message: err.message, stack: err.stack};
+        // }
         node.send(msg);
       });
     });
