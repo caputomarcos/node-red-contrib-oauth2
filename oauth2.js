@@ -157,13 +157,13 @@ module.exports = function (RED) {
             text: `HTTP ${response.statusCode}, hasn't token!`
           });
         };
-        // if (err && err.code) {
-        //   node.status({fill: "red", shape: "dot", text: `ERR ${err.code}`});
-        //   msg.err = JSON.parse(JSON.stringify(err));
-        // } else if (err && err.message && err.stack) {
-        //   node.status({fill: "red", shape: "dot", text: `ERR ${err.message}`});
-        //   msg.err = {message: err.message, stack: err.stack};
-        // }
+        if (err && err.code) {
+          node.status({fill: "red", shape: "dot", text: `ERR ${err.code}`});
+          msg.err = JSON.parse(JSON.stringify(err));
+        } else if (err && err.message && err.stack) {
+          node.status({fill: "red", shape: "dot", text: `ERR ${err.message}`});
+          msg.err = {message: err.message, stack: err.stack};
+        }
         node.send(msg);
       });
     });
