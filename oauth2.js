@@ -26,8 +26,8 @@
 module.exports = function (RED) {
   "use strict";
   // require any external libraries we may need....
-  let request = require('request');
-  var querystring = require('querystring');
+  let request = require("request");
+  var querystring = require("querystring");
 
   // The main node definition - most things happen in here
   function OAuth2Node(oauth2Node) {
@@ -44,7 +44,7 @@ module.exports = function (RED) {
     this.client_id = oauth2Node.client_id || "";
     this.client_secret = oauth2Node.client_secret || "";
     this.scope = oauth2Node.scope || "";
-    this.headers = oauth2Node.headers||{};
+    this.headers = oauth2Node.headers || {};
 
     // copy "this" object in case we need it in context of callbacks of other functions.
     let node = this;
@@ -59,7 +59,7 @@ module.exports = function (RED) {
 
       // TODO - ??? =)
       let Method = "Post";
-      let Authorization = '';
+      let Authorization = "";
       // Choice a grant_type
       if (node.grant_type === "set_by_credentials" && msg.oauth2Request) {
         node.access_token_url = msg.oauth2Request.access_token_url;
@@ -68,30 +68,46 @@ module.exports = function (RED) {
         Form = msg.oauth2Request.credentials;
         if (msg.oauth2Request.username && msg.oauth2Request.password) {
           // TODO - ??? =)
-          Authorization = 'Basic ' + Buffer.from(`${msg.oauth2Request.username}:${msg.oauth2Request.password}`).toString('base64');
+          Authorization =
+            "Basic " +
+            Buffer.from(
+              `${msg.oauth2Request.username}:${msg.oauth2Request.password}`
+            ).toString("base64");
         } else {
           // TODO - ??? =)
-          Authorization = 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64');
+          Authorization =
+            "Basic " +
+            Buffer.from(`${node.client_id}:${node.client_secret}`).toString(
+              "base64"
+            );
         }
       } else if (node.grant_type === "password") {
         Form = {
-          'username': node.username,
-          'password': node.password,
-          'grant_type': node.grant_type,
-          'client_id': node.client_id,
-          'client_secret': node.client_secret
+          username: node.username,
+          password: node.password,
+          grant_type: node.grant_type,
+          client_id: node.client_id,
+          client_secret: node.client_secret,
         };
         // TODO - ??? =)
-        Authorization = 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64');
+        Authorization =
+          "Basic " +
+          Buffer.from(`${node.client_id}:${node.client_secret}`).toString(
+            "base64"
+          );
       } else if (node.grant_type === "client_credentials") {
         Form = {
-          'grant_type': node.grant_type,
-          'client_id': node.client_id,
-          'client_secret': node.client_secret,
-          'scope': node.scope
+          grant_type: node.grant_type,
+          client_id: node.client_id,
+          client_secret: node.client_secret,
+          scope: node.scope,
         };
         // TODO - ??? =)
-        Authorization = 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64');
+        Authorization =
+          "Basic " +
+          Buffer.from(`${node.client_id}:${node.client_secret}`).toString(
+            "base64"
+          );
       }
       //When the clients secret and password are passed to the as Authorization Basic for many API's it shouldn't shouldn't be sent in form.
       delete Form.client_secret;
@@ -104,28 +120,26 @@ module.exports = function (RED) {
       // TODO - improve 'Authorization': 'Basic ' ??? =)
       let Headers = {
         // 'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(Body),
-        'Authorization': Authorization
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(Body),
+        Authorization: Authorization,
       };
 
       if (oauth2Node.headers) {
-        console.log(oauth2Node.headers);
         for (var h in oauth2Node.headers) {
-            if (oauth2Node.headers[h] && !Headers.hasOwnProperty(h)) {
-              Headers[h] = oauth2Node.headers[h];
-              console.log(Headers);
-            }
+          if (oauth2Node.headers[h] && !Headers.hasOwnProperty(h)) {
+            Headers[h] = oauth2Node.headers[h];
+          }
         }
       }
-  
+
       // Put all together
       let Options = {
         method: Method,
         url: node.access_token_url,
         headers: Headers,
         body: Body,
-        json: false
+        json: false,
       };
 
       // make a post request
@@ -139,49 +153,57 @@ module.exports = function (RED) {
               oauth2Response: {
                 statusCode: response.statusCode,
                 statusMessage: response.statusMessage,
-                body: oauth2Body
-              }
+                body: oauth2Body,
+              },
             };
 
             node.status({
               fill: "green",
               shape: "dot",
-              text: `HTTP ${response.statusCode}, has token!`
+              text: `HTTP ${response.statusCode}, has token!`,
             });
-          } else if (response && response.statusCode && response.statusCode !== 200) {
+          } else if (
+            response &&
+            response.statusCode &&
+            response.statusCode !== 200
+          ) {
             msg[node.container] = {
               oauth2Response: {
                 statusCode: response.statusCode,
                 statusMessage: response.statusMessage,
-                body: oauth2Body
-              }
+                body: oauth2Body,
+              },
             };
             node.status({
               fill: "red",
               shape: "dot",
-              text: `HTTP ${response.statusCode}, hasn't token!`
+              text: `HTTP ${response.statusCode}, hasn't token!`,
             });
           }
 
           if (err && err.code) {
-            node.status({fill: "red", shape: "dot", text: `ERR ${err.code}`});
             msg.err = JSON.parse(JSON.stringify(err));
+            node.status({ fill: "yellow", shape: "dot", text: `ERR ${err.code}` });
           } else if (err && err.message && err.stack) {
-            node.status({fill: "red", shape: "dot", text: `ERR ${err.message}`});
-            msg.err = {message: err.message, stack: err.stack};
+            msg.err = { message: err.message, stack: err.stack };
+            node.status({
+              fill: "black",
+              shape: "dot",
+              text: `ERR ${err.message}`,
+            });
           }
           node.send(msg);
-        }
-        catch(err) {
+        } catch (err) {
           var d = new Date();
           var n = d.toISOString();
-          console.log(n + ': ' + err.message);
-          console.log(n + ': ' + body.replace((/  |\r\n|\n|\r/gm),""));
-        };
-
+          console.log(n + ": " + err.message);
+          console.log(n + ": " + body.replace(/  |\r\n|\n|\r/gm, ""));
+          msg.err = JSON.parse(JSON.stringify(err));
+          node.status({ fill: "blue", shape: "dot", text: `ERR ${err.code}` });
+        }
       });
     });
   }
 
   RED.nodes.registerType("oauth2", OAuth2Node);
-}
+};
