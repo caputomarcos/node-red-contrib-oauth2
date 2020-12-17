@@ -147,7 +147,7 @@ module.exports = function (RED) {
         if (msg.oauth2Request) delete msg.oauth2Request;
         try {
           let oauth2Body = JSON.parse(body ? body : JSON.stringify("{}"));
-          if (response && response.statusCode && response.statusCode === 200) {
+          if (response && response.statusCode < 299 && response.statusCode > 200)  {
             msg[node.container] = {
               authorization: `${oauth2Body.token_type} ${oauth2Body.access_token}`,
               oauth2Response: {
