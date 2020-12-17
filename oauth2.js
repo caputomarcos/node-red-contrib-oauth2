@@ -44,6 +44,7 @@ module.exports = function (RED) {
     this.client_id = oauth2Node.client_id || "";
     this.client_secret = oauth2Node.client_secret || "";
     this.scope = oauth2Node.scope || "";
+    this.headers = oauth2Node.headers||{};
 
     // copy "this" object in case we need it in context of callbacks of other functions.
     let node = this;
@@ -53,7 +54,6 @@ module.exports = function (RED) {
 
     // respond to inputs....
     this.on("input", function (msg) {
-
       // set an empty form
       let Form = {};
 
@@ -93,7 +93,11 @@ module.exports = function (RED) {
         // TODO - ??? =)
         Authorization = 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64');
       }
-
+      //When the clients secret and password are passed to the as Authorization Basic for many API's it shouldn't shouldn't be sent in form.
+      delete Form.client_secret;
+      delete Form.client_id;
+      delete Form.username;
+      delete Form.password;
       let Body = querystring.stringify(Form);
 
       // set Headers
@@ -105,6 +109,16 @@ module.exports = function (RED) {
         'Authorization': Authorization
       };
 
+      if (oauth2Node.headers) {
+        console.log(oauth2Node.headers);
+        for (var h in oauth2Node.headers) {
+            if (oauth2Node.headers[h] && !Headers.hasOwnProperty(h)) {
+              Headers[h] = oauth2Node.headers[h];
+              console.log(Headers);
+            }
+        }
+      }
+  
       // Put all together
       let Options = {
         method: Method,
@@ -148,6 +162,7 @@ module.exports = function (RED) {
               text: `HTTP ${response.statusCode}, hasn't token!`
             });
           }
+
           if (err && err.code) {
             node.status({fill: "red", shape: "dot", text: `ERR ${err.code}`});
             msg.err = JSON.parse(JSON.stringify(err));
@@ -163,6 +178,7 @@ module.exports = function (RED) {
           console.log(n + ': ' + err.message);
           console.log(n + ': ' + body.replace((/  |\r\n|\n|\r/gm),""));
         };
+
       });
     });
   }

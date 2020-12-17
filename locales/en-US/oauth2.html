@@ -1,0 +1,189 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/html" data-help-name="oauth2">
+<p>An OAuth2 client which sends an oauth2Response object as output.</p>
+<h2 id="inputs">Inputs</h2>
+<p>Any message to trigger producing an oauth2Response.</p>
+<h4 id="container">Container</h4>
+<p>The name of the container that will receive the message oauth2Response object.</p>
+<p><code>p.s. msg.payload.oauth2Response object</code></p>
+<h4 id="grant-type">Grant Type</h4>
+<ul><li><code>Client Credentials</code></li></ul>
+<p><strong>inputs:</strong></p>
+<pre><code>
+Access Token URL
+Client ID
+Client Secret
+Scope
+</code></pre>
+<ul><li><code>Password</code></li></ul>
+<p><strong>inputs:</strong></p>
+<pre><code>
+Access Token URL
+Username
+Password
+Client ID
+Client Secret
+Scope
+</code></pre>
+<ul><li><code>- Set by msg.oauth2Request -</code></li></ul>
+<p><strong>input:</strong> </p>
+<p><code>client_credentials</code></p>
+<pre><code>
+msg.oauth2Request = { 
+    "access_token_url": "http://localhost:9999/uaa/oauth/token", 
+    "credentials": {
+        "grant_type": "client_credentials",
+        "client_id": "acmesecret",
+        "client_secret": "acme",
+        "scope": "openid"
+    }
+};
+return msg;
+</code></pre>
+<p><code>authorization_code</code></p>
+<pre><code>
+msg.oauth2Request = { 
+    "access_token_url": "http://localhost:9999/uaa/oauth/token", 
+    "credentials": {
+        "grant_type": "authorization_code",
+        "client_id": "acme",
+        "client_secret": "acmesecret",
+        "code":"LXZ5dn",
+        "redirect_uri": "http://localhost:1880/admin",
+        "scope": "openid"
+    }
+};
+return msg;
+</code></pre>
+<p><code>password</code></p>
+<pre><code>
+msg.oauth2Request = { 
+    "access_token_url": "http://localhost:9999/uaa/oauth/token", 
+    "credentials": {
+        "grant_type": "password",
+        "username": "user",
+        "password": "password",
+        "client_id": "acme",
+        "client_secret": "acmesecret",
+        "scope": "openid"
+    }
+};
+return msg;
+</code></pre>
+<p><code>refresh_token</code></p>
+<pre><code>
+msg.oauth2Request = { 
+    "access_token_url": "http://localhost:9999/uaa/oauth/token", 
+    "credentials": {
+        "grant_type": "refresh_token",
+        "client_id": "acme",
+        "client_secret": "acmesecret",
+        "refresh_token": "1f2c7ed8-4f12-4c05-8ac5-67ef85f2461f",
+        "scope": "openid"
+    }
+};
+return msg;
+</code></pre>
+<h2 id="outputs">Outputs</h2>
+<ol>
+<li>Standard output</li>
+</ol>
+<p><code>msg.payload.oauth2Response object</code></p>
+<pre><code>
+{
+    "_msgid": "781bff99.670d",
+    "topic": "",
+    "payload": {
+    "authorization": "bearer d9e551a7-e165-4186-bf4c-3ff16135d55b",
+        "oauth2Response": {
+            "statusCode": 200,
+            "statusMessage": "OK",
+            "body": {
+                "access_token": "d9e551a7-e165-4186-bf4c-3ff16135d55b",
+                "token_type": "bearer",
+                "refresh_token": "567d3f0b-af7e-421e-a0d9-fae99e010173",
+                "expires_in": 43199,
+                "scope": "openid"
+            }
+        }
+    }
+}
+</code></pre><ol>
+<li>Standard output error</li>
+</ol>
+<p><code>msg.payload.oauth2Response object</code></p>
+<pre><code>
+{
+    _msgid: '9f97a5b8.ff13f8',
+    topic: 'Get Token',
+    payload: {
+        oauth2Response: {
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            body: {
+                message: 'Invalid grant: user credentials are invalid',
+                error: {
+                statusCode: 400,
+                status: 400,
+                code: 400,
+                message: 'Invalid grant: user credentials are invalid',
+                name: 'invalid_grant'
+                }
+            }
+        }
+    }
+}
+</code></pre><h2 id="generic-error">Generic error</h2>
+<p>Err object describing the cause of a failed operation.</p>
+<p><code>msg.err object</code> </p>
+<pre><code>
+{
+    _msgid: 'd45ffa20.0f28e8',
+    topic: 'Get Token',
+    payload: 1552255377233,
+    err: {
+        code: 'ECONNRESET',
+        path: null,
+        host: 'localhost',
+        port: '8000'
+    }
+}
+</code></pre><h2 id="details">Details</h2>
+<p>This node is intended to be used for communicating with OAuth2 protected APIs. Once you configured it, for each incoming message the node will emit a message containing the msg.payload.oauth2Response value which can be passed to other nodes sending messages to an OAuth protected API.</p>
+<h2 id="todo">TODO</h2>
+<ul>
+<li>Set by msg.oauth2 </li>
+<li><del>Client Credentials</del></li>
+<li><del>Authorization Code</del></li>
+<li><del>Password</del></li>
+<li><del>Refresh Token</del></li>
+<li>Device Code</li>
+<li><p>Implicit</p>
+</li>
+<li><p>Set by node form </p>
+</li>
+<li><del>Client Credentials</del></li>
+<li>Authorization Code</li>
+<li><del>Password</del></li>
+<li>Refresh Token</li>
+<li>Device Code</li>
+<li>Implicit</li>
+</ul>
+<h2 id="references">References</h2>
+<p><a href="https://tools.ietf.org/html/rfc6749">The OAuth 2.0 Authorization Framework</a> - The OAuth 2.0 authorization framework enables a third-party application to obtain limited access to an HTTP service, either on behalf of a resource owner by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party application to obtain access on its own behalf. This specification replaces and obsoletes the OAuth 1.0 protocol described in RFC 5849.</p>
+</script>
