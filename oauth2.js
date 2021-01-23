@@ -100,7 +100,9 @@ module.exports = function (RED) {
           grant_type: node.grant_type,
           client_id: node.client_id,
           client_secret: node.client_secret,
-          scope: node.scope,
+        };
+        if (node.scope.length > 0) {
+          Form.scope = node.scope
         };
         // TODO - ??? =)
         Authorization =
