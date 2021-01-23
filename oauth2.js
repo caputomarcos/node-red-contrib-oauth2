@@ -109,11 +109,9 @@ module.exports = function (RED) {
             "base64"
           );
       }
-      //When the clients secret and password are passed to the as Authorization Basic for many API's it shouldn't shouldn't be sent in form.
+      //When the client secret and client id are passed to the as Authorization Basic for many API's it shouldn't shouldn't be sent in form.
       delete Form.client_secret;
       delete Form.client_id;
-      delete Form.username;
-      delete Form.password;
       let Body = querystring.stringify(Form);
 
       // set Headers
