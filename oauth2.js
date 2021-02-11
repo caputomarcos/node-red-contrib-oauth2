@@ -100,7 +100,9 @@ module.exports = function (RED) {
           grant_type: node.grant_type,
           client_id: node.client_id,
           client_secret: node.client_secret,
-          scope: node.scope,
+        };
+        if (node.scope.length > 0) {
+          Form.scope = node.scope
         };
         // TODO - ??? =)
         Authorization =
@@ -109,11 +111,9 @@ module.exports = function (RED) {
             "base64"
           );
       }
-      //When the clients secret and password are passed to the as Authorization Basic for many API's it shouldn't shouldn't be sent in form.
+      //When the client secret and client id are passed to the as Authorization Basic for many API's it shouldn't shouldn't be sent in form.
       delete Form.client_secret;
       delete Form.client_id;
-      delete Form.username;
-      delete Form.password;
       let Body = querystring.stringify(Form);
 
       // set Headers
@@ -147,7 +147,7 @@ module.exports = function (RED) {
         if (msg.oauth2Request) delete msg.oauth2Request;
         try {
           let oauth2Body = JSON.parse(body ? body : JSON.stringify("{}"));
-          if (response && response.statusCode < 299 && response.statusCode > 200)  {
+          if (response && response.statusCode < 299 && response.statusCode > 199)  {
             msg[node.container] = {
               authorization: `${oauth2Body.token_type} ${oauth2Body.access_token}`,
               oauth2Response: {
