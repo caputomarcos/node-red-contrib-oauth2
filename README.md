@@ -117,13 +117,13 @@
     "_msgid": "781bff99.670d",
     "topic": "",
     "payload": {
-      "authorization": "bearer d9e551a7-e165-4186-bf4c-3ff16135d55b",
+      "authorization": "Bearer d9e551a7-e165-4186-bf4c-3ff16135d55b",
       "oauth2Response": {
         "statusCode": 200,
         "statusMessage": "OK",
         "body": {
           "access_token": "d9e551a7-e165-4186-bf4c-3ff16135d55b",
-          "token_type": "bearer",
+          "token_type": "Bearer",
           "refresh_token": "567d3f0b-af7e-421e-a0d9-fae99e010173",
           "expires_in": 43199,
           "scope": "openid"

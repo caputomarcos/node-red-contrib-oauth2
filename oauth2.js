@@ -27,182 +27,107 @@ module.exports = function (RED) {
   "use strict";
   // require any external libraries we may need....
   let request = require("request");
-  var querystring = require("querystring");
 
   // The main node definition - most things happen in here
-  function OAuth2Node(oauth2Node) {
-    // Create a RED node
-    RED.nodes.createNode(this, oauth2Node);
+  class OAuth2Node {
+    constructor(oauth2Node) {
+      // Create a RED node
+      RED.nodes.createNode(this, oauth2Node);
 
-    // Store local copies of the node configuration (as defined in the .html)
-    this.name = oauth2Node.name || "";
-    this.container = oauth2Node.container || "oauth2Response";
-    this.access_token_url = oauth2Node.access_token_url || "";
-    this.grant_type = oauth2Node.grant_type || "password";
-    this.username = oauth2Node.username || "";
-    this.password = oauth2Node.password || "";
-    this.client_id = oauth2Node.client_id || "";
-    this.client_secret = oauth2Node.client_secret || "";
-    this.scope = oauth2Node.scope || "";
-    this.headers = oauth2Node.headers || {};
+      // Store local copies of the node configuration (as defined in the .html)
+      this.name = oauth2Node.name || "";
+      this.container = oauth2Node.container || "oauth2Response";
+      this.access_token_url = oauth2Node.access_token_url || "";
+      this.grant_type = oauth2Node.grant_type || "password";
+      this.username = oauth2Node.username || "";
+      this.password = oauth2Node.password || "";
+      this.client_id = oauth2Node.client_id || "";
+      this.client_secret = oauth2Node.client_secret || "";
+      this.scope = oauth2Node.scope || "";
+      this.headers = oauth2Node.headers || {};
 
-    // copy "this" object in case we need it in context of callbacks of other functions.
-    let node = this;
+      // copy "this" object in case we need it in context of callbacks of other functions.
+      let node = this;
 
-    let msg = {};
-    // msg.payload = this.payload;
+      // respond to inputs....
+      this.on("input", function (msg) {
 
-    // respond to inputs....
-    this.on("input", function (msg) {
-      // set an empty form
-      let Form = {};
-
-      // TODO - ??? =)
-      let Method = "Post";
-      let Authorization = "";
-      // Choice a grant_type
-      if (node.grant_type === "set_by_credentials" && msg.oauth2Request) {
-        node.access_token_url = msg.oauth2Request.access_token_url;
-        node.client_id = msg.oauth2Request.credentials.client_id;
-        node.client_secret = msg.oauth2Request.credentials.client_secret;
-        Form = msg.oauth2Request.credentials;
-        if (msg.oauth2Request.username && msg.oauth2Request.password) {
-          // TODO - ??? =)
-          Authorization =
-            "Basic " +
-            Buffer.from(
-              `${msg.oauth2Request.username}:${msg.oauth2Request.password}`
-            ).toString("base64");
+        if (oauth2Node.headers) {
+          for (var h in oauth2Node.headers) {
+            if (oauth2Node.headers[h] && !Headers.hasOwnProperty(h)) {
+              Headers[h] = oauth2Node.headers[h];
+            }
+          }
+        }
+        // Put all together
+        var options = {}
+        if (node.grant_type === "set_by_credentials") {
+          options = {
+            'method': 'POST',
+            'url': msg.oauth2Request.access_token_url,
+            'headers': {
+              'Authorization': "Basic " +
+                Buffer.from(`${msg.oauth2Request.credentials.client_id}:${msg.oauth2Request.credentials.client_secret}`).toString(
+                  "base64"
+                ),
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            form: {
+              'grant_type': msg.oauth2Request.credentials.grant_type,
+              'scope': msg.oauth2Request.credentials.scope
+            }
+          };
+          if (msg.oauth2Request.credentials.grant_type === "password") {
+            options.form.username = msg.oauth2Request.credentials.username;
+            options.form.password = msg.oauth2Request.credentials.password;
+          }
         } else {
-          // TODO - ??? =)
-          Authorization =
-            "Basic " +
-            Buffer.from(`${node.client_id}:${node.client_secret}`).toString(
-              "base64"
-            );
-        }
-      } else if (node.grant_type === "password") {
-        Form = {
-          username: node.username,
-          password: node.password,
-          grant_type: node.grant_type,
-          client_id: node.client_id,
-          client_secret: node.client_secret,
-        };
-        // TODO - ??? =)
-        Authorization =
-          "Basic " +
-          Buffer.from(`${node.client_id}:${node.client_secret}`).toString(
-            "base64"
-          );
-      } else if (node.grant_type === "client_credentials") {
-        Form = {
-          grant_type: node.grant_type,
-          client_id: node.client_id,
-          client_secret: node.client_secret,
-        };
-        if (node.scope.length > 0) {
-          Form.scope = node.scope
-        };
-        // TODO - ??? =)
-        Authorization =
-          "Basic " +
-          Buffer.from(`${node.client_id}:${node.client_secret}`).toString(
-            "base64"
-          );
-      }
-      //When the client secret and client id are passed to the as Authorization Basic for many API's it shouldn't shouldn't be sent in form.
-      delete Form.client_secret;
-      delete Form.client_id;
-      let Body = querystring.stringify(Form);
-
-      // set Headers
-      // TODO - improve 'Authorization': 'Basic ' ??? =)
-      let Headers = {
-        // 'Accept': 'application/json',
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Content-Length": Buffer.byteLength(Body),
-        Authorization: Authorization,
-      };
-
-      if (oauth2Node.headers) {
-        for (var h in oauth2Node.headers) {
-          if (oauth2Node.headers[h] && !Headers.hasOwnProperty(h)) {
-            Headers[h] = oauth2Node.headers[h];
+          options = {
+            'method': 'POST',
+            'url': node.access_token_url,
+            'headers': {
+              'Authorization': "Basic " +
+                Buffer.from(`${node.client_id}:${node.client_secret}`).toString(
+                  "base64"
+                ),
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            form: {
+              'grant_type': node.grant_type,
+              'scope': node.scope
+            }
+          };
+          if (node.grant_type === "password") {
+            options.form.username = node.username;
+            options.form.password = node.password;
           }
-        }
-      }
+        };
 
-      // Put all together
-      let Options = {
-        method: Method,
-        url: node.access_token_url,
-        headers: Headers,
-        body: Body,
-        json: false,
-      };
-
-      // make a post request
-      request.post(Options, function (err, response, body) {
-        if (msg.oauth2Request) delete msg.oauth2Request;
-        try {
-          let oauth2Body = JSON.parse(body ? body : JSON.stringify("{}"));
-          if (response && response.statusCode < 299 && response.statusCode > 199)  {
-            msg[node.container] = {
-              authorization: `${oauth2Body.token_type} ${oauth2Body.access_token}`,
-              oauth2Response: {
-                statusCode: response.statusCode,
-                statusMessage: response.statusMessage,
-                body: oauth2Body,
-              },
+        // make a post request
+        request(options, function (error, response) {
+          if (error) {
+            msg.err = JSON.parse(JSON.stringify(error));
+            node.status({ fill: "red", shape: "dot", text: `ERR ${error.code}` });
+          } else {
+            msg[node.container] = JSON.parse(response.body ? response.body : JSON.stringify("{}"));
+            if (response.statusCode === 200) {
+              node.status({
+                fill: "green",
+                shape: "dot",
+                text: `HTTP ${response.statusCode}, ok`,
+              });
+            } else {
+              node.status({
+                fill: "yellow",
+                shape: "dot",
+                text: `HTTP ${response.statusCode}, error`,
+              });
             };
-
-            node.status({
-              fill: "green",
-              shape: "dot",
-              text: `HTTP ${response.statusCode}, has token!`,
-            });
-          } else if (
-            response &&
-            response.statusCode &&
-            response.statusCode !== 200
-          ) {
-            msg[node.container] = {
-              oauth2Response: {
-                statusCode: response.statusCode,
-                statusMessage: response.statusMessage,
-                body: oauth2Body,
-              },
-            };
-            node.status({
-              fill: "red",
-              shape: "dot",
-              text: `HTTP ${response.statusCode}, hasn't token!`,
-            });
           }
-
-          if (err && err.code) {
-            msg.err = JSON.parse(JSON.stringify(err));
-            node.status({ fill: "yellow", shape: "dot", text: `ERR ${err.code}` });
-          } else if (err && err.message && err.stack) {
-            msg.err = { message: err.message, stack: err.stack };
-            node.status({
-              fill: "black",
-              shape: "dot",
-              text: `ERR ${err.message}`,
-            });
-          }
-          node.send(msg);
-        } catch (err) {
-          var d = new Date();
-          var n = d.toISOString();
-          console.log(n + ": " + err.message);
-          console.log(n + ": " + body.replace(/  |\r\n|\n|\r/gm, ""));
-          msg.err = JSON.parse(JSON.stringify(err));
-          node.status({ fill: "blue", shape: "dot", text: `ERR ${err.code}` });
-        }
+          node.send(msg)
+        });
       });
-    });
+    }
   }
 
   RED.nodes.registerType("oauth2", OAuth2Node);
