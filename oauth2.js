@@ -124,9 +124,10 @@ module.exports = function (RED) {
               });
             };
           }
-          node.send(msg)
+          node.send(msg);
         });
       });
+      delete options;
     }
   }
 
