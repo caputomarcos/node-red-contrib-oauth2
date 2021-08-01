@@ -106,7 +106,7 @@ module.exports = function (RED) {
         // make a post request
         request(options, function (error, response) {
           if (error) {
-            msg.err = JSON.parse(JSON.stringify(error));
+            msg[node.container] = JSON.parse(JSON.stringify(error));
             node.status({ fill: "red", shape: "dot", text: `ERR ${error.code}` });
           } else {
             msg[node.container] = JSON.parse(response.body ? response.body : JSON.stringify("{}"));
@@ -120,7 +120,7 @@ module.exports = function (RED) {
               node.status({
                 fill: "yellow",
                 shape: "dot",
-                text: `HTTP ${response.statusCode}, error`,
+                text: `HTTP ${response.statusCode}, ${response.body}`,
               });
             };
           }
