@@ -80,6 +80,9 @@ module.exports = function (RED) {
           if (msg.oauth2Request.credentials.grant_type === "password") {
             options.form.username = msg.oauth2Request.credentials.username;
             options.form.password = msg.oauth2Request.credentials.password;
+          };
+          if (msg.oauth2Request.credentials.grant_type === "refresh_token") {
+            options.form.refresh_token = msg.oauth2Request.credentials.refresh_token;
           }
         } else {
           options = {
@@ -100,9 +103,8 @@ module.exports = function (RED) {
           if (node.grant_type === "password") {
             options.form.username = node.username;
             options.form.password = node.password;
-          }
+          };
         };
-
         // make a post request
         request(options, function (error, response) {
           if (error) {
