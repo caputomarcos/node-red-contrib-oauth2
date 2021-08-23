@@ -70,7 +70,8 @@ module.exports = function (RED) {
                 Buffer.from(`${msg.oauth2Request.credentials.client_id}:${msg.oauth2Request.credentials.client_secret}`).toString(
                   "base64"
                 ),
-              'Content-Type': 'application/x-www-form-urlencoded'
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Accept': 'application/json',
             },
             form: {
               'grant_type': msg.oauth2Request.credentials.grant_type,
@@ -93,7 +94,8 @@ module.exports = function (RED) {
                 Buffer.from(`${node.client_id}:${node.client_secret}`).toString(
                   "base64"
                 ),
-              'Content-Type': 'application/x-www-form-urlencoded'
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Accept': 'application/json'
             },
             form: {
               'grant_type': node.grant_type,
@@ -108,25 +110,36 @@ module.exports = function (RED) {
         delete msg.oauth2Request;
         // make a post request
         request(options, function (error, response) {
-          if (error) {
-            msg[node.container] = JSON.parse(JSON.stringify(error));
-            node.status({ fill: "red", shape: "dot", text: `ERR ${error.code}` });
-          } else {
-            msg[node.container] = JSON.parse(response.body ? response.body : JSON.stringify("{}"));
-            if (response.statusCode === 200) {
-              node.status({
-                fill: "green",
-                shape: "dot",
-                text: `HTTP ${response.statusCode}, ok`,
-              });
+          try {
+            if (error) {
+              msg[node.container] = JSON.parse(JSON.stringify(error));
+              node.status({ fill: "red", shape: "dot", text: `ERR ${error.code}` });
             } else {
-              node.status({
-                fill: "yellow",
-                shape: "dot",
-                text: `HTTP ${response.statusCode}, ${response.body}`,
-              });
-            };
-          }
+              console.log(response);
+              msg[node.container] = JSON.parse(response.body ? response.body : JSON.stringify("{}"));
+              if (response.statusCode === 200) {
+                node.status({
+                  fill: "green",
+                  shape: "dot",
+                  text: `HTTP ${response.statusCode}, ok`,
+                });
+              } else {
+                node.status({
+                  fill: "yellow",
+                  shape: "dot",
+                  text: `HTTP ${response.statusCode}, nok`,
+                });
+              };
+            }
+          } catch (e) {
+            msg[node.container] = response;
+            msg.error = e;
+            node.status({
+              fill: "red",
+              shape: "dot",
+              text: `HTTP ${response.statusCode}, nok`,
+            });
+          };
           node.send(msg);
         });
       });
