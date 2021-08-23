@@ -44,48 +44,31 @@
       `client_credentials`
       
       ```
-        msg.oauth2Request = { 
-            "access_token_url": "http://localhost:9999/uaa/oauth/token", 
-            "credentials": {
-                "grant_type": "client_credentials",
-                "client_id": "acmesecret",
-                "client_secret": "acme",
-                "scope": "openid"
-            }
-        };
-        return msg;
-      ```
-      
-      `authorization_code`
-      
-      ```
-        msg.oauth2Request = { 
-            "access_token_url": "http://localhost:9999/uaa/oauth/token", 
-            "credentials": {
-                "grant_type": "authorization_code",
-                "client_id": "acme",
-                "client_secret": "acmesecret",
-                "code":"LXZ5dn",
-                "redirect_uri": "http://localhost:1880/admin",
-                "scope": "openid"
-            }
-        };
-        return msg;
+      msg.oauth2Request = { 
+      "access_token_url": "http://localhost:3000/oauth/token",
+      "credentials": {
+          "grant_type": "client_credentials",
+          "client_id": "confidentialApplication",
+          "client_secret": "topSecret",
+          "scope": "*"
+          },
+      };
+      return msg;
       ```
        
       `password`
       
       ```
       msg.oauth2Request = { 
-          "access_token_url": "http://localhost:9999/uaa/oauth/token", 
-          "credentials": {
-              "grant_type": "password",
-              "username": "user",
-              "password": "password",
-              "client_id": "acme",
-              "client_secret": "acmesecret",
-              "scope": "openid"
-          }
+      "access_token_url": "http://localhost:3000/oauth/token",
+      "credentials": {
+          "grant_type": "password",
+          "client_id": "application",
+          "client_secret": "secret",
+          "scope": "*",
+          "username": "pedroetb",
+          "password": "password"   
+        },
       };
       return msg;
       ```
@@ -93,15 +76,17 @@
       `refresh_token`
       
       ```
+      var refreshToken = flow.get('refreshToken');
+
       msg.oauth2Request = { 
-          "access_token_url": "http://localhost:9999/uaa/oauth/token", 
+          "access_token_url": "http://localhost:3000/oauth/token",
           "credentials": {
               "grant_type": "refresh_token",
-              "client_id": "acme",
-              "client_secret": "acmesecret",
-              "refresh_token": "1f2c7ed8-4f12-4c05-8ac5-67ef85f2461f",
-              "scope": "openid"
-          }
+              "client_id": "application",
+              "client_secret": "secret",
+              "scope": "*",
+              "refresh_token": refreshToken   
+          },
       };
       return msg;
       ```
@@ -110,54 +95,42 @@
   -------
   1. Standard output
   
-  `msg.payload.oauth2Response object`
+  `msg.oauth2Response object`
         
   ```
   {
-    "_msgid": "781bff99.670d",
-    "topic": "",
-    "payload": {
-      "authorization": "Bearer d9e551a7-e165-4186-bf4c-3ff16135d55b",
+      "_msgid": "2670c12c7893c3f9",
+      "payload": 1629740729931,
+      "topic": "Client Credentials set by msg.oauth2Request",
       "oauth2Response": {
-        "statusCode": 200,
-        "statusMessage": "OK",
-        "body": {
-          "access_token": "d9e551a7-e165-4186-bf4c-3ff16135d55b",
-          "token_type": "Bearer",
-          "refresh_token": "567d3f0b-af7e-421e-a0d9-fae99e010173",
-          "expires_in": 43199,
-          "scope": "openid"
-        }
+          "accessToken": "b7a0d0c04d44e093b2dac7d6def877da2e19aa76",
+          "accessTokenExpiresAt": "2021-08-23T18:45:29.943Z",
+          "scope": "*",
+          "client": {
+              "id": "confidentialApplication"
+          },
+          "user": {}
       }
-    }
   }
   ```
   
   
   2. Standard output error
   
-  `msg.payload.oauth2Response object`
+  `msg.oauth2Response object`
   
   ```
   {
-    _msgid: '9f97a5b8.ff13f8',
-    topic: 'Get Token',
-    payload: {
-      oauth2Response: {
-        statusCode: 400,
-        statusMessage: 'Bad Request',
-        body: {
-          message: 'Invalid grant: user credentials are invalid',
-          error: {
-            statusCode: 400,
-            status: 400,
-            code: 400,
-            message: 'Invalid grant: user credentials are invalid',
-            name: 'invalid_grant'
-          }
-        }
+      "_msgid": "e85afdfa97d3d79d",
+      "payload": 1629734971400,
+      "topic": "Refresh Token HTTP 400 by msg.oauth2Request",
+      "oauth2Response": {
+          "statusCode": 400,
+          "status": 400,
+          "code": 400,
+          "message": "Invalid grant: refresh token is invalid",
+          "name": "invalid_grant"
       }
-    }
   }
   ```
       
@@ -191,7 +164,7 @@
          
   Details
   -------
-  This node is intended to be used for communicating with OAuth2 protected APIs. Once you configured it, for each incoming message the node will emit a message containing the msg.payload.oauth2Response value which can be passed to other nodes sending messages to an OAuth protected API.
+  This node is intended to be used for communicating with OAuth2 protected APIs. Once you configured it, for each incoming message the node will emit a message containing the msg.oauth2Response value which can be passed to other nodes sending messages to an OAuth protected API.
  
   TODO
   ---- 
