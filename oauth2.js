@@ -36,9 +36,9 @@ module.exports = function (RED) {
 
       // Store local copies of the node configuration (as defined in the .html)
       this.name = oauth2Node.name || "";
-      this.container = oauth2Node.container || "oauth2Response";
+      this.container = oauth2Node.container || "";
       this.access_token_url = oauth2Node.access_token_url || "";
-      this.grant_type = oauth2Node.grant_type || "password";
+      this.grant_type = oauth2Node.grant_type || "";
       this.username = oauth2Node.username || "";
       this.password = oauth2Node.password || "";
       this.client_id = oauth2Node.client_id || "";
@@ -105,6 +105,7 @@ module.exports = function (RED) {
             options.form.password = node.password;
           };
         };
+        delete msg.oauth2Request;
         // make a post request
         request(options, function (error, response) {
           if (error) {
