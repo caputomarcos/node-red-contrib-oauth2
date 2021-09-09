@@ -79,8 +79,8 @@
       {value:"other",label:RED._("node-red:httpin.label.other"),icon:"red/images/typedInput/az.png"}
     ];
     RED.nodes.registerType("oauth2", {
-    category: 'security',
-    color: "#ffffff",
+    category: 'DevSecOps',
+    color: "#fff",
     defaults: {
       name: {
       value: ""},
@@ -96,8 +96,7 @@
     },
     inputs: 1,
     outputs: 1,
-    icon: "oauth2.png",
-    align: "right",
+    icon: "oauth2.svg",
     label: function () {
       return this.name || this._("oauth2.oauth2");
     },
