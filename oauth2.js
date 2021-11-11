@@ -44,6 +44,7 @@ module.exports = function (RED) {
       this.client_id = oauth2Node.client_id || "";
       this.client_secret = oauth2Node.client_secret || "";
       this.scope = oauth2Node.scope || "";
+      this.rejectUnauthorized = oauth2Node.rejectUnauthorized || false;
       this.headers = oauth2Node.headers || {};
 
       // copy "this" object in case we need it in context of callbacks of other functions.
@@ -73,6 +74,7 @@ module.exports = function (RED) {
               'Content-Type': 'application/x-www-form-urlencoded',
               'Accept': 'application/json',
             },
+            'rejectUnauthorized': node.rejectUnauthorized,
             form: {
               'grant_type': msg.oauth2Request.credentials.grant_type,
               'scope': msg.oauth2Request.credentials.scope
@@ -97,6 +99,7 @@ module.exports = function (RED) {
               'Content-Type': 'application/x-www-form-urlencoded',
               'Accept': 'application/json'
             },
+            'rejectUnauthorized': node.rejectUnauthorized,
             form: {
               'grant_type': node.grant_type,
               'scope': node.scope
