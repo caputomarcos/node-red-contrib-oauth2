@@ -11,7 +11,7 @@
             "client_id": "Client ID",
             "client_secret": "Client Secret",
             "scope": "Scope",
-	        "rejectUnauthorized" : "rejectUnauthorized"
+            "rejectUnauthorized" : "rejectUnauthorized"
         },
         "placeholder":{
             "name": "oauth2",
@@ -21,7 +21,7 @@
             "client_id": "012493af6282be51660dbc8e21a8462e",
             "client_secret": "5621bd4b5a8b09ed31817efb8d54fda2c72bfc1c6968cd4563d83f7cc26f68f6",
             "scope": "scope",
-	        "rejectUnauthorized" : "rejectUnauthorized",
+            "rejectUnauthorized" : "rejectUnauthorized",
             "headers": "headers"
         },
         "opts": {
