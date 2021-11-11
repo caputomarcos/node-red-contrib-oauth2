@@ -51,6 +51,11 @@
       <label for="node-input-scope"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.scope"></span></label>
       <input type="text" id="node-input-scope" data-i18n="[placeholder]oauth2.placeholder.scope" style="width:70%;">
   </div>
+  <!-- node-rejectUnauthorized -->
+  <div class="form-row" id="node-rejectUnauthorized">
+      <label for="node-input-rejectUnauthorized" style="width:30%;"><i class="fa fa-exclamation-circle fa-fw" ></i> <span data-i18n="oauth2.label.rejectUnauthorized"></span></label>
+      <input type="checkbox" id="node-input-rejectUnauthorized" autocomplete="on" style="width: 5%;" checked>
+  </div>
   <!-- node-input-headers-container -->
   <div class="form-row" style="margin-bottom:0;">
       <label><i class="fa fa-list"></i> <span data-i18n="oauth2.placeholder.headers"></span></label>
@@ -92,6 +97,7 @@
       client_id: {value: ""},
       client_secret: {value: ""},
       scope: {value: ""},
+      rejectUnauthorized : {value: true},
       headers: {value:{}}
     },
     inputs: 1,
@@ -116,18 +122,21 @@
           $("#node-client_id").hide();
           $("#node-client_secret").hide();
           $("#node-scope").hide();
+	  $("#node-rejectUnauthorized").hide();
         } else if ($("#node-input-grant_type").val() === "client_credentials") {
           $("#node-password_credentials").hide();
           $("#node-access_token_url").show();
           $("#node-client_id").show();
           $("#node-client_secret").show();
           $("#node-scope").show();
+	  $("#node-rejectUnauthorized").show();
         } else if ($("#node-input-grant_type").val() === "password") {
           $("#node-password_credentials").show();
           $("#node-access_token_url").show();
           $("#node-client_id").show();
           $("#node-client_secret").show();
           $("#node-scope").show();
+	  $("#node-rejectUnauthorized").show();
         }
       });
       function resizeRule(rule) {
