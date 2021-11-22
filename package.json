@@ -9,10 +9,13 @@
     }
   },
   "dependencies": {
-    "request": "*"
+    "request": "*",
+    "json-schema": ">=0.4.0"
   },
   "description": "node-red-contrib-oauth2 - An OAuth2 client which sends an oauth2Response object as output.",
-  "devDependencies": {},
+  "devDependencies": {
+    "json-schema": ">=0.4.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/caputomarcos/node-red-contrib-oauth2.git"
