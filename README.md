@@ -168,28 +168,19 @@
   Details
   -------
   This node is intended to be used for communicating with OAuth2 protected APIs. Once you configured it, for each incoming message the node will emit a message containing the msg.oauth2Response value which can be passed to other nodes sending messages to an OAuth protected API.
- 
-  TODO
-  ---- 
- 
-   * Set by msg.oauth2 
-      - ~~Client Credentials~~
-      - ~~Authorization Code~~
-      - ~~Password~~
-      - ~~Refresh Token~~
-      - Device Code
-      - Implicit
-      
-   * Set by node form 
-      - ~~Client Credentials~~
-      - Authorization Code
-      - ~~Password~~
-      - Refresh Token
-      - Device Code
-      - Implicit
-
-   
-    
+     
   References
   -----------
   [The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749) - The OAuth 2.0 authorization framework enables a third-party application to obtain limited access to an HTTP service, either on behalf of a resource owner by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party application to obtain access on its own behalf. This specification replaces and obsoletes the OAuth 1.0 protocol described in RFC 5849.
+
+
+## Contributors
+<table>
+  <tr>
+    <td>
+      <a href="https://github.com/caputomarcos/node-red-contrib-oauth2/graphs/contributors">
+        <img src="https://contrib.rocks/image?repo=caputomarcos/node-red-contrib-oauth2" />
+      </a>
+     </td>
+  </tr>
+</table>
