@@ -1,7 +1,8 @@
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=FLB35ANBK99ZA)
  
- <img src="icons/oauth2.svg" width="128" height="128">
+
+<img src="icons/oauth2.svg" width="128" height="128">
 
   node-red-contrib-oauth2
   =================
