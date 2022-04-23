@@ -53,14 +53,7 @@ module.exports = function (RED) {
       // respond to inputs....
       this.on("input", function (msg) {
 
-        if (oauth2Node.headers) {
-          for (var h in oauth2Node.headers) {
-            if (oauth2Node.headers[h] && !Headers.hasOwnProperty(h)) {
-              Headers[h] = oauth2Node.headers[h];
-            }
-          }
-        }
-        // Put all together
+        // generate the options for the request
         var options = {}
         if (node.grant_type === "set_by_credentials") {
           options = {
@@ -110,6 +103,15 @@ module.exports = function (RED) {
             options.form.password = node.password;
           };
         };
+
+        // add any custom headers, if we haven't already set them above
+        if (oauth2Node.headers) {
+          for (var h in oauth2Node.headers) {
+            if (oauth2Node.headers[h] && !options.headers.hasOwnProperty(h)) {
+              options.headers[h] = oauth2Node.headers[h];
+            }
+          }
+        }
         delete msg.oauth2Request;
         // make a post request
         request(options, function (error, response) {
