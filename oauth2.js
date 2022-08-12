@@ -120,7 +120,7 @@ module.exports = function (RED) {
               msg[node.container] = JSON.parse(JSON.stringify(error));
               node.status({ fill: "red", shape: "dot", text: `ERR ${error.code}` });
             } else {
-              console.log(response);
+              //console.log(response);
               msg[node.container] = JSON.parse(response.body ? response.body : JSON.stringify("{}"));
               if (response.statusCode === 200) {
                 node.status({
