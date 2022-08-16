@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-oauth2",
-  "version": "3.0.6",
+  "version": "3.2.6",
   "description": "node-red-contrib-oauth2 - An OAuth2 client which sends an oauth2Response object as output.",
   "author": "Marcos Caputo <caputo.marcos@gmail.com>",
   "contributors": [],
@@ -14,17 +14,17 @@
     "url": "https://github.com/caputomarcos/node-red-contrib-oauth2/issues"
   },
   "engines": {
-     "node": ">=12.0.0"
+    "node": ">=12.0.0"
   },
   "keywords": [
     "node-red",
     "oauth2",
     "security"
   ],
-  "node-red"  : {
+  "node-red": {
     "version": ">=2.0.0",
     "nodes": {
-      "oauth2": "oauth2.js"
+      "sample": "oauth2.js"
     }
   },
   "dependencies": {
