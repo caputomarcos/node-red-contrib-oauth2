@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-oauth2",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "node-red-contrib-oauth2 - An OAuth2 client which sends an oauth2Response object as output.",
   "author": "Marcos Caputo <caputo.marcos@gmail.com>",
   "contributors": [],
@@ -22,7 +22,7 @@
     "security"
   ],
   "node-red": {
-    "version": ">=2.0.0",
+    "version": "3.0.4",
     "nodes": {
       "oauth2": "oauth2.js"
     }
