@@ -150,5 +150,13 @@ module.exports = function (RED) {
     }
   }
 
+  RED.httpAdmin.get('/oauth/redirect', function(req, res) {
+    if (!req.query.clientId || !req.query.redirect_uri ||
+      !req.query.id || !req.query.callback) {
+      res.send(400);
+      return;
+    }
+  });
+
   RED.nodes.registerType("oauth2", OAuth2Node);
 };

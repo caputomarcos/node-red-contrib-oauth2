@@ -15,6 +15,7 @@
     <select type="text" id="node-input-grant_type" style="width:70%;">
       <option value="client_credentials" data-i18n="oauth2.opts.client_credentials"></option>
       <option value="password" data-i18n="oauth2.opts.password_credentials"></option>
+      <option value="authorization_code" data-i18n="oauth2.opts.authorization_code"></option>
       <option value="set_by_credentials" data-i18n="oauth2.opts.set_by_credentials"></option>
     </select>
   </div>
@@ -22,6 +23,16 @@
   <div class="form-row" id="node-access_token_url">
     <label for="node-input-access_token_url"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.access_token_url"></span></label>
     <input type="text" id="node-input-access_token_url" data-i18n="[placeholder]oauth2.placeholder.access_token_url" style="width:70%;">
+  </div>
+  <!-- node-authorization_endpoint -->
+  <div class="form-row" id="node-authorization_endpoint">
+    <label for="node-input-authorization_endpoint"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.authorization_endpoint"></span></label>
+    <input type="text" id="node-input-authorization_endpoint" data-i18n="[placeholder]oauth2.placeholder.authorization_endpoint" style="width:70%;">
+  </div>
+  <!-- node-redirect_uri -->
+  <div class="form-row" id="node-redirect_uri">
+    <label for="node-input-redirect_uri"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.redirect_uri"></span></label>
+    <input type="text" id="node-input-redirect_uri" data-i18n="[placeholder]oauth2.placeholder.redirect_uri" style="width:70%;">
   </div>
   <!-- node-password_credentials -->
   <div class="form-row" id="node-password_credentials">
@@ -50,6 +61,12 @@
   <div class="form-row" id="node-scope">
       <label for="node-input-scope"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.scope"></span></label>
       <input type="text" id="node-input-scope" data-i18n="[placeholder]oauth2.placeholder.scope" style="width:70%;">
+  </div>
+  <!-- node-open_authentication -->
+  <div class="form-row" id="node-open_authentication">
+    <label for="node-input-open_authentication"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.open_authentication"></span></label>
+    <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication" style="width:49%;">
+    <button class="red-ui-button" id="authorizeButton" style="right: 0px; top: 0px;"><i class="fa fa-key"></i> Authorize</button>
   </div>
   <!-- node-rejectUnauthorized -->
   <div class="form-row" id="node-rejectUnauthorized">
@@ -90,8 +107,11 @@
       name: {
       value: ""},
       container: {value: "oauth2Response"},
-      access_token_url: {value: ""},
       grant_type: {value: "set_by_credentials"},
+      access_token_url: {value: ""},
+      authorization_endpoint: {value: ""},
+      redirect_uri: {value: "/oauth2/redirect_uri"},
+      open_authentication: {value: ""},
       username: {value: ""},
       password: {value: ""},
       client_id: {value: ""},
@@ -117,6 +137,9 @@
       $("#node-input-container").typedInput({default: 'msg', types: ['msg']});
       $("#node-input-grant_type").on("change", function () {
         if ($("#node-input-grant_type").val() === "set_by_credentials") {
+          $("#node-authorization_endpoint").hide();
+          $("#node-open_authentication").hide();
+          $("#node-redirect_uri").hide();
           $("#node-password_credentials").hide();
           $("#node-access_token_url").hide();
           $("#node-client_id").hide();
@@ -124,6 +147,9 @@
           $("#node-scope").hide();
 	        $("#node-rejectUnauthorized").hide();
         } else if ($("#node-input-grant_type").val() === "client_credentials") {
+          $("#node-authorization_endpoint").hide();
+          $("#node-open_authentication").hide();
+          $("#node-redirect_uri").hide();
           $("#node-password_credentials").hide();
           $("#node-access_token_url").show();
           $("#node-client_id").show();
@@ -131,13 +157,32 @@
           $("#node-scope").show();
 	        $("#node-rejectUnauthorized").show();
         } else if ($("#node-input-grant_type").val() === "password") {
+          $("#node-authorization_endpoint").hide();
+          $("#node-open_authentication").hide();
+          $("#node-redirect_uri").hide();
           $("#node-password_credentials").show();
           $("#node-access_token_url").show();
           $("#node-client_id").show();
           $("#node-client_secret").show();
           $("#node-scope").show();
 	        $("#node-rejectUnauthorized").show();
+        } else if ($("#node-input-grant_type").val() === "authorization_code") {
+          $("#node-password_credentials").hide();
+          $("#node-open_authentication").show();
+          $("#node-redirect_uri").show();
+          $("#node-access_token_url").show();
+          $("#node-authorization_endpoint").show();
+          $("#node-client_id").show();
+          $("#node-client_secret").show();
+          $("#node-scope").show();
+	        $("#node-rejectUnauthorized").hide();
         }
+      });
+      $("#authorizeButton").click(function(){     
+                const authorizationEndpoint = $("#node-input-authorization_endpoint").val();
+                const clientId              = $("#node-input-client_id").val();
+                const redirectUri           = $("#node-input-redirect_uri").val();
+                window.open(`${authorizationEndpoint}?clientId=${clientId}&redirect_uri=${redirectUri}`, '_blank');
       });
       function resizeRule(rule) {
                 var newWidth = rule.width();
