@@ -209,20 +209,21 @@
     const credentials = JSON.parse(JSON.stringify(req.query, getCircularReplacer()))
     const scopes = req.query.scopes;
     const csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
+    
     credentials.csrfToken = csrfToken;
     credentials.callback = callback;
     res.cookie('csrf', csrfToken);
+    var l = url.parse(req.query.authorizationEndpoint, true);
     res.redirect(url.format({
-      protocol: 'https',
-      hostname: 'github.com',
-      pathname: '/login/oauth/authorize',
+      protocol: l.protocol.replace(':',''),
+      hostname: l.hostname,
+      pathname: l.pathname,
       query: {
           client_id: credentials.clientId,
           redirect_uri: redirectUri,
           state: node_id + ":" + csrfToken
       }
     }));
-    // res.redirect(`${req.query.authorizationEndpoint}?client_id=${req.query.clientId}&redirect_uri=https://flow.essavida.ai/red/oauth/redirect&id=${req.query.id}`);
     RED.nodes.addCredentials(node_id, credentials);
  });
 
