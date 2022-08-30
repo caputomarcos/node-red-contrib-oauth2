@@ -26,10 +26,9 @@
  module.exports = function (RED) {
   "use strict";
   // require any external libraries we may need....
-  const request = require("request");
-
-  const crypto = require("crypto");
   const url = require('url');
+  const crypto = require("crypto");
+  const request = require("request");
 
   const getCircularReplacer = () => {
     const seen = new WeakSet();
@@ -68,7 +67,6 @@
 
       // respond to inputs....
       this.on("input", function (msg) {
-
         // generate the options for the request
         var options = {}
         if (node.grant_type === "set_by_credentials") {
@@ -193,7 +191,7 @@
       var node_id = state[0];
       var credentials = RED.nodes.getCredentials(node_id);
       credentials.code = req.query.code;
-      res.send('Authorized');
+      res.send({"status": "Authorized"});
     }
   });
 
