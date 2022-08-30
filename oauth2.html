@@ -30,10 +30,10 @@
     <input type="text" id="node-input-authorization_endpoint" data-i18n="[placeholder]oauth2.placeholder.authorization_endpoint" style="width:70%;">
   </div>
   <!-- node-redirect_uri -->
-  <div class="form-row" id="node-redirect_uri">
+  <!-- <div class="form-row" id="node-redirect_uri">
     <label for="node-input-redirect_uri"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.redirect_uri"></span></label>
     <input type="text" id="node-input-redirect_uri" data-i18n="[placeholder]oauth2.placeholder.redirect_uri" style="width:70%;">
-  </div>
+  </div> -->
   <!-- node-password_credentials -->
   <div class="form-row" id="node-password_credentials">
     <!--node-input-username -->
@@ -150,6 +150,9 @@
           callback = `${location.protocol}//${location.hostname}${(location.port?":"+location.port:"")}${pathname}oauth2/auth/callback`;
       } 
 
+
+      var redirectUri = `${location.protocol}//${location.hostname}${(location.port?":"+location.port:"")}${pathname}oauth2/redirect`;
+
       if (this.container === undefined) {
         $("#node-input-container").val("payload");
       }
@@ -217,7 +220,6 @@
           const authorizationEndpoint = $("#node-input-authorization_endpoint").val();
           const clientId              = $("#node-input-client_id").val();
           const clientSecret          = $("#node-input-client_secret").val();
-          const redirectUri           = $("#node-input-redirect_uri").val();
           var scopes                  = $("#node-input-scope").val();
           scopes = scopes.replace(/\n/g, "%20");
           
@@ -227,6 +229,7 @@
           } else {
             url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scopes=${scopes}&callback=${encodeURIComponent(callback)}`;
           }
+          
           $(this).attr("href",url);
           
           window.configNodeIntervalId = window.setTimeout(pollCredentials,2000);
