@@ -18,9 +18,9 @@
         },
         "placeholder":{
             "name": "oauth2",
-            "access_token_url": "https://exemplo.com/oauth/token",
-            "authorization_endpoint": "https://exemplo.com/login/oauth/authorize",
-            "redirect_uri": "/oauth/redirect",
+            "access_token_url": "https://github.com/login/oauth/access_token",
+            "authorization_endpoint": "https://github.com/login/oauth/authorize",
+            "redirect_uri": "/oauth2/redirect",
             "open_authentication": "93af6282be5",
             "username": "admin",
             "password": "admin",

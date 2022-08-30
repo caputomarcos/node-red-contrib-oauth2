@@ -66,7 +66,9 @@
   <div class="form-row" id="node-open_authentication">
     <label for="node-input-open_authentication"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.open_authentication"></span></label>
     <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication" style="width:49%;">
-    <button class="red-ui-button" id="authorizeButton" style="right: 0px; top: 0px;"><i class="fa fa-key"></i> Authorize</button>
+    <a class="red-ui-button fa fa-key" id="authorizeButton" href="#" target="_blank"></a>
+
+    <!-- <button class="red-ui-button" id="authorizeButton" style="right: 0px; top: 0px;"><i class="fa fa-key"></i> Authorize</button> -->
   </div>
   <!-- node-rejectUnauthorized -->
   <div class="form-row" id="node-rejectUnauthorized">
@@ -129,12 +131,31 @@
     labelStyle: function () {
       return this.name ? "node_label_italic" : "";
     },
-    oneditprepare: function () 
-    {
+    oneditprepare: function () {
+      var id = this.id;
+    
+      var pathname = document.location.pathname;
+      if (pathname.slice(-1) != "/") {
+          pathname += "/";
+      }
+    
+      var privateIPRegex = /(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/;
+      
+      var callback;
+      if(privateIPRegex.test(location.hostname)) { // if private IP has been detected
+          var dummyDomain = "node-red.example.com";
+          var actualIP = location.hostname;
+          callback = `${location.protocol}//${dummyDomain}${(location.port?":"+location.port:"")}${pathname}oauth2/auth/callback`;
+      } else {
+          callback = `${location.protocol}//${location.hostname}${(location.port?":"+location.port:"")}${pathname}oauth2/auth/callback`;
+      } 
+
       if (this.container === undefined) {
         $("#node-input-container").val("payload");
       }
+
       $("#node-input-container").typedInput({default: 'msg', types: ['msg']});
+
       $("#node-input-grant_type").on("change", function () {
         if ($("#node-input-grant_type").val() === "set_by_credentials") {
           $("#node-authorization_endpoint").hide();
@@ -178,11 +199,51 @@
 	        $("#node-rejectUnauthorized").hide();
         }
       });
-      $("#authorizeButton").click(function(){     
-                const authorizationEndpoint = $("#node-input-authorization_endpoint").val();
-                const clientId              = $("#node-input-client_id").val();
-                const redirectUri           = $("#node-input-redirect_uri").val();
-                window.open(`${authorizationEndpoint}?clientId=${clientId}&redirect_uri=${redirectUri}`, '_blank');
+
+
+      function pollCredentials() {
+        $.getJSON('oauth2/credentials/'+id,function(data) {
+            if (data) {
+                console.log(data);
+                $("#node-input-open_authentication").val(data.code);
+                delete window.configNodeIntervalId;
+            } else {
+                window.configNodeIntervalId = window.setTimeout(pollCredentials,2000);
+            }
+        });
+      };
+
+      $("#authorizeButton").mousedown(function() {
+          const authorizationEndpoint = $("#node-input-authorization_endpoint").val();
+          const clientId              = $("#node-input-client_id").val();
+          const clientSecret          = $("#node-input-client_secret").val();
+          const redirectUri           = $("#node-input-redirect_uri").val();
+          var scopes                  = $("#node-input-scope").val();
+          scopes = scopes.replace(/\n/g, "%20");
+          
+          var url;
+          if (authorizationEndpoint) {
+            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scopes=${scopes}&callback=${encodeURIComponent(callback)}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${redirectUri}`;
+          } else {
+            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scopes=${scopes}&callback=${encodeURIComponent(callback)}`;
+          }
+          $(this).attr("href",url);
+          
+          window.configNodeIntervalId = window.setTimeout(pollCredentials,2000);
+
+      });
+      $("#authorizeButton").click(function(){    
+          var clientId     = $("#node-input-client_id").val();
+          var clientSecret = $("#node-input-client_secret").val();
+          if (clientId === "" || clientSecret === "") {
+              e.preventDefault();
+          } 
+          // console.log(`${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}`);
+          // window.open(`${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}`, '_blank');
+          // $.getJSON("oauth/redirect", function(data) {
+          //   console.log(data);
+          // });
+
       });
       function resizeRule(rule) {
                 var newWidth = rule.width();
