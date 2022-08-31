@@ -191,7 +191,16 @@
       var node_id = state[0];
       var credentials = RED.nodes.getCredentials(node_id);
       credentials.code = req.query.code;
-      res.send({"status": "Authorized"});
+
+      var html = "<HTML><HEAD><script language=\"javascript\" type=\"text/javascript\">" +
+      "function closeWindow() {" +
+      "window.open('','_parent','');" +
+      "window.close();" +
+      "}" +
+      "</script></HEAD>" +
+      "<BODY onload=\"javascript:closeWindow();\"></BODY></HTML>";
+
+      res.send(html);  
     }
   });
 
