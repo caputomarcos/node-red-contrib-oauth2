@@ -197,8 +197,11 @@
       "window.open('','_parent','');" +
       "window.close();" +
       "}" +
+      "function delay() {\n" +
+      "setTimeout(\"closeWindow()\", 1000);\n" +
+      "}\n" +
       "</script></HEAD>" +
-      "<BODY onload=\"javascript:closeWindow();\"></BODY></HTML>";
+      "<BODY onload=\"javascript:delay();\"></BODY></HTML>";
 
       res.send(html);  
     }
@@ -206,7 +209,6 @@
 
   
   RED.httpAdmin.get('/oauth2/auth', function(req, res){
-    console.log('oauth2/auth');
     if (!req.query.clientId || !req.query.clientSecret ||
         !req.query.id || !req.query.callback) {
         res.send(400);
@@ -237,7 +239,6 @@
  });
 
   RED.httpAdmin.get('/oauth2/auth/callback', function(req, res) {
-    console.log('oauth/auth/callback');
     if (req.query.error) {
         return res.send("oauth2.error.error", {error: req.query.error, description: req.query.error_description});
     }
@@ -245,7 +246,6 @@
     var node_id = state[0];
     var credentials = RED.nodes.getCredentials(node_id);
     if (!credentials || !credentials.clientId || !credentials.clientSecret) {
-        console.log("credentials not present?");
         return res.send("oauth2.error.no-credentials");
     }
     if (state[1] !== credentials.csrfToken) {
@@ -253,6 +253,5 @@
     }
 
   });
-
   RED.nodes.registerType("oauth2", OAuth2Node);
 };
