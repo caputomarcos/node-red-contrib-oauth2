@@ -220,14 +220,14 @@
           const authorizationEndpoint = $("#node-input-authorization_endpoint").val();
           const clientId              = $("#node-input-client_id").val();
           const clientSecret          = $("#node-input-client_secret").val();
-          var scopes                  = $("#node-input-scope").val();
-          scopes = scopes.replace(/\n/g, "%20");
-          
+          var scope                   = $("#node-input-scope").val();
+          scope = scope.replace(/\n/g, "%20");
+
           var url;
           if (authorizationEndpoint) {
-            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scopes=${scopes}&callback=${encodeURIComponent(callback)}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${redirectUri}`;
+            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scope=${scope}&callback=${encodeURIComponent(callback)}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${redirectUri}`;
           } else {
-            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scopes=${scopes}&callback=${encodeURIComponent(callback)}`;
+            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scope=${scope}&callback=${encodeURIComponent(callback)}`;
           }
           
           $(this).attr("href",url);

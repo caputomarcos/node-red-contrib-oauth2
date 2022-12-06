@@ -218,7 +218,7 @@
     const callback = req.query.callback;
     const redirectUri = req.query.redirectUri;
     const credentials = JSON.parse(JSON.stringify(req.query, getCircularReplacer()))
-    const scopes = req.query.scopes;
+    const scope = req.query.scope;
     const csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
     
     credentials.csrfToken = csrfToken;
@@ -232,7 +232,8 @@
       query: {
           client_id: credentials.clientId,
           redirect_uri: redirectUri,
-          state: node_id + ":" + csrfToken
+          state: node_id + ":" + csrfToken,
+          scope: scope
       }
     }));
     RED.nodes.addCredentials(node_id, credentials);
