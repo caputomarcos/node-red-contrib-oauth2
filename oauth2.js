@@ -201,7 +201,9 @@
       "setTimeout(\"closeWindow()\", 1000);\n" +
       "}\n" +
       "</script></HEAD>" +
-      "<BODY onload=\"javascript:delay();\"></BODY></HTML>";
+      "<BODY onload=\"javascript:delay();\">" +
+      "<p>Success! This page can be closed if it doesn't do so automatically.</p>"
+      "</BODY></HTML>";
 
       res.send(html);  
     }
