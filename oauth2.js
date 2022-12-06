@@ -60,6 +60,7 @@
       this.client_secret = oauth2Node.client_secret || "";
       this.scope = oauth2Node.scope || "";
       this.rejectUnauthorized = oauth2Node.rejectUnauthorized || false;
+      this.client_credentials_in_body = oauth2Node.client_credentials_in_body || false;
       this.headers = oauth2Node.headers || {};
 
       // copy "this" object in case we need it in context of callbacks of other functions.
@@ -118,8 +119,10 @@
           };
           if (node.grant_type === "authorization_code") {
             // Some services accept these via Authorization while other require it in the POST body
-            options.form.client_id = node.client_id;
-            options.form.client_secret = node.client_secret
+            if (node.client_credentials_in_body) {
+              options.form.client_id = node.client_id;
+              options.form.client_secret = node.client_secret;
+            }
 
             options.form.code = node.credentials.code;
             options.form.redirect_uri = node.credentials.redirectUri;
