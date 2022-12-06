@@ -117,7 +117,12 @@
             options.form.password = node.password;
           };
           if (node.grant_type === "authorization_code") {
+            // Some services accept these via Authorization while other require it in the POST body
+            options.form.client_id = node.client_id;
+            options.form.client_secret = node.client_secret
+
             options.form.code = node.credentials.code;
+            options.form.redirect_uri = node.credentials.redirectUri;
           };
         };
 
@@ -182,7 +187,7 @@
 
   RED.httpAdmin.get('/oauth2/credentials/:token', function(req, res) {
     var credentials = RED.nodes.getCredentials(req.params.token);
-    res.json({code: credentials.code});
+    res.json({code: credentials.code, redirect_uri: credentials.redirect_uri});
   });
 
   RED.httpAdmin.get('/oauth2/redirect', function(req, res) {
@@ -225,6 +230,7 @@
     
     credentials.csrfToken = csrfToken;
     credentials.callback = callback;
+    credentials.redirectUri = redirectUri;
     res.cookie('csrf', csrfToken);
     var l = url.parse(req.query.authorizationEndpoint, true);
     res.redirect(url.format({
