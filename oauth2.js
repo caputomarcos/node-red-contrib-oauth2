@@ -233,7 +233,8 @@
           client_id: credentials.clientId,
           redirect_uri: redirectUri,
           state: node_id + ":" + csrfToken,
-          scope: scope
+          scope: scope,
+          response_type: 'code'
       }
     }));
     RED.nodes.addCredentials(node_id, credentials);
