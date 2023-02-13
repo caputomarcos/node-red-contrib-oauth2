@@ -23,11 +23,26 @@
  *
  **/
 
-module.exports = function (RED) {
+ module.exports = function (RED) {
   "use strict";
   // require any external libraries we may need....
-  let request = require("request");
+  const url = require('url');
+  const crypto = require("crypto");
+  const request = require("request");
 
+  const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key, value) => {
+      if (typeof value === 'object' && value !== null) {
+        if (seen.has(value)) {
+          return;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  };
+  
   // The main node definition - most things happen in here
   class OAuth2Node {
     constructor(oauth2Node) {
@@ -45,6 +60,7 @@ module.exports = function (RED) {
       this.client_secret = oauth2Node.client_secret || "";
       this.scope = oauth2Node.scope || "";
       this.rejectUnauthorized = oauth2Node.rejectUnauthorized || false;
+      this.client_credentials_in_body = oauth2Node.client_credentials_in_body || false;
       this.headers = oauth2Node.headers || {};
 
       // copy "this" object in case we need it in context of callbacks of other functions.
@@ -52,7 +68,6 @@ module.exports = function (RED) {
 
       // respond to inputs....
       this.on("input", function (msg) {
-
         // generate the options for the request
         var options = {}
         if (node.grant_type === "set_by_credentials") {
@@ -102,6 +117,16 @@ module.exports = function (RED) {
             options.form.username = node.username;
             options.form.password = node.password;
           };
+          if (node.grant_type === "authorization_code") {
+            // Some services accept these via Authorization while other require it in the POST body
+            if (node.client_credentials_in_body) {
+              options.form.client_id = node.client_id;
+              options.form.client_secret = node.client_secret;
+            }
+
+            options.form.code = node.credentials.code;
+            options.form.redirect_uri = node.credentials.redirectUri;
+          };
         };
 
         // add any custom headers, if we haven't already set them above
@@ -148,7 +173,98 @@ module.exports = function (RED) {
         });
       });
     }
-  }
+  };
 
+  RED.nodes.registerType("oauth2-credentials",OAuth2Node,{
+    credentials: {
+        displayName: {type:"text"},
+        clientId: {type:"text"},
+        clientSecret: {type:"password"},
+        accessToken: {type:"password"},
+        refreshToken: {type:"password"},
+        expireTime: {type:"password"},
+        code: {type:"password"}
+    }
+  });
+
+
+  RED.httpAdmin.get('/oauth2/credentials/:token', function(req, res) {
+    var credentials = RED.nodes.getCredentials(req.params.token);
+    res.json({code: credentials.code, redirect_uri: credentials.redirect_uri});
+  });
+
+  RED.httpAdmin.get('/oauth2/redirect', function(req, res) {
+    if (req.query.code) {
+      var state = req.query.state.split(':');
+      var node_id = state[0];
+      var credentials = RED.nodes.getCredentials(node_id);
+      credentials.code = req.query.code;
+
+      var html = "<HTML><HEAD><script language=\"javascript\" type=\"text/javascript\">" +
+      "function closeWindow() {" +
+      "window.open('','_parent','');" +
+      "window.close();" +
+      "}" +
+      "function delay() {\n" +
+      "setTimeout(\"closeWindow()\", 1000);\n" +
+      "}\n" +
+      "</script></HEAD>" +
+      "<BODY onload=\"javascript:delay();\">" +
+      "<p>Success! This page can be closed if it doesn't do so automatically.</p>"
+      "</BODY></HTML>";
+
+      res.send(html);  
+    }
+  });
+
+  
+  RED.httpAdmin.get('/oauth2/auth', function(req, res){
+    if (!req.query.clientId || !req.query.clientSecret ||
+        !req.query.id || !req.query.callback) {
+        res.send(400);
+        return;
+    }
+    const node_id = req.query.id;
+    const callback = req.query.callback;
+    const redirectUri = req.query.redirectUri;
+    const credentials = JSON.parse(JSON.stringify(req.query, getCircularReplacer()))
+    const scope = req.query.scope;
+    const csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
+    
+    credentials.csrfToken = csrfToken;
+    credentials.callback = callback;
+    credentials.redirectUri = redirectUri;
+    res.cookie('csrf', csrfToken);
+    var l = url.parse(req.query.authorizationEndpoint, true);
+    res.redirect(url.format({
+      protocol: l.protocol.replace(':',''),
+      hostname: l.hostname,
+      pathname: l.pathname,
+      query: {
+          client_id: credentials.clientId,
+          redirect_uri: redirectUri,
+          state: node_id + ":" + csrfToken,
+          scope: scope,
+          response_type: 'code'
+      }
+    }));
+    RED.nodes.addCredentials(node_id, credentials);
+ });
+
+  RED.httpAdmin.get('/oauth2/auth/callback', function(req, res) {
+    if (req.query.error) {
+        return res.send("oauth2.error.error", {error: req.query.error, description: req.query.error_description});
+    }
+    var state = req.query.state.split(':');
+    var node_id = state[0];
+    var credentials = RED.nodes.getCredentials(node_id);
+    if (!credentials || !credentials.clientId || !credentials.clientSecret) {
+        return res.send("oauth2.error.no-credentials");
+    }
+    if (state[1] !== credentials.csrfToken) {
+        return res.status(401).send("oauth2.error.token-mismatch");
+    }
+
+  });
   RED.nodes.registerType("oauth2", OAuth2Node);
 };

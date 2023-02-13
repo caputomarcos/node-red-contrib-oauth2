@@ -6,16 +6,23 @@
             "name": "Name",
             "container": "Container",
             "access_token_url": "Access Token URL",
+            "authorization_endpoint": "Authorization Endpoint",
+            "redirect_uri": "Redirect URI",
+            "open_authentication": "Code",
             "username": "Username",
             "password": "Password",
             "client_id": "Client ID",
             "client_secret": "Client Secret",
             "scope": "Scope",
-            "rejectUnauthorized" : "rejectUnauthorized"
+            "rejectUnauthorized" : "rejectUnauthorized",
+            "client_credentials_in_body": "Include client credentials in token request body"
         },
         "placeholder":{
             "name": "oauth2",
-            "access_token_url": "http://exemplo.com/oauth/token",
+            "access_token_url": "https://github.com/login/oauth/access_token",
+            "authorization_endpoint": "https://github.com/login/oauth/authorize",
+            "redirect_uri": "/oauth2/redirect",
+            "open_authentication": "93af6282be5",
             "username": "admin",
             "password": "admin",
             "client_id": "012493af6282be51660dbc8e21a8462e",
@@ -27,6 +34,7 @@
         "opts": {
             "client_credentials": "Client Credentials",
             "password_credentials": "Password",
+            "authorization_code": "Authorization Code",
             "set_by_credentials": "- Set by msg.oauth2Request -"
         }
     }
