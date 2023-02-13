@@ -60,6 +60,7 @@
       this.client_secret = oauth2Node.client_secret || "";
       this.scope = oauth2Node.scope || "";
       this.rejectUnauthorized = oauth2Node.rejectUnauthorized || false;
+      this.client_credentials_in_body = oauth2Node.client_credentials_in_body || false;
       this.headers = oauth2Node.headers || {};
 
       // copy "this" object in case we need it in context of callbacks of other functions.
@@ -117,7 +118,14 @@
             options.form.password = node.password;
           };
           if (node.grant_type === "authorization_code") {
+            // Some services accept these via Authorization while other require it in the POST body
+            if (node.client_credentials_in_body) {
+              options.form.client_id = node.client_id;
+              options.form.client_secret = node.client_secret;
+            }
+
             options.form.code = node.credentials.code;
+            options.form.redirect_uri = node.credentials.redirectUri;
           };
         };
 
@@ -182,7 +190,7 @@
 
   RED.httpAdmin.get('/oauth2/credentials/:token', function(req, res) {
     var credentials = RED.nodes.getCredentials(req.params.token);
-    res.json({code: credentials.code});
+    res.json({code: credentials.code, redirect_uri: credentials.redirect_uri});
   });
 
   RED.httpAdmin.get('/oauth2/redirect', function(req, res) {
@@ -201,7 +209,9 @@
       "setTimeout(\"closeWindow()\", 1000);\n" +
       "}\n" +
       "</script></HEAD>" +
-      "<BODY onload=\"javascript:delay();\"></BODY></HTML>";
+      "<BODY onload=\"javascript:delay();\">" +
+      "<p>Success! This page can be closed if it doesn't do so automatically.</p>"
+      "</BODY></HTML>";
 
       res.send(html);  
     }
@@ -218,11 +228,12 @@
     const callback = req.query.callback;
     const redirectUri = req.query.redirectUri;
     const credentials = JSON.parse(JSON.stringify(req.query, getCircularReplacer()))
-    const scopes = req.query.scopes;
+    const scope = req.query.scope;
     const csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
     
     credentials.csrfToken = csrfToken;
     credentials.callback = callback;
+    credentials.redirectUri = redirectUri;
     res.cookie('csrf', csrfToken);
     var l = url.parse(req.query.authorizationEndpoint, true);
     res.redirect(url.format({
@@ -232,7 +243,9 @@
       query: {
           client_id: credentials.clientId,
           redirect_uri: redirectUri,
-          state: node_id + ":" + csrfToken
+          state: node_id + ":" + csrfToken,
+          scope: scope,
+          response_type: 'code'
       }
     }));
     RED.nodes.addCredentials(node_id, credentials);

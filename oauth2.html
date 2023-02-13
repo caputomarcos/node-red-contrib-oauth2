@@ -70,6 +70,11 @@
 
     <!-- <button class="red-ui-button" id="authorizeButton" style="right: 0px; top: 0px;"><i class="fa fa-key"></i> Authorize</button> -->
   </div>
+  <!-- node-client_credentials_in_body -->
+  <div class="form-row" id="node-client_credentials_in_body">
+    <label for="node-input-client_credentials_in_body"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.client_credentials_in_body"></span></label>
+    <input type="checkbox" id="node-input-client_credentials_in_body">
+  </div>
   <!-- node-rejectUnauthorized -->
   <div class="form-row" id="node-rejectUnauthorized">
       <label for="node-input-rejectUnauthorized" style="width:30%;"><i class="fa fa-exclamation-circle fa-fw" ></i> <span data-i18n="oauth2.label.rejectUnauthorized"></span></label>
@@ -119,6 +124,7 @@
       client_id: {value: ""},
       client_secret: {value: ""},
       scope: {value: ""},
+      client_credentials_in_body: {value: false},
       rejectUnauthorized : {value: true},
       headers: {value:{}}
     },
@@ -170,6 +176,7 @@
           $("#node-client_secret").hide();
           $("#node-scope").hide();
 	        $("#node-rejectUnauthorized").hide();
+          $("#node-client_credentials_in_body").hide();
         } else if ($("#node-input-grant_type").val() === "client_credentials") {
           $("#node-authorization_endpoint").hide();
           $("#node-open_authentication").hide();
@@ -180,6 +187,7 @@
           $("#node-client_secret").show();
           $("#node-scope").show();
 	        $("#node-rejectUnauthorized").show();
+          $("#node-client_credentials_in_body").hide();
         } else if ($("#node-input-grant_type").val() === "password") {
           $("#node-authorization_endpoint").hide();
           $("#node-open_authentication").hide();
@@ -190,6 +198,7 @@
           $("#node-client_secret").show();
           $("#node-scope").show();
 	        $("#node-rejectUnauthorized").show();
+          $("#node-client_credentials_in_body").hide();
         } else if ($("#node-input-grant_type").val() === "authorization_code") {
           $("#node-password_credentials").hide();
           $("#node-open_authentication").show();
@@ -200,6 +209,7 @@
           $("#node-client_secret").show();
           $("#node-scope").show();
 	        $("#node-rejectUnauthorized").hide();
+          $("#node-client_credentials_in_body").show();
         }
       });
 
@@ -220,14 +230,14 @@
           const authorizationEndpoint = $("#node-input-authorization_endpoint").val();
           const clientId              = $("#node-input-client_id").val();
           const clientSecret          = $("#node-input-client_secret").val();
-          var scopes                  = $("#node-input-scope").val();
-          scopes = scopes.replace(/\n/g, "%20");
-          
+          var scope                   = $("#node-input-scope").val();
+          scope = scope.replace(/\n/g, "%20");
+
           var url;
           if (authorizationEndpoint) {
-            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scopes=${scopes}&callback=${encodeURIComponent(callback)}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${redirectUri}`;
+            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scope=${scope}&callback=${encodeURIComponent(callback)}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${redirectUri}`;
           } else {
-            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scopes=${scopes}&callback=${encodeURIComponent(callback)}`;
+            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scope=${scope}&callback=${encodeURIComponent(callback)}`;
           }
           
           $(this).attr("href",url);

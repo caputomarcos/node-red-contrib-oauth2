@@ -14,7 +14,8 @@
             "client_id": "Client ID",
             "client_secret": "Client Secret",
             "scope": "Scope",
-            "rejectUnauthorized" : "rejectUnauthorized"
+            "rejectUnauthorized" : "rejectUnauthorized",
+            "client_credentials_in_body": "Include client credentials in token request body"
         },
         "placeholder":{
             "name": "oauth2",
