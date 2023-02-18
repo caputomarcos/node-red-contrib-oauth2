@@ -6,8 +6,28 @@
 
   node-red-contrib-oauth2
   =================
-  An OAuth2 client which sends an oauth2Response object as output.
+  The `node-red-contrib-oauth2` is a Node-RED node that provides an OAuth2 authentication flow. This node uses the OAuth2 protocol to obtain an access token, which can be used to make authenticated API requests.
+
+  Usage
+  -----
   
+  The node requires an access token URL and a set of client credentials to authenticate with that URL. The node will generate an HTTP request to the access token URL to retrieve the access token using the client credentials.
+  The access token can be stored in a message property that can be used by subsequent nodes in a flow.
+  
+  The node provides two modes of operation:
+  
+   1. Static credentials: The client credentials can be set in the node configuration page.
+   2. Dynamic credentials: The client credentials can be sent as part of the message payload to the node.
+
+  Install
+  -------
+  You can install this node directly from the Node-RED editor by going to the Manage Palette menu and searching for "node-red-contrib-oauth2". Alternatively, you can install it using npm:  
+  
+  ```bash
+  $ cd ~/.node-red
+  $ npm install node-red-contrib-oauth2
+  ```
+
   Inputs
   ------
   Any message to trigger producing an oauth2Response.
