@@ -26,9 +26,9 @@
  module.exports = function (RED) {
   "use strict";
   // require any external libraries we may need....
-  const axios = require('axios');
   const url = require('url');
   const crypto = require("crypto");
+  const request = require("request");
 
   const getCircularReplacer = () => {
     const seen = new WeakSet();
@@ -139,24 +139,38 @@
         }
         delete msg.oauth2Request;
         // make a post request
-        axios.post(options.url, options.form, {
-          headers: options.headers,
-          httpsAgent: node.rejectUnauthorized ? new https.Agent({ rejectUnauthorized: true }) : undefined,
-        })
-          .then(response => {
-            msg[node.container] = response.data || {};
-            if (response.status === 200) {
-              node.status({ fill: "green", shape: "dot", text: `HTTP ${response.status}, ok` });
+        request(options, function (error, response) {
+          try {
+            if (error) {
+              msg[node.container] = JSON.parse(JSON.stringify(error));
+              node.status({ fill: "red", shape: "dot", text: `ERR ${error.code}` });
             } else {
-              node.status({ fill: "yellow", shape: "dot", text: `HTTP ${response.status}, nok` });
+              msg[node.container] = JSON.parse(response.body ? response.body : JSON.stringify("{}"));
+              if (response.statusCode === 200) {
+                node.status({
+                  fill: "green",
+                  shape: "dot",
+                  text: `HTTP ${response.statusCode}, ok`,
+                });
+              } else {
+                node.status({
+                  fill: "yellow",
+                  shape: "dot",
+                  text: `HTTP ${response.statusCode}, nok`,
+                });
+              };
             }
-            node.send(msg);
-          })
-          .catch(error => {
-            msg[node.container] = error.response ? error.response.data || {} : {};
-            node.status({ fill: "red", shape: "dot", text: `ERR ${error.code}` });
-            node.send(msg);
-          });
+          } catch (e) {
+            msg[node.container] = response;
+            msg.error = e;
+            node.status({
+              fill: "red",
+              shape: "dot",
+              text: `HTTP ${response.statusCode}, nok`,
+            });
+          };
+          node.send(msg);
+        });
       });
     }
   };

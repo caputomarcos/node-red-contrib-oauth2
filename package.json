@@ -28,7 +28,7 @@
     }
   },
   "dependencies": {
-    "axios": "*",
+    "request": ">=2.88.2",
     "json-schema": ">=0.4.0"
   },
   "devDependencies": {
