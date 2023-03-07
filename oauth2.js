@@ -24,11 +24,14 @@
  **/
 
  module.exports = function (RED) {
+  
   "use strict";
+
   // require any external libraries we may need....
   const axios = require('axios');
   const url = require('url');
   const crypto = require("crypto");
+  const https = require('https');
 
   const getCircularReplacer = () => {
     const seen = new WeakSet();
