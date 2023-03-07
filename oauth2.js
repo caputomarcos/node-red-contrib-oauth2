@@ -24,11 +24,14 @@
  **/
 
  module.exports = function (RED) {
+  
   "use strict";
+
   // require any external libraries we may need....
   const axios = require('axios');
   const url = require('url');
   const crypto = require("crypto");
+  const https = require('https');
 
   const getCircularReplacer = () => {
     const seen = new WeakSet();
@@ -141,7 +144,7 @@
         // make a post request
         axios.post(options.url, options.form, {
           headers: options.headers,
-          httpsAgent: node.rejectUnauthorized ? new https.Agent({ rejectUnauthorized: true }) : undefined,
+          httpsAgent: node.rejectUnauthorized ? new https.Agent({ rejectUnauthorized: true }) : new https.Agent({}),
         })
           .then(response => {
             msg[node.container] = response.data || {};
