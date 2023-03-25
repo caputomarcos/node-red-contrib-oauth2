@@ -70,7 +70,7 @@ module.exports = function (RED) {
       let node = this;
 
       // respond to inputs....
-      this.on("input", function (msg) {
+      this.on("input", async function (msg) {
         // generate the options for the request
         var options = {}
         if (node.grant_type === "set_by_credentials") {
@@ -143,24 +143,28 @@ module.exports = function (RED) {
         }
         delete msg.oauth2Request;
         // make a post request
-        axios.post(options.url, options.form, {
-          headers: options.headers,
-          httpsAgent: node.rejectUnauthorized ? new https.Agent({ rejectUnauthorized: true }) : new https.Agent({}),
-        })
-          .then(response => {
-            msg[node.container] = response.data || {};
-            if (response.status === 200) {
-              node.status({ fill: "green", shape: "dot", text: `HTTP ${response.status}, ok` });
-            } else {
-              node.status({ fill: "yellow", shape: "dot", text: `HTTP ${response.status}, nok` });
-            }
-            node.send(msg);
-          })
-          .catch(error => {
-            msg[node.container] = error.response ? error.response.data || {} : {};
-            node.status({ fill: "red", shape: "dot", text: `ERR ${error.code}` });
-            node.send(msg);
+        try {
+          const response = await axios.post(options.url, options.form, {
+            headers: options.headers,
+            httpsAgent: node.rejectUnauthorized ? new https.Agent({ rejectUnauthorized: true }) : new https.Agent({}),
           });
+          msg[node.container] = response.data || {};
+          if (response.status === 200) {
+            node.status({ fill: "green", shape: "dot", text: `HTTP ${response.status}, ok` });
+          } else {
+            node.status({ fill: "yellow", shape: "dot", text: `HTTP ${response.status}, nok` });
+          }
+          node.send(msg);
+        } catch (error) {
+          msg[node.container] = {
+            error: {
+              message: error.message,
+              stack: error.stack
+            }
+          };
+          node.status({ fill: "red", shape: "ring", text: "Error" });
+          node.error(error, msg);
+        }
       });
     }
   };
