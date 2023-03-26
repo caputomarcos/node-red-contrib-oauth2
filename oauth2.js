@@ -156,42 +156,58 @@ module.exports = function (RED) {
     }
   };
 
+  // OAuth2 credentials node
   RED.nodes.registerType("oauth2-credentials", OAuth2Node, {
     credentials: {
-      displayName: { type: "text" },
-      clientId: { type: "text" },
-      clientSecret: { type: "password" },
-      accessToken: { type: "password" },
-      refreshToken: { type: "password" },
-      expireTime: { type: "password" },
-      code: { type: "password" }
-    }
+      displayName: { type: "text", default: "OAuth2 Credentials" }, // A user-friendly name for the OAuth2 credentials
+      clientId: { type: "text" }, // The client ID provided by the OAuth2 provider
+      clientSecret: { type: "password" }, // The client secret provided by the OAuth2 provider
+      accessToken: { type: "password" }, // The access token obtained after successful authorization
+      refreshToken: { type: "password" }, // The refresh token obtained after successful authorization
+      expireTime: { type: "number" }, // The Unix timestamp at which the access token expires
+      code: { type: "text" } // The authorization code obtained during the OAuth2 authorization flow
+    },
+    // A brief overview of the OAuth2 credentials node
+    description: "A Node-RED node for managing OAuth2 credentials"
   });
 
-
+  // Endpoint to retrieve credentials associated with a token
   RED.httpAdmin.get('/oauth2/credentials/:token', async (req, res) => {
     try {
+      // Retrieve credentials from the node's configuration
       const credentials = await RED.nodes.getCredentials(req.params.token);
+
+      if (!credentials || !credentials.code || !credentials.redirect_uri) {
+        // Return 404 Not Found if credentials are not found or incomplete
+        return res.status(404).json({ error: 'Credentials not found or incomplete' });
+      }
+
+      // Respond with code and redirect_uri from credentials
       res.json({ code: credentials.code, redirect_uri: credentials.redirect_uri });
     } catch (error) {
       console.error(error);
-      res.sendStatus(500);
+      res.sendStatus(500); // Internal server error if there was an error retrieving credentials
     }
   });
 
+  // Define an endpoint for handling OAuth2 redirects
   RED.httpAdmin.get('/oauth2/redirect', async (req, res) => {
     try {
-
+      // Ensure that the redirect URL includes a code and state parameter
       const { code, state } = req.query;
       if (!code || !state) {
         return res.status(400).send('Bad Request');
       }
 
+      // Extract the node ID from the state parameter and retrieve credentials for that node
       const [nodeId] = state.split(':');
       const credentials = await RED.nodes.getCredentials(nodeId);
+
+      // Store the code in the credentials and update them in the node credential store
       credentials.code = code;
       await RED.nodes.addCredentials(nodeId, credentials);
 
+      // Construct a simple HTML page to display a success message and close the window
       const html = `
       <!DOCTYPE html>
       <html>
@@ -213,15 +229,17 @@ module.exports = function (RED) {
       </html>
     `;
 
+      // Set the Content-Security-Policy header to restrict the sources that the page can load from
       res.set('Content-Security-Policy', "default-src 'self'");
+
+      // Send the HTML page as the response
       res.send(html);
     } catch (error) {
+      // Handle any errors that occur during the process
       console.error(error);
       res.sendStatus(500);
     }
   });
-
-
 
   RED.httpAdmin.get('/oauth2/auth', async (req, res) => {
     // Check if all required parameters are present in the request query
@@ -231,7 +249,7 @@ module.exports = function (RED) {
     }
 
     // Get the required parameters from the request query
-    const node_id = req.query.id;
+    const nodeId = req.query.id;
     const callback = req.query.callback;
     const redirectUri = req.query.redirectUri;
     const scope = req.query.scope;
@@ -255,7 +273,7 @@ module.exports = function (RED) {
       const query = {
         client_id: credentials.clientId,
         redirect_uri: redirectUri,
-        state: `${node_id}:${csrfToken}`,
+        state: `${nodeId}:${csrfToken}`,
         scope,
         response_type: 'code',
       };
@@ -267,7 +285,7 @@ module.exports = function (RED) {
       });
 
       // Store the credentials in the Node-RED credential store
-      await RED.nodes.addCredentials(node_id, credentials);
+      await RED.nodes.addCredentials(nodeId, credentials);
 
       // Redirect the user to the authorization URL
       res.redirect(redirectUrl);
@@ -278,7 +296,7 @@ module.exports = function (RED) {
     }
   });
 
-
+  // Handle OAuth2 authentication callback
   RED.httpAdmin.get('/oauth2/auth/callback', async (req, res) => {
     try {
       // Handle errors returned by the OAuth2 provider
@@ -288,8 +306,8 @@ module.exports = function (RED) {
 
       // Extract node ID and credentials from state parameter
       const state = req.query.state.split(':');
-      const node_id = state[0];
-      const credentials = await RED.nodes.getCredentials(node_id);
+      const nodeId = state[0];
+      const credentials = await RED.nodes.getCredentials(nodeId);
 
       // Check if credentials are valid
       if (!credentials || !credentials.clientId || !credentials.clientSecret) {
