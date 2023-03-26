@@ -170,7 +170,7 @@ module.exports = function (RED) {
     // A brief overview of the OAuth2 credentials node
     description: "A Node-RED node for managing OAuth2 credentials"
   });
-
+  
   // Endpoint to retrieve credentials associated with a token
   RED.httpAdmin.get('/oauth2/credentials/:token', async (req, res) => {
     try {
@@ -181,7 +181,7 @@ module.exports = function (RED) {
         // Return 404 Not Found if credentials are not found or incomplete
         return res.status(404).json({ error: 'Credentials not found or incomplete' });
       }
-
+  
       // Respond with code and redirect_uri from credentials
       res.json({ code: credentials.code, redirect_uri: credentials.redirect_uri });
     } catch (error) {
@@ -240,7 +240,8 @@ module.exports = function (RED) {
       res.sendStatus(500);
     }
   });
-
+  
+  // Handle OAuth2 authentication
   RED.httpAdmin.get('/oauth2/auth', async (req, res) => {
     // Check if all required parameters are present in the request query
     if (!req.query.clientId || !req.query.clientSecret || !req.query.id || !req.query.callback) {
