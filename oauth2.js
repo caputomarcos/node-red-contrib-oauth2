@@ -145,7 +145,7 @@ module.exports = function (RED) {
         // make a post request
         axios.post(options.url, options.form, {
           headers: options.headers,
-          httpsAgent: node.rejectUnauthorized ? new https.Agent({ rejectUnauthorized: true }) : new https.Agent({}),
+          httpsAgent: node.rejectUnauthorized ? new https.Agent({ rejectUnauthorized: true }) : new https.Agent({ rejectUnauthorized: false }),
         })
           .then(response => {
             msg[node.container] = response.data || {};
