@@ -190,7 +190,7 @@
          
   Details
   -------
-  This node is intended to be used for communicating with OAuth2 protected APIs. Once you configured it, for each incoming message the node will emit a message containing the msg.oauth2Response value which can be passed to other nodes sending messages to an OAuth protected API.
+  The `node-red-contrib-oauth2` is designed to simplify the communication process with APIs that require `OAuth2 authentication`. Upon configuration, incoming messages will trigger a response that includes the msg.oauth2Response value. This response can then be passed on to other nodes to enable communication with `OAuth2-protected APIs`.
      
   References
   -----------
