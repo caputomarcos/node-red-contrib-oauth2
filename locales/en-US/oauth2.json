@@ -14,8 +14,10 @@
             "client_id": "Client ID",
             "client_secret": "Client Secret",
             "scope": "Scope",
-            "rejectUnauthorized" : "rejectUnauthorized",
-            "client_credentials_in_body": "Include client credentials in token request body"
+            "rejectUnauthorized" : "The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.",
+            "rejectUnauthorized_label" : "Reject Unauthorized",
+            "client_credentials_in_body": "Ensure that the client credentials are included in the token request body for authentication purposes.",
+            "client_credentials_in_body_label": "Embedded Credentials"
         },
         "placeholder":{
             "name": "oauth2",

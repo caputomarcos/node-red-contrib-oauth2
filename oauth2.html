@@ -72,12 +72,21 @@
   </div>
   <!-- node-client_credentials_in_body -->
   <div class="form-row" id="node-client_credentials_in_body">
-    <label for="node-input-client_credentials_in_body"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.client_credentials_in_body"></span></label>
-    <input type="checkbox" id="node-input-client_credentials_in_body">
-  </div>
+    <div abria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
+      <i class="fa fa-exclamation-circle fa-fw"></i><b>Embedded Credentials</b> - <span data-i18n="oauth2.label.client_credentials_in_body"></span>
+      </div>
+      <label for="node-input-client_credentials_in_body_label">
+        <i class="fa fa-sign-in fa-fw"></i> 
+        <span data-i18n="oauth2.label.client_credentials_in_body_label"></span>
+      </label>
+      <input type="checkbox" id="node-input-client_credentials_in_body">
+  </div>  
   <!-- node-rejectUnauthorized -->
-  <div class="form-row" id="node-rejectUnauthorized">
-      <label for="node-input-rejectUnauthorized" style="width:30%;"><i class="fa fa-exclamation-circle fa-fw" ></i> <span data-i18n="oauth2.label.rejectUnauthorized"></span></label>
+  <div class="form-row" id="node-rejectUnauthorized" style="margin-bottom:0;">
+    <div aria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
+      <i class="fa fa-exclamation-circle fa-fw"></i><b>Reject Unauthorized</b> - <span data-i18n="oauth2.label.rejectUnauthorized"></span>
+      </div>
+      <label for="node-input-rejectUnauthorized" style="width:30%;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.rejectUnauthorized_label"></span></label>
       <input type="checkbox" id="node-input-rejectUnauthorized" autocomplete="on" style="width: 5%;" checked>
   </div>
   <!-- node-input-headers-container -->
