@@ -230,6 +230,7 @@ module.exports = function (RED) {
     res.redirect(url.format({
       protocol: l.protocol.replace(':', ''),
       hostname: l.hostname,
+      port: l.port,
       pathname: l.pathname,
       query: {
         client_id: credentials.clientId,
