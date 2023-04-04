@@ -83,6 +83,22 @@
   <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication"
     style="width:61%;margin-top: -4px;" disabled>
 </div>
+
+<div class="form-row">
+  <input type="checkbox" id="node-input-useProxy" style="display: inline-block; width: auto; vertical-align: top;">
+  <label for="node-input-useProxy" style="width: auto;"><span data-i18n="oauth2.label.use-proxy"></span></label>
+  <div id="node-input-useProxy-row" class="hide">
+    <label style="width: auto; margin-left: 20px; margin-right: 10px;" for="node-input-proxy"><i
+        class="fa fa-globe"></i> <span data-i18n="oauth2.label.proxy-config"></span></label><input type="text"
+      style="width: 270px" id="node-input-proxy">
+  </div>
+</div>
+
+<div class="form-row">
+  <input type="checkbox" id="node-input-senderr" style="display: inline-block; width: auto; vertical-align: top;">
+  <label for="node-input-senderr" style="width: auto" data-i18n="oauth2.label.senderr"></label>
+</div>
+
 <!-- node-client_credentials_in_body -->
 <div class="form-row" id="node-client_credentials_in_body">
   <div abria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
@@ -156,6 +172,11 @@
         client_id: { value: "" },
         client_secret: { value: "" },
         scope: { value: "" },
+        proxy: {
+          type: "http proxy", required: false,
+          label: RED._("node-red:oauth2.label.proxy-config")
+        },
+        senderr: { value: false },
         client_credentials_in_body: { value: false },
         rejectUnauthorized: { value: true },
         headers: { value: {} }
@@ -284,6 +305,25 @@
             e.preventDefault();
           }
         });
+
+        $("#node-input-useProxy").on("click", function () {
+          updateProxyOptions();
+        });
+        function updateProxyOptions() {
+          if ($("#node-input-useProxy").is(":checked")) {
+            $("#node-input-useProxy-row").show();
+          } else {
+            $("#node-input-useProxy-row").hide();
+          }
+          RED.tray.resize();
+        }
+        if (this.proxy) {
+          $("#node-input-useProxy").prop("checked", true);
+        } else {
+          $("#node-input-useProxy").prop("checked", false);
+        }
+        updateProxyOptions();
+
         var headerList = $("#node-input-headers-container").css('min-height', '150px').css('min-width', '450px').editableList({
           addItem: function (container, i, header) {
             var row = $('<div/>').css({
@@ -360,6 +400,9 @@
         }
       },
       oneditsave: function () {
+        if (!$("#node-input-useProxy").is(":checked")) {
+          $("#node-input-proxy").val("_ADD_");
+        }
         var headers = $("#node-input-headers-container").editableList('items');
         var node = this;
         node.headers = {};

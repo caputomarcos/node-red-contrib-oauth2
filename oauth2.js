@@ -65,14 +65,27 @@ module.exports = function (RED) {
       this.rejectUnauthorized = oauth2Node.rejectUnauthorized || false;
       this.client_credentials_in_body = oauth2Node.client_credentials_in_body || false;
       this.headers = oauth2Node.headers || {};
+      this.sendErrorsToCatch = oauth2Node.senderr || false;
+
+      if (process.env.http_proxy) { this.prox = process.env.http_proxy; }
+      if (process.env.HTTP_PROXY) { this.prox = process.env.HTTP_PROXY; }
+      if (process.env.no_proxy) { this.noprox = process.env.no_proxy.split(","); }
+      if (process.env.NO_PROXY) { this.noprox = process.env.NO_PROXY.split(","); }
+
+      let proxyConfig;
+      if (oauth2Node.proxy) {
+        proxyConfig = RED.nodes.getNode(oauth2Node.proxy);
+        this.prox = proxyConfig.url;
+        this.noprox = proxyConfig.noproxy;
+      }
 
       // copy "this" object in case we need it in context of callbacks of other functions.
       let node = this;
 
       // respond to inputs....
-      this.on("input", function (msg) {
+      this.on("input", function (msg, nodeSend, nodeDone) {
         // generate the options for the request
-        var options = {}
+        let options = {}
         if (node.grant_type === "set_by_credentials") {
           options = {
             'method': 'POST',
@@ -127,7 +140,7 @@ module.exports = function (RED) {
               options.form.client_secret = node.client_secret;
             }
 
-            var credentials = RED.nodes.getCredentials(this.id);
+            const credentials = RED.nodes.getCredentials(this.id);
             options.form.code = credentials.code;
             options.form.redirect_uri = credentials.redirectUri;
           };
@@ -135,16 +148,65 @@ module.exports = function (RED) {
 
         // add any custom headers, if we haven't already set them above
         if (oauth2Node.headers) {
-          for (var h in oauth2Node.headers) {
+          for (let h in oauth2Node.headers) {
             if (oauth2Node.headers[h] && !options.headers.hasOwnProperty(h)) {
               options.headers[h] = oauth2Node.headers[h];
             }
           }
         }
+
+        if (this.noprox) {
+          for (let i = 0; i < this.noprox.length; i += 1) {
+            if (url.indexOf(this.noprox[i]) !== -1) { this.noproxy = true; }
+          }
+        }
+        if (this.prox && !this.noproxy) {
+          let match = this.prox.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
+          if (match) {
+            // let proxyAgent;
+            let proxyURL = new URL(this.prox);
+            //set username/password to null to stop empty creds header
+            let proxyOptions = {
+              proxy: {
+                protocol: proxyURL.protocol,
+                hostname: proxyURL.hostname,
+                port: proxyURL.port,
+                username: null,
+                password: null
+              },
+              maxFreeSockets: 256,
+              maxSockets: 256,
+              //getCert: for reliably retrieving the peer certificate, we must use agents with keepAlive=false
+              keepAlive: false
+            }
+            if (proxyConfig && proxyConfig.credentials) {
+              let proxyUsername = proxyConfig.credentials.username || '';
+              let proxyPassword = proxyConfig.credentials.password || '';
+              if (proxyUsername || proxyPassword) {
+                proxyOptions.proxy.username = proxyUsername;
+                proxyOptions.proxy.password = proxyPassword;
+              }
+            } else if (proxyURL.username || proxyURL.password) {
+              proxyOptions.proxy.username = proxyURL.username;
+              proxyOptions.proxy.password = proxyURL.password;
+            }
+            this.proxy = proxyOptions.proxy;
+            // //need both incase of http -> https redirect
+            // opts.agent = {
+            //   http: new HttpProxyAgent(proxyOptions),
+            //   https: new HttpsProxyAgent(proxyOptions)
+            // };
+
+          } else {
+            node.warn("Bad proxy url: " + prox);
+          }
+        }
+
         delete msg.oauth2Request;
         // make a post request
         axios.post(options.url, options.form, {
           headers: options.headers,
+          proxy: this.proxy,
           httpsAgent: node.rejectUnauthorized ? new https.Agent({ rejectUnauthorized: true }) : new https.Agent({ rejectUnauthorized: false }),
         })
           .then(response => {
@@ -154,12 +216,16 @@ module.exports = function (RED) {
             } else {
               node.status({ fill: "yellow", shape: "dot", text: `HTTP ${response.status}, nok` });
             }
-            node.send(msg);
+            nodeSend(msg);
+            nodeDone();
           })
           .catch(error => {
             msg[node.container] = error.response ? error.response.data || {} : {};
             node.status({ fill: "red", shape: "dot", text: `ERR ${error.code}` });
-            node.send(msg);
+            if (!this.sendErrorsToCatch) {
+              nodeSend(msg);
+            }
+            nodeDone();
           });
       });
     }
@@ -179,31 +245,34 @@ module.exports = function (RED) {
 
 
   RED.httpAdmin.get('/oauth2/credentials/:token', function (req, res) {
-    var credentials = RED.nodes.getCredentials(req.params.token);
+    const credentials = RED.nodes.getCredentials(req.params.token);
     res.json({ code: credentials.code, redirect_uri: credentials.redirect_uri });
   });
 
   RED.httpAdmin.get('/oauth2/redirect', function (req, res) {
     if (req.query.code) {
-      var state = req.query.state.split(':');
-      var node_id = state[0];
-      var credentials = RED.nodes.getCredentials(node_id);
+      const state = req.query.state.split(':');
+      const node_id = state[0];
+      const credentials = RED.nodes.getCredentials(node_id);
       credentials.code = req.query.code;
       RED.nodes.addCredentials(node_id, credentials);
 
-      var html = "<HTML><HEAD><script language=\"javascript\" type=\"text/javascript\">" +
-        "function closeWindow() {" +
-        "window.open('','_parent','');" +
-        "window.close();" +
-        "}" +
-        "function delay() {\n" +
-        "setTimeout(\"closeWindow()\", 1000);\n" +
-        "}\n" +
-        "</script></HEAD>" +
-        "<BODY onload=\"javascript:delay();\">" +
-        "<p>Success! This page can be closed if it doesn't do so automatically.</p>"
-      "</BODY></HTML>";
-
+      const html = `<HTML>
+      <HEAD>
+          <script language=\"javascript\" type=\"text/javascript\">
+            function closeWindow() {
+                window.open('','_parent','');
+                window.close();
+            }
+            function delay() {\n
+                setTimeout(\"closeWindow()\", 1000);\n
+            }\n
+          </script>
+      </HEAD>
+      <BODY onload=\"javascript:delay();\">
+              <p>Success! This page can be closed if it doesn't do so automatically.</p>
+      </BODY>
+      </HTML>`;
       res.send(html);
     }
   });

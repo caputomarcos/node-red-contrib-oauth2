@@ -14,12 +14,15 @@
             "client_id": "Client ID",
             "client_secret": "Client Secret",
             "scope": "Scope",
-            "rejectUnauthorized" : "The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.",
-            "rejectUnauthorized_label" : "Reject Unauthorized",
+            "rejectUnauthorized": "The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.",
+            "rejectUnauthorized_label": "Reject Unauthorized",
             "client_credentials_in_body": "Ensure that the client credentials are included in the token request body for authentication purposes.",
-            "client_credentials_in_body_label": "Embedded Credentials"
+            "client_credentials_in_body_label": "Embedded Credentials",
+            "proxy-config": "Proxy Configuration",
+            "use-proxy": "Use proxy",
+            "senderr": "Only send non-2xx responses to Catch node"
         },
-        "placeholder":{
+        "placeholder": {
             "name": "oauth2",
             "access_token_url": "https://github.com/login/oauth/access_token",
             "authorization_endpoint": "https://github.com/login/oauth/authorize",
@@ -30,7 +33,7 @@
             "client_id": "012493af6282be51660dbc8e21a8462e",
             "client_secret": "5621bd4b5a8b09ed31817efb8d54fda2c72bfc1c6968cd4563d83f7cc26f68f6",
             "scope": "scope",
-            "rejectUnauthorized" : "rejectUnauthorized",
+            "rejectUnauthorized": "rejectUnauthorized",
             "headers": "headers"
         },
         "opts": {
