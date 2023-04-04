@@ -82,8 +82,6 @@
   <a class="red-ui-button fa fa-key" id="authorizeButton" href="#" target="_blank"></a>
   <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication"
     style="width:61%;margin-top: -4px;" disabled>
-
-  <!-- <button class="red-ui-button" id="authorizeButton" style="right: 0px; top: 0px;"><i class="fa fa-key"></i> Authorize</button> -->
 </div>
 <!-- node-client_credentials_in_body -->
 <div class="form-row" id="node-client_credentials_in_body">
@@ -172,7 +170,7 @@
         return this.name ? "node_label_italic" : "";
       },
       oneditprepare: function () {
-        var id = this.id;
+        const id = this.id;
 
         var pathname = document.location.pathname;
         if (pathname.slice(-1) != "/") {
@@ -209,8 +207,8 @@
             $("#node-client_id").hide();
             $("#node-client_secret").hide();
             $("#node-scope").hide();
-            $("#node-rejectUnauthorized").hide();
-            $("#node-client_credentials_in_body").hide();
+            $("#node-rejectUnauthorized").show();
+            $("#node-client_credentials_in_body").show();
           } else if ($("#node-input-grant_type").val() === "client_credentials") {
             $("#node-authorization_endpoint").hide();
             $("#node-open_authentication").hide();
@@ -221,7 +219,7 @@
             $("#node-client_secret").show();
             $("#node-scope").show();
             $("#node-rejectUnauthorized").show();
-            $("#node-client_credentials_in_body").hide();
+            $("#node-client_credentials_in_body").show();
           } else if ($("#node-input-grant_type").val() === "password") {
             $("#node-authorization_endpoint").hide();
             $("#node-open_authentication").hide();
@@ -232,7 +230,7 @@
             $("#node-client_secret").show();
             $("#node-scope").show();
             $("#node-rejectUnauthorized").show();
-            $("#node-client_credentials_in_body").hide();
+            $("#node-client_credentials_in_body").show();
           } else if ($("#node-input-grant_type").val() === "authorization_code") {
             $("#node-password_credentials").hide();
             $("#node-open_authentication").show();
@@ -242,11 +240,11 @@
             $("#node-client_id").show();
             $("#node-client_secret").show();
             $("#node-scope").show();
-            $("#node-rejectUnauthorized").hide();
+            $("#node-rejectUnauthorized").show();
             $("#node-client_credentials_in_body").show();
           }
+          RED.tray.resize();
         });
-
 
         function pollCredentials() {
           $.getJSON('oauth2/credentials/' + id, function (data) {
@@ -285,17 +283,7 @@
           if (clientId === "" || clientSecret === "") {
             e.preventDefault();
           }
-          // console.log(`${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}`);
-          // window.open(`${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}`, '_blank');
-          // $.getJSON("oauth/redirect", function(data) {
-          //   console.log(data);
-          // });
-
         });
-        function resizeRule(rule) {
-          var newWidth = rule.width();
-          rule.find('.red-ui-typedInput').typedInput("width", (newWidth - 15) / 2);
-        }
         var headerList = $("#node-input-headers-container").css('min-height', '150px').css('min-width', '450px').editableList({
           addItem: function (container, i, header) {
             var row = $('<div/>').css({
@@ -303,11 +291,11 @@
               whiteSpace: 'nowrap'
             }).appendTo(container);
 
-            var propertyName = $('<input/>', { class: "node-input-header-name", type: "text" })
+            var propertyName = $('<input/>', { class: "node-input-header-name", type: "text", style: "width: 50%" })
               .appendTo(row)
               .typedInput({ types: headerTypes });
 
-            var propertyValue = $('<input/>', { class: "node-input-header-value", type: "text", style: "margin-left: 10px" })
+            var propertyValue = $('<input/>', { class: "node-input-header-value", type: "text", style: "margin-left: 10px; width: 45%;" })
               .appendTo(row)
               .typedInput({
                 types:
@@ -354,15 +342,12 @@
               if (type === 'content-type') {
                 propertyValue.typedInput('types', contentTypes);
               } else {
-                propertyValue.typedInput('types', [{ value: "other", label: "other", icon: "red/images/typedInput/az.png" }]);
+                propertyValue.typedInput('types', [{ value: "other", label: RED._("node-red:httpin.label.other"), hasValue: true, icon: "red/images/typedInput/az.svg" }]);
               }
+              RED.tray.resize();
             });
-
-
-
-            resizeRule(container);
+            RED.tray.resize();
           },
-          resizeItem: resizeRule,
           removable: true
         });
 
@@ -398,14 +383,19 @@
         });
       },
       oneditresize: function (size) {
-        var rows = $("#dialog-form>div:not(.node-input-headers-container-row)");
-        var height = size.height;
-        for (var i = 0; i < rows.length; i++) {
-          height -= $(rows[i]).outerHeight(true);
+        const dlg = $("#dialog-form");
+        const expandRow = dlg.find('.node-input-headers-container-row');
+        let height = dlg.height() - 5;
+        if (expandRow && expandRow.length) {
+          const siblingRows = dlg.find('> .form-row:not(.node-input-headers-container-row)');
+          for (let i = 0; i < siblingRows.size(); i++) {
+            const cr = $(siblingRows[i]);
+            if (cr.is(":visible"))
+              height -= cr.outerHeight(true);
+          }
+          $("#node-input-headers-container").editableList('height', height);
         }
-        var editorRow = $("#dialog-form>div.node-input-headers-container-row");
-        height -= (parseInt(editorRow.css("marginTop")) + parseInt(editorRow.css("marginBottom")));
-        $("#node-input-headers-container").editableList('height', height);
+        RED.tray.resize();
       }
     });
   })();
