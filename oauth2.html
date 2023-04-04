@@ -172,7 +172,7 @@
         return this.name ? "node_label_italic" : "";
       },
       oneditprepare: function () {
-        var id = this.id;
+        const id = this.id;
 
         var pathname = document.location.pathname;
         if (pathname.slice(-1) != "/") {
@@ -245,8 +245,8 @@
             $("#node-rejectUnauthorized").hide();
             $("#node-client_credentials_in_body").show();
           }
+          RED.tray.resize();
         });
-
 
         function pollCredentials() {
           $.getJSON('oauth2/credentials/' + id, function (data) {
@@ -292,10 +292,11 @@
           // });
 
         });
-        function resizeRule(rule) {
-          var newWidth = rule.width();
-          rule.find('.red-ui-typedInput').typedInput("width", (newWidth - 15) / 2);
-        }
+        // function resizeRule(rule) {
+        //   var newWidth = rule.width();
+        //   rule.find('.red-ui-typedInput').typedInput("width", (newWidth - 15) / 2);
+        //   RED.tray.resize();
+        // }
         var headerList = $("#node-input-headers-container").css('min-height', '150px').css('min-width', '450px').editableList({
           addItem: function (container, i, header) {
             var row = $('<div/>').css({
@@ -303,11 +304,11 @@
               whiteSpace: 'nowrap'
             }).appendTo(container);
 
-            var propertyName = $('<input/>', { class: "node-input-header-name", type: "text" })
+            var propertyName = $('<input/>', { class: "node-input-header-name", type: "text", style: "width: 50%" })
               .appendTo(row)
               .typedInput({ types: headerTypes });
 
-            var propertyValue = $('<input/>', { class: "node-input-header-value", type: "text", style: "margin-left: 10px" })
+            var propertyValue = $('<input/>', { class: "node-input-header-value", type: "text", style: "margin-left: 10px; width: 45%;" })
               .appendTo(row)
               .typedInput({
                 types:
@@ -318,7 +319,7 @@
               return ht.value === header.h
             });
             if (matchedType.length === 0) {
-              propertyName.typedInput('type', 'other');
+              propertyName.typedInput('type', 'other'); 100
               propertyName.typedInput('value', header.h);
               propertyValue.typedInput('value', header.v);
             } else {
@@ -354,15 +355,14 @@
               if (type === 'content-type') {
                 propertyValue.typedInput('types', contentTypes);
               } else {
-                propertyValue.typedInput('types', [{ value: "other", label: "other", icon: "red/images/typedInput/az.png" }]);
+                propertyValue.typedInput('types', [{ value: "other", label: RED._("node-red:httpin.label.other"), hasValue: true, icon: "red/images/typedInput/az.svg" }]);
               }
+              RED.tray.resize();
             });
-
-
-
-            resizeRule(container);
+            RED.tray.resize();
+            // resizeRule(this.container);
           },
-          resizeItem: resizeRule,
+          // resizeItem: resizeRule,
           removable: true
         });
 
@@ -398,14 +398,19 @@
         });
       },
       oneditresize: function (size) {
-        var rows = $("#dialog-form>div:not(.node-input-headers-container-row)");
-        var height = size.height;
-        for (var i = 0; i < rows.length; i++) {
-          height -= $(rows[i]).outerHeight(true);
+        const dlg = $("#dialog-form");
+        const expandRow = dlg.find('.node-input-headers-container-row');
+        let height = dlg.height() - 5;
+        if (expandRow && expandRow.length) {
+          const siblingRows = dlg.find('> .form-row:not(.node-input-headers-container-row)');
+          for (let i = 0; i < siblingRows.size(); i++) {
+            const cr = $(siblingRows[i]);
+            if (cr.is(":visible"))
+              height -= cr.outerHeight(true);
+          }
+          $("#node-input-headers-container").editableList('height', height);
         }
-        var editorRow = $("#dialog-form>div.node-input-headers-container-row");
-        height -= (parseInt(editorRow.css("marginTop")) + parseInt(editorRow.css("marginBottom")));
-        $("#node-input-headers-container").editableList('height', height);
+        RED.tray.resize();
       }
     });
   })();
