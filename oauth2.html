@@ -82,8 +82,6 @@
   <a class="red-ui-button fa fa-key" id="authorizeButton" href="#" target="_blank"></a>
   <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication"
     style="width:61%;margin-top: -4px;" disabled>
-
-  <!-- <button class="red-ui-button" id="authorizeButton" style="right: 0px; top: 0px;"><i class="fa fa-key"></i> Authorize</button> -->
 </div>
 <!-- node-client_credentials_in_body -->
 <div class="form-row" id="node-client_credentials_in_body">
@@ -285,18 +283,7 @@
           if (clientId === "" || clientSecret === "") {
             e.preventDefault();
           }
-          // console.log(`${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}`);
-          // window.open(`${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}`, '_blank');
-          // $.getJSON("oauth/redirect", function(data) {
-          //   console.log(data);
-          // });
-
         });
-        // function resizeRule(rule) {
-        //   var newWidth = rule.width();
-        //   rule.find('.red-ui-typedInput').typedInput("width", (newWidth - 15) / 2);
-        //   RED.tray.resize();
-        // }
         var headerList = $("#node-input-headers-container").css('min-height', '150px').css('min-width', '450px').editableList({
           addItem: function (container, i, header) {
             var row = $('<div/>').css({
@@ -360,9 +347,7 @@
               RED.tray.resize();
             });
             RED.tray.resize();
-            // resizeRule(this.container);
           },
-          // resizeItem: resizeRule,
           removable: true
         });
 
