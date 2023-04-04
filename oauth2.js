@@ -1,5 +1,4 @@
 /**
-
  * MIT License
  *
  * Copyright (c) 2019 Marcos Caputo <caputo.marcos@gmail.com>
