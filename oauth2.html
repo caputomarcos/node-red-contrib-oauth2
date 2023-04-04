@@ -122,7 +122,10 @@
     var headerTypes = [
       { value: "content-type", label: "Content-Type", hasValue: false },
       { value: "location", label: "Location", hasValue: false },
-      { value: "other", label: RED._("node-red:httpin.label.other"), hasValue: true, icon: "red/images/typedInput/az.svg" },
+      {
+        value: "other", label: RED._("node-red:httpin.label.other"),
+        hasValue: true, icon: "red/images/typedInput/az.svg"
+      },
     ]
     var contentTypes = [
       { value: "application/json", label: "application/json", hasValue: false },
@@ -132,7 +135,10 @@
       { value: "text/plain", label: "text/plain", hasValue: false },
       { value: "image/gif", label: "image/gif", hasValue: false },
       { value: "image/png", label: "image/png", hasValue: false },
-      { value: "other", label: RED._("node-red:httpin.label.other"), hasValue: true, icon: "red/images/typedInput/az.svg" },
+      {
+        value: "other", label: RED._("node-red:httpin.label.other"),
+        hasValue: true, icon: "red/images/typedInput/az.svg"
+      },
     ];
     RED.nodes.registerType("oauth2", {
       category: 'DevSecOps',
@@ -166,7 +172,7 @@
         return this.name ? "node_label_italic" : "";
       },
       oneditprepare: function () {
-        const id = this.id;
+        var id = this.id;
 
         var pathname = document.location.pathname;
         if (pathname.slice(-1) != "/") {
@@ -239,8 +245,8 @@
             $("#node-rejectUnauthorized").hide();
             $("#node-client_credentials_in_body").show();
           }
-          RED.tray.resize();
         });
+
 
         function pollCredentials() {
           $.getJSON('oauth2/credentials/' + id, function (data) {
@@ -286,11 +292,10 @@
           // });
 
         });
-        // function resizeRule(rule) {
-        //   var newWidth = rule.width();
-        //   rule.find('.red-ui-typedInput').typedInput("width", (newWidth - 15) / 2);
-        //   RED.tray.resize();
-        // }
+        function resizeRule(rule) {
+          var newWidth = rule.width();
+          rule.find('.red-ui-typedInput').typedInput("width", (newWidth - 15) / 2);
+        }
         var headerList = $("#node-input-headers-container").css('min-height', '150px').css('min-width', '450px').editableList({
           addItem: function (container, i, header) {
             var row = $('<div/>').css({
@@ -298,11 +303,11 @@
               whiteSpace: 'nowrap'
             }).appendTo(container);
 
-            var propertyName = $('<input/>', { class: "node-input-header-name", type: "text", style: "width: 50%" })
+            var propertyName = $('<input/>', { class: "node-input-header-name", type: "text" })
               .appendTo(row)
               .typedInput({ types: headerTypes });
 
-            var propertyValue = $('<input/>', { class: "node-input-header-value", type: "text", style: "margin-left: 10px; width: 45%;" })
+            var propertyValue = $('<input/>', { class: "node-input-header-value", type: "text", style: "margin-left: 10px" })
               .appendTo(row)
               .typedInput({
                 types:
@@ -313,7 +318,7 @@
               return ht.value === header.h
             });
             if (matchedType.length === 0) {
-              propertyName.typedInput('type', 'other'); 100
+              propertyName.typedInput('type', 'other');
               propertyName.typedInput('value', header.h);
               propertyValue.typedInput('value', header.v);
             } else {
@@ -349,14 +354,15 @@
               if (type === 'content-type') {
                 propertyValue.typedInput('types', contentTypes);
               } else {
-                propertyValue.typedInput('types', [{ value: "other", label: RED._("node-red:httpin.label.other"), hasValue: true, icon: "red/images/typedInput/az.svg" }]);
+                propertyValue.typedInput('types', [{ value: "other", label: "other", icon: "red/images/typedInput/az.png" }]);
               }
-              RED.tray.resize();
             });
-            RED.tray.resize();
-            // resizeRule(this.container);
+
+
+
+            resizeRule(container);
           },
-          // resizeItem: resizeRule,
+          resizeItem: resizeRule,
           removable: true
         });
 
@@ -392,19 +398,14 @@
         });
       },
       oneditresize: function (size) {
-        const dlg = $("#dialog-form");
-        const expandRow = dlg.find('.node-input-headers-container-row');
-        let height = dlg.height() - 5;
-        if (expandRow && expandRow.length) {
-          const siblingRows = dlg.find('> .form-row:not(.node-input-headers-container-row)');
-          for (let i = 0; i < siblingRows.size(); i++) {
-            const cr = $(siblingRows[i]);
-            if (cr.is(":visible"))
-              height -= cr.outerHeight(true);
-          }
-          $("#node-input-headers-container").editableList('height', height);
+        var rows = $("#dialog-form>div:not(.node-input-headers-container-row)");
+        var height = size.height;
+        for (var i = 0; i < rows.length; i++) {
+          height -= $(rows[i]).outerHeight(true);
         }
-        RED.tray.resize();
+        var editorRow = $("#dialog-form>div.node-input-headers-container-row");
+        height -= (parseInt(editorRow.css("marginTop")) + parseInt(editorRow.css("marginBottom")));
+        $("#node-input-headers-container").editableList('height', height);
       }
     });
   })();
