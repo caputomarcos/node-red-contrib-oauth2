@@ -207,8 +207,8 @@
             $("#node-client_id").hide();
             $("#node-client_secret").hide();
             $("#node-scope").hide();
-            $("#node-rejectUnauthorized").hide();
-            $("#node-client_credentials_in_body").hide();
+            $("#node-rejectUnauthorized").show();
+            $("#node-client_credentials_in_body").show();
           } else if ($("#node-input-grant_type").val() === "client_credentials") {
             $("#node-authorization_endpoint").hide();
             $("#node-open_authentication").hide();
@@ -219,7 +219,7 @@
             $("#node-client_secret").show();
             $("#node-scope").show();
             $("#node-rejectUnauthorized").show();
-            $("#node-client_credentials_in_body").hide();
+            $("#node-client_credentials_in_body").show();
           } else if ($("#node-input-grant_type").val() === "password") {
             $("#node-authorization_endpoint").hide();
             $("#node-open_authentication").hide();
@@ -230,7 +230,7 @@
             $("#node-client_secret").show();
             $("#node-scope").show();
             $("#node-rejectUnauthorized").show();
-            $("#node-client_credentials_in_body").hide();
+            $("#node-client_credentials_in_body").show();
           } else if ($("#node-input-grant_type").val() === "authorization_code") {
             $("#node-password_credentials").hide();
             $("#node-open_authentication").show();
@@ -240,7 +240,7 @@
             $("#node-client_id").show();
             $("#node-client_secret").show();
             $("#node-scope").show();
-            $("#node-rejectUnauthorized").hide();
+            $("#node-rejectUnauthorized").show();
             $("#node-client_credentials_in_body").show();
           }
           RED.tray.resize();
