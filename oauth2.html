@@ -274,7 +274,7 @@
               $("#node-input-open_authentication").val(data.code);
               delete window.configNodeIntervalId;
             } else {
-              window.configNodeIntervalId = window.setTimeout(pollCredentials, 2000);
+              window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
             }
           });
         };
@@ -296,7 +296,7 @@
 
           $(this).attr("href", url);
 
-          window.configNodeIntervalId = window.setTimeout(pollCredentials, 2000);
+          window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
 
         });
         $("#authorizeButton").click(function () {
