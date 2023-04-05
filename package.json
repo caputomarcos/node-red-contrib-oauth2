@@ -22,7 +22,7 @@
     "security"
   ],
   "node-red": {
-    "version": ">=3.0.0",
+    "version": "4.1.8",
     "nodes": {
       "oauth2": "oauth2.js"
     }
