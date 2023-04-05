@@ -191,17 +191,11 @@ module.exports = function (RED) {
               proxyOptions.proxy.password = proxyURL.password;
             }
             this.proxy = proxyOptions.proxy;
-            // //need both incase of http -> https redirect
-            // opts.agent = {
-            //   http: new HttpProxyAgent(proxyOptions),
-            //   https: new HttpsProxyAgent(proxyOptions)
-            // };
-
+            RED.nodes.addCredentials(node.id, proxyOptions.proxy);
           } else {
             node.warn("Bad proxy url: " + prox);
           }
         }
-
         delete msg.oauth2Request;
         // make a post request
         axios.post(options.url, options.form, {
@@ -239,7 +233,8 @@ module.exports = function (RED) {
       accessToken: { type: "password" },
       refreshToken: { type: "password" },
       expireTime: { type: "password" },
-      code: { type: "password" }
+      code: { type: "password" },
+      proxy: { type: "json" },
     }
   });
 
@@ -277,26 +272,47 @@ module.exports = function (RED) {
     }
   });
 
-
-  RED.httpAdmin.get('/oauth2/auth', function (req, res) {
+  RED.httpAdmin.get('/oauth2/auth', async function (req, res) {
     if (!req.query.clientId || !req.query.clientSecret ||
       !req.query.id || !req.query.callback) {
-      res.send(400);
+      res.sendStatus(400);
       return;
     }
+
     const node_id = req.query.id;
     const callback = req.query.callback;
     const redirectUri = req.query.redirectUri;
-    const credentials = JSON.parse(JSON.stringify(req.query, getCircularReplacer()))
+    const credentials = JSON.parse(JSON.stringify(req.query, getCircularReplacer()));
+    const proxy = RED.nodes.getNode(credentials.proxy);
+
+    let proxyOptions;
+    if (proxy) {
+      let match = proxy.url.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
+      if (match) {
+        // let proxyAgent;
+        let proxyURL = new URL(proxy.url);
+        //set username/password to null to stop empty creds header
+        proxyOptions = {
+          protocol: proxyURL.protocol,
+          hostname: proxyURL.hostname,
+          port: proxyURL.port,
+          username: proxyURL.username,
+          password: proxyURL.password
+        };
+      }
+    }
+
     const scope = req.query.scope;
     const csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
 
     credentials.csrfToken = csrfToken;
     credentials.callback = callback;
     credentials.redirectUri = redirectUri;
+
     res.cookie('csrf', csrfToken);
+
     var l = url.parse(req.query.authorizationEndpoint, true);
-    res.redirect(url.format({
+    const redirectUrl = url.format({
       protocol: l.protocol.replace(':', ''),
       hostname: l.hostname,
       port: l.port,
@@ -308,8 +324,19 @@ module.exports = function (RED) {
         scope: scope,
         response_type: 'code'
       }
-    }));
-    RED.nodes.addCredentials(node_id, credentials);
+    });
+
+    try {
+      const response = await axios.get(redirectUrl, {
+        proxy: proxyOptions
+      });
+      res.redirect(response.request.res.responseUrl);
+
+      RED.nodes.addCredentials(node_id, credentials);
+    } catch (error) {
+      console.error(error);
+      res.sendStatus(500);
+    }
   });
 
   RED.httpAdmin.get('/oauth2/auth/callback', function (req, res) {
