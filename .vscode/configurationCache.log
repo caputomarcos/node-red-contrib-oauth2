@@ -1,1 +1,0 @@
-{"buildTargets":["check-release","check-status","help","major-release","micro-release","minor-release","release","tag","tag-major-release","tag-micro-release","tag-minor-release","version"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
