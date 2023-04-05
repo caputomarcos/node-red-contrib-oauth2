@@ -1,23 +1,19 @@
 #!/bin/bash
 
-# Checks if there are any changes in the repository
 function hasChanges() {
 	test -n "$(git status -s .)"
 }
 
-# Gets the release version from .release file
 function getRelease() {
 	if [[ -f .release ]]; then
     	awk -F= '/release/{print $2}' .release
 	fi
 }
 
-# Gets the base tag from .release file
 function getBaseTag() {
 	sed -n -e "s/tag=\\(.*\\)$(getRelease)\$/\\1/p" .release
 }
 
-# Gets the tag based on release and optional tag suffix
 function getTag() {
 	if [[ -z "$1" ]] ; then
 		awk -F= '/tag/{print $2}' .release
@@ -26,16 +22,11 @@ function getTag() {
 	fi
 }
 
-# Sets the release version in package.json and updates tag and release in .release file
-# Only the first version tag of package.json is changed
 function setRelease() {
 	if [[ -n "$1" ]] ; then
-	  	# Uses sed to replace the version in package.json
-		sed -i.x -e '0,/"version": "[^"]*"/s//"version": "'$(getRelease)'"/' package.json
-		# Updates tag and release in .release file
+	  	sed -i.x -e '0,/"version": "[^"]*"/s//"version": "'$(getRelease)'"/' package.json
 		sed -i.x -e "s/tag=.*/tag=$(getTag "$1")/" .release
 		sed -i.x -e "s/release=.*/release=$1/g" .release
-		# Removes backup files created by sed
 		rm -f .release.x
 		rm -f package.json.x
 	else
@@ -44,19 +35,16 @@ function setRelease() {
 	fi
 }
 
-# Checks if tag exists in git
 function tagExists() {
 	tag=${1:-$(getTag)}
 	test -n "$tag" && test -n "$(git tag | grep "^$tag\$")"
 }
 
-# Checks if there are differences between the current state and the release tag
 function differsFromRelease() {
 	tag=$(getTag)
 	! tagExists "$tag" || test -n "$(git diff --shortstat -r "$tag" .)"
 }
 
-# Gets the version based on release, commit hash, and changes
 function getVersion() {
 	result=$(getRelease)
 
@@ -70,7 +58,6 @@ function getVersion() {
 	echo "$result"
 }
 
-# Gets the next micro level version based on current release
 function nextMicroLevel() {
 	version=${1:-$(getRelease)}
 	major_and_minor=$(echo "$version" | cut -d. -f1,2)
@@ -79,7 +66,6 @@ function nextMicroLevel() {
 	echo "$version"
 }
 
-# Gets the next minor level version based on current release
 function nextMinorLevel() {
 	version=${1:-$(getRelease)}
 	major=$(echo "$version" | cut -d. -f1);
@@ -88,52 +74,9 @@ function nextMinorLevel() {
 	echo "$version"
 }
 
-# Gets the next major level version based on current release
 function nextMajorLevel() {
 	version=${1:-$(getRelease)}
 	major=$(echo "$version" | cut -d. -f1);
-	version=$(printf "%d.0.0" $((major + 1)));
+	version=$(printf "%d.0.0" $((major + 1)))
 	echo "$version"
 }
-
-# Prompts the user for the version and updates the release tag and package.json
-function promptAndSetVersion() {
-	echo "Enter version (current: $(getRelease)): "
-	read version
-
-	setRelease "$version"
-}
-
-# # Creates a new tag and pushes it to git
-# function createTag() {
-# 	tag=${1:-$(getTag)}
-# 	git tag "$tag" -m "Release $tag"
-# 	git push --tags
-# }
-
-# # Main script
-# case "$1" in
-# 	prompt)
-# 		promptAndSetVersion
-# 		;;
-# 	micro)
-# 		setRelease "$(nextMicroLevel)"
-# 		createTag
-# 		;;
-# 	minor)
-# 		setRelease "$(nextMinorLevel)"
-# 		createTag
-# 		;;
-# 	major)
-# 		setRelease "$(nextMajorLevel)"
-# 		createTag
-# 		;;
-# 	version)
-# 		setRelease "$2"
-# 		createTag
-# 		;;
-# 	*)
-# 		echo "Invalid argument. Usage: release.sh [prompt|micro|minor|major|version <version>]"
-# 		exit 1
-# 		;;
-# esac
