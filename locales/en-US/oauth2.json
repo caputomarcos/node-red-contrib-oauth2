@@ -27,7 +27,7 @@
             "access_token_url": "https://github.com/login/oauth/access_token",
             "authorization_endpoint": "https://github.com/login/oauth/authorize",
             "redirect_uri": "/oauth2/redirect",
-            "open_authentication": "93af6282be5",
+            "open_authentication": "1b897416-3de3-4631-a0e9-7f7431e1a959",
             "username": "admin",
             "password": "admin",
             "client_id": "012493af6282be51660dbc8e21a8462e",
