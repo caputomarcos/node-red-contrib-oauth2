@@ -104,36 +104,36 @@ function promptAndSetVersion() {
 	setRelease "$version"
 }
 
-# Creates a new tag and pushes it to git
-function createTag() {
-	tag=${1:-$(getTag)}
-	git tag "$tag" -m "Release $tag"
-	git push --tags
-}
+# # Creates a new tag and pushes it to git
+# function createTag() {
+# 	tag=${1:-$(getTag)}
+# 	git tag "$tag" -m "Release $tag"
+# 	git push --tags
+# }
 
-# Main script
-case "$1" in
-	prompt)
-		promptAndSetVersion
-		;;
-	micro)
-		setRelease "$(nextMicroLevel)"
-		createTag
-		;;
-	minor)
-		setRelease "$(nextMinorLevel)"
-		createTag
-		;;
-	major)
-		setRelease "$(nextMajorLevel)"
-		createTag
-		;;
-	version)
-		setRelease "$2"
-		createTag
-		;;
-	*)
-		echo "Invalid argument. Usage: release.sh [prompt|micro|minor|major|version <version>]"
-		exit 1
-		;;
-esac
+# # Main script
+# case "$1" in
+# 	prompt)
+# 		promptAndSetVersion
+# 		;;
+# 	micro)
+# 		setRelease "$(nextMicroLevel)"
+# 		createTag
+# 		;;
+# 	minor)
+# 		setRelease "$(nextMinorLevel)"
+# 		createTag
+# 		;;
+# 	major)
+# 		setRelease "$(nextMajorLevel)"
+# 		createTag
+# 		;;
+# 	version)
+# 		setRelease "$2"
+# 		createTag
+# 		;;
+# 	*)
+# 		echo "Invalid argument. Usage: release.sh [prompt|micro|minor|major|version <version>]"
+# 		exit 1
+# 		;;
+# esac
