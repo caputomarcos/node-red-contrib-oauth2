@@ -24,9 +24,9 @@ function getTag() {
 
 function setRelease() {
 	if [[ -n "$1" ]] ; then
-		sed -i.x -e '0,/"version": "[^"]*"/s//"version": "'$(getRelease)'"/' package.json
 		sed -i.x -e "s/tag=.*/tag=$(getTag "$1")/" .release
 		sed -i.x -e "s/release=.*/release=$1/g" .release
+		sed -i.x -e '0,/"version": "[^"]*"/s//"version": "'$1'"/' package.json
 		rm -f .release.x
 		rm -f package.json.x
 	else
