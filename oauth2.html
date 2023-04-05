@@ -271,7 +271,6 @@
         function pollCredentials() {
           $.getJSON('oauth2/credentials/' + id, function (data) {
             if (data) {
-              console.log(data);
               $("#node-input-open_authentication").val(data.code);
               delete window.configNodeIntervalId;
             } else {
@@ -440,7 +439,6 @@
           }
           $("#node-input-headers-container").editableList('height', height);
         }
-        RED.tray.resize();
       }
     });
   })();

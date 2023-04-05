@@ -334,7 +334,6 @@ module.exports = function (RED) {
 
       RED.nodes.addCredentials(node_id, credentials);
     } catch (error) {
-      console.error(error);
       res.sendStatus(500);
     }
   });
