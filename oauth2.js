@@ -24,7 +24,6 @@
  **/
 
 module.exports = function (RED) {
-
   "use strict";
 
   // require any external libraries we may need....
@@ -119,7 +118,7 @@ module.exports = function (RED) {
        * @param {function} Send - The callback function for sending messages to next nodes.
        * @param {function} Done - The callback function to end the node's processing.
        */
-      this.on("input", function (msg, Send, Done) {
+      this.on("input", async function (msg, Send, Done) {
         // generate the options for the request
         let options = {};
         if (node.grant_type === "set_by_credentials") {
@@ -179,7 +178,7 @@ module.exports = function (RED) {
               options.form.client_secret = node.client_secret;
             }
 
-            const credentials = RED.nodes.getCredentials(this.id);
+            const credentials = RED.nodes.getCredentials(node.id);
             options.form.code = credentials.code;
             options.form.redirect_uri = credentials.redirectUri;
           }
@@ -194,18 +193,18 @@ module.exports = function (RED) {
           }
         }
 
-        if (this.noprox) {
-          for (let i = 0; i < this.noprox.length; i += 1) {
-            if (url.indexOf(this.noprox[i]) !== -1) {
-              this.noproxy = true;
+        if (node.noprox) {
+          for (let i = 0; i < node.noprox.length; i += 1) {
+            if (url.indexOf(node.noprox[i]) !== -1) {
+              node.noproxy = true;
             }
           }
         }
-        if (this.prox && !this.noproxy) {
-          let match = this.prox.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
+        if (node.prox && !node.noproxy) {
+          let match = node.prox.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
           if (match) {
             // let proxyAgent;
-            let proxyURL = new URL(this.prox);
+            let proxyURL = new URL(node.prox);
             //set username/password to null to stop empty creds header
             let proxyOptions = {
               proxy: {
@@ -231,7 +230,7 @@ module.exports = function (RED) {
               proxyOptions.proxy.username = proxyURL.username;
               proxyOptions.proxy.password = proxyURL.password;
             }
-            this.proxy = proxyOptions.proxy;
+            node.proxy = proxyOptions.proxy;
             RED.nodes.addCredentials(node.id, proxyOptions.proxy);
           } else {
             node.warn("Bad proxy url: " + prox);
@@ -239,14 +238,17 @@ module.exports = function (RED) {
         }
         delete msg.oauth2Request;
         // make a post request
-        axios
-          .post(options.url, options.form, {
+        const Post = () => {
+          const response = axios.post(options.url, options.form, {
             headers: options.headers,
-            proxy: this.proxy,
+            proxy: node.proxy,
             httpsAgent: node.rejectUnauthorized
               ? new https.Agent({ rejectUnauthorized: true })
               : new https.Agent({ rejectUnauthorized: false }),
-          })
+          });
+          return response;
+        };
+        Post()
           .then((response) => {
             msg[node.container] = response.data || {};
             if (response.status === 200) {
@@ -274,7 +276,7 @@ module.exports = function (RED) {
               shape: "dot",
               text: `ERR ${error.code}`,
             });
-            if (!this.sendErrorsToCatch) {
+            if (!node.sendErrorsToCatch) {
               Send(msg);
             }
             Done();
@@ -376,9 +378,7 @@ module.exports = function (RED) {
     if (proxy) {
       let match = proxy.url.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
       if (match) {
-        // let proxyAgent;
         let proxyURL = new URL(proxy.url);
-        //set username/password to null to stop empty creds header
         proxyOptions = {
           protocol: proxyURL.protocol,
           hostname: proxyURL.hostname,
