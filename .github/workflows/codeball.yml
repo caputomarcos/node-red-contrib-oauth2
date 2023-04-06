@@ -1,19 +1,136 @@
-name: Codeball
-on:
-  pull_request: {}
-  pull_request_review_comment:
-    types: [created, edited]
+# See https://github.com/sturdy-dev/codeball-action for more information of how to use this action
+name: Codeball AI Code Review
+description: AI Code Review – Codeball approves Pull Requests that a human would have approved. Wait less for review, save time and money.
 
-jobs:
-  codeball_job:
-    runs-on: ubuntu-latest
-    name: Codeball
-    steps:
-      - name: Codeball
-        uses: sturdy-dev/codeball-action@v2
-        with:
-          # For all configuration options see https://github.com/sturdy-dev/codeball-action/blob/v2/action.yml
-          approvePullRequests: "true"
-          labelPullRequestsWhenApproved: "true"
-          labelPullRequestsWhenReviewNeeded: "false"
-          failJobsWhenReviewNeeded: "false"
+author: Sturdy
+branding:
+  icon: check
+  color: orange
+
+inputs:
+  approvePullRequests:
+    description: 'If "true", the action will submit an approving review if the Codeball AI approves the contribution'
+    default: "true"
+    required: false
+
+  labelPullRequestsWhenApproved:
+    description: 'If "true", the action will add `codeball:approved` label to the PR if the Codeball AI confidence is above the configured approve threshold'
+    default: "true"
+    required: false
+
+  labelPullRequestsWhenReviewNeeded:
+    description: 'If "true", the action will add `codeball:needs-review` label to the PR if the Codeball AI confidence is between the "approve" and "careful" thresholds'
+    default: "false"
+    required: false
+
+  labelPullRequestsWhenCarefulReviewNeeded:
+    description: 'If "true", the action will add `codeball:needs-careful-review` label to the PR if the Codeball AI confidence is below the configured careful threshold'
+    default: "true"
+    required: false
+
+  approveThreshold:
+    description: 'The threshold to use for "approving" (greater than or equal to). A number between 0 and 1. Must be specified with 3 decimals.'
+    default: "0.935"
+    required: false
+
+  carefulReviewThreshold:
+    description: 'The threshold to use for "careful review" actions (less than). A number between 0 and 1. Must be specified with 3 decimals.'
+    default: "0.300"
+    required: false
+
+  failJobsWhenReviewNeeded:
+    description: 'If "true", the action will exit with status code 1 if the Codeball AI does not approve the contribution'
+    default: "false"
+    required: false
+
+  codeSuggestionsFromComments:
+    description: 'If "true", Codeball will read generate code suggestions from comments made in Pull Requests (beta)'
+    default: "false"
+    required: false
+
+  GITHUB_TOKEN:
+    description: 'Default to {{ github.token }}. This is the default GitHub token available to actions and is used to run Codeball and to post the result. The default token permissions (https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions) work fine.'
+    default: '${{ github.token }}'
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+
+    # Start a new Codeball review job
+    # This step is asynchronous and will return a job id
+    - name: Trigger Codeball
+      id: codeball_baller
+      uses: sturdy-dev/codeball-action/baller@v2
+      with:
+        approveThreshold: ${{ inputs.approveThreshold }}
+        carefulReviewThreshold: ${{ inputs.carefulReviewThreshold }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+    # Wait for Codeball to return the status
+    - name: Get Status
+      id: codeball_status
+      uses: sturdy-dev/codeball-action/status@v2
+      with:
+        codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
+
+    # If the Codeball confidence is high, add the "codeball:approved" label
+    - name: Label Approved
+      uses: sturdy-dev/codeball-action/labeler@v2
+      if: ${{ steps.codeball_status.outputs.jobType == 'contribution' && inputs.labelPullRequestsWhenApproved == 'true' && steps.codeball_status.outputs.confidence >= inputs.approveThreshold  }}
+      with:
+        name: "codeball:approved"
+        color: "86efac" # green
+        remove-label-names: "codeball:needs-review,codeball:needs-careful-review"
+        codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+
+    # If the Codeball confidence is medium, add the "codeball:needs-review" label
+    - name: Label Needs Review
+      uses: sturdy-dev/codeball-action/labeler@v2
+      if: ${{ steps.codeball_status.outputs.jobType == 'contribution' && inputs.labelPullRequestsWhenReviewNeeded == 'true' && steps.codeball_status.outputs.confidence >= inputs.carefulReviewThreshold && steps.codeball_status.outputs.confidence < inputs.approveThreshold  }}
+      with:
+        name: "codeball:needs-review"
+        color: "bfdbfe" # blue
+        remove-label-names: "codeball:approved,codeball:needs-careful-review"
+        codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+
+    # If the Codeball confidence is low, add the "codeball:needs-careful-review" label
+    - name: Label Needs Careful Review
+      uses: sturdy-dev/codeball-action/labeler@v2
+      if: ${{ steps.codeball_status.outputs.jobType == 'contribution' && inputs.labelPullRequestsWhenCarefulReviewNeeded == 'true' && steps.codeball_status.outputs.confidence < inputs.carefulReviewThreshold }}
+      with:
+        name: "codeball:needs-careful-review"
+        color: "fde68a" # amber
+        remove-label-names: "codeball:approved,codeball:needs-review"
+        codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+
+    # If Codeball approved the contribution, approve the PR
+    - name: Approve PR
+      uses: sturdy-dev/codeball-action/approver@v2
+      if: ${{ steps.codeball_status.outputs.jobType == 'contribution' && inputs.approvePullRequests == 'true' }}
+      with:
+        codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
+        approve: ${{ steps.codeball_status.outputs.confidence >= inputs.approveThreshold }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+    # If Codeball have code suggestions, add suggestions as comments
+    - name: Add Suggestions
+      uses: sturdy-dev/codeball-action/suggester@v2
+      if: ${{ steps.codeball_status.outputs.suggested == 'true' && inputs.codeSuggestionsFromComments == 'true' && steps.codeball_status.outputs.jobType == 'comment' }}
+      with:
+        codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+    # If Codeball didn't approve the contribution, fail the job.
+    - name: Fail Job
+      shell: bash
+      if: ${{ steps.codeball_status.outputs.approved == 'false' && inputs.failJobsWhenReviewNeeded == 'true' && steps.codeball_status.outputs.jobType == 'contribution' }}
+      run: |
+        echo "Not approved"
+        exit 1
