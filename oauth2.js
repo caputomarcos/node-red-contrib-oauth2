@@ -242,9 +242,9 @@ module.exports = function (RED) {
           const response = axios.post(options.url, options.form, {
             headers: options.headers,
             proxy: node.proxy,
-            httpsAgent: node.rejectUnauthorized
-              ? new https.Agent({ rejectUnauthorized: true })
-              : new https.Agent({ rejectUnauthorized: false }),
+            httpsAgent: new https.Agent({
+              rejectUnauthorized: node.rejectUnauthorized,
+            }),
           });
           return response;
         };
