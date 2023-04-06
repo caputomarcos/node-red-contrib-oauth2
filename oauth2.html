@@ -289,11 +289,11 @@
 
           var url;
           if (authorizationEndpoint) {
-            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scope=${scope}&callback=${encodeURIComponent(callback)}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${redirectUri}&proxy=${proxy}`;
+            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&callback=${encodeURIComponent(callback)}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${encodeURIComponent(redirectUri)}&proxy=${encodeURIComponent(proxy)}`;
           } else {
-            url = `oauth2/auth?id=${id}&clientId=${clientId}&clientSecret=${clientSecret}&scope=${scope}&callback=${encodeURIComponent(callback)}&proxy=${proxy}`;
+            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&callback=${encodeURIComponent(callback)}&proxy=${encodeURIComponent(proxy)}`;
           }
-
+          console.log(url);
           $(this).attr("href", url);
 
           window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
