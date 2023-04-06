@@ -24,6 +24,7 @@
         },
         "placeholder": {
             "name": "oauth2",
+            "container": "oauth2Response",
             "access_token_url": "https://github.com/login/oauth/access_token",
             "authorization_endpoint": "https://github.com/login/oauth/authorize",
             "redirect_uri": "/oauth2/redirect",
