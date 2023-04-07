@@ -76,6 +76,11 @@ This sample used the [go-oauth2-server](https://github.com/RichardKnop/go-oauth2
 | embedded credentials           | boolean        | This specifies whether to include the client credentials in the token request body for authentication purposes.       |
 | reject Unauthorized            | boolean        | This specifies whether to reject unauthorized requests. The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it. |
 
+**`Note:`** 
+
+> * If running behind a proxy, the standard `http_proxy=...` environment variable should be set and `Node-RED restarted, or use Proxy Configuration`. If Proxy Configuration was set, the configuration take precedence over environment variable.
+
+> * The OAuth redirect URL is set by default to `/oauth2/redirect`, which is the endpoint responsible for receiving the authorization `code`.
 
 # Outputs
 

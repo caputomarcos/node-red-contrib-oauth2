@@ -179,8 +179,10 @@ module.exports = function (RED) {
             }
 
             const credentials = RED.nodes.getCredentials(node.id);
-            options.form.code = credentials.code;
-            options.form.redirect_uri = credentials.redirectUri;
+            if (credentials) {
+              options.form.code = credentials.code;
+              options.form.redirect_uri = credentials.redirectUri;
+            }
           }
         }
 
@@ -311,10 +313,14 @@ module.exports = function (RED) {
    */
   RED.httpAdmin.get("/oauth2/credentials/:token", function (req, res) {
     const credentials = RED.nodes.getCredentials(req.params.token);
-    res.json({
-      code: credentials.code,
-      redirect_uri: credentials.redirect_uri,
-    });
+    if (credentials) {
+      res.json({
+        code: credentials.code,
+        redirect_uri: credentials.redirect_uri,
+      });
+    } else {
+      res.send("oauth2.error.no-credentials");
+    }
   });
 
   /**
@@ -327,10 +333,10 @@ module.exports = function (RED) {
       const state = req.query.state.split(":");
       const node_id = state[0];
       const credentials = RED.nodes.getCredentials(node_id);
-      credentials.code = req.query.code;
-      RED.nodes.addCredentials(node_id, credentials);
-
-      const html = `<HTML>
+      if (credentials) {
+        credentials.code = req.query.code;
+        RED.nodes.addCredentials(node_id, credentials);
+        const html = `<HTML>
       <HEAD>
           <script language=\"javascript\" type=\"text/javascript\">
             function closeWindow() {
@@ -346,7 +352,10 @@ module.exports = function (RED) {
               <p>Success! This page can be closed if it doesn't do so automatically.</p>
       </BODY>
       </HTML>`;
-      res.send(html);
+        res.send(html);
+      }
+    } else {
+      res.send("oauth2.error.no-credentials");
     }
   });
 
@@ -402,7 +411,7 @@ module.exports = function (RED) {
 
     res.cookie("csrf", csrfToken);
 
-    var l = url.parse(req.query.authorizationEndpoint, true);
+    const l = url.parse(req.query.authorizationEndpoint, true);
     const redirectUrl = url.format({
       protocol: l.protocol.replace(":", ""),
       hostname: l.hostname,
@@ -422,10 +431,9 @@ module.exports = function (RED) {
         proxy: proxyOptions,
       });
       res.redirect(response.request.res.responseUrl);
-
       RED.nodes.addCredentials(node_id, credentials);
     } catch (error) {
-      res.sendStatus(500);
+      res.sendStatus(404);
     }
   });
 
@@ -441,9 +449,9 @@ module.exports = function (RED) {
         description: req.query.error_description,
       });
     }
-    var state = req.query.state.split(":");
-    var node_id = state[0];
-    var credentials = RED.nodes.getCredentials(node_id);
+    const state = req.query.state.split(":");
+    const node_id = state[0];
+    const credentials = RED.nodes.getCredentials(node_id);
     if (!credentials || !credentials.clientId || !credentials.clientSecret) {
       return res.send("oauth2.error.no-credentials");
     }

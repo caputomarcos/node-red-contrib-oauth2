@@ -47,12 +47,18 @@ The `oauth2` Node-RED node enables `OAuth2 authentication` and provides an `acce
 
 : use proxy (boolean)                                 :  This specifies whether to use a proxy or not.
 * use proxy: `true` 
-: use proxy(Proxy Configuration) (object)             :  This specifies the configuration for the proxy.
+: Proxy Configuration (object)                        :  This specifies the configuration for the proxy.
 
 : only send non-2xx responses to catch node (boolean) :  This specifies whether to only catch non-2xx responses.
 : embedded credentials (boolean)                      :  This specifies whether to include the client credentials in the token request body for authentication purposes.
 : reject Unauthorized (boolean)                       :  This specifies whether to reject unauthorized requests. The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.
 
+
+**`Note:`** 
+
+> * If running behind a proxy, the standard `http_proxy=...` environment variable should be set and `Node-RED restarted, or use Proxy Configuration`. If Proxy Configuration was set, the configuration take precedence over environment variable.
+
+> * The OAuth redirect URL is set by default to `/oauth2/redirect`, which is the endpoint responsible for receiving the authorization `code`.
 
 ### Outputs
 
