@@ -34,7 +34,7 @@ $ cd ~/.node-red
 $ npm install node-red-contrib-oauth2
 ```
 
-# Forms
+# Svelte Form
 
 
 ![236672731-4f288236-147e-4a3a-b5e9-490645568e01](https://user-images.githubusercontent.com/3945941/236673031-76a23e01-9276-4ef5-9a66-432d054f5cc9.png)
