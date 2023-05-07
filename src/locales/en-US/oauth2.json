@@ -11,11 +11,13 @@
     "accessTokenUrl": "Access Token URL",
     "code": "Code",
     "scope": "Scope",
+    "credentials": "Credentials",
     "clientSecret": "Client Secret",
     "authorizationEndpoint": "Authorization Endpoint",
     "password": "Password",
     "userName": "User Name",
-    "clientId": "Client Id"
+    "clientId": "Client Id",
+    "headers": "Headers"
   },
   "placeholder": {
     "name": "Here could stand your individual node name. E.g. OAuth2",

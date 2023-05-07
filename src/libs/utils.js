@@ -19,6 +19,8 @@ const createBackwardCompatible = (obj) => {
   if (typeof obj.keepAuth === 'undefined') obj.keepAuth = false 
   if (typeof obj.rejectUnauthorized === 'undefined') obj.rejectUnauthorized = false
   if (typeof obj.clientCredentialsInBody === 'undefined') obj.clientCredentialsInBody = false 
+  if (typeof obj.headers === 'undefined') obj.headers = [ { key: "favicon", value: "", type: "str" }] 
+
   if (typeof obj.showBanner === 'undefined') obj.showBanner = false
   if (typeof obj.disableInput === 'undefined') obj.disableInput = false 
 

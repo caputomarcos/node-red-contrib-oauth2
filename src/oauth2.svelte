@@ -55,6 +55,7 @@
         label: "label.clientCredentialsInBody",
         icon: "lock",
       },
+      headers: { value: [{key: "", value: "", type: "str"}], label: "label.headers" },
 
       disableInput: {
         value: false,
@@ -110,19 +111,27 @@
     TabContent,
     Collapsible,
     Group,
+    EditableList,
+    Row,
+    TypedInput
   } from "svelte-integration-red/components";
   import Advanced from "./components/Advanced.svelte";
   import General from "./components/General.svelte";
   import Credentials from "./components/Credentials.svelte";
   import { createBackwardCompatible } from "./libs/utils.js";
-
+  import Assembly from "carbon-icons-svelte/lib/Assembly.svelte";
   createBackwardCompatible(node);
 
-  node.internalErrors.readUrl = true;
+  node.internalErrors.readUrl = false;
 
   let tabs = { general: "General", advanced: "Advanced" };
 
   export let data = { error: "Error" };
+
+  const addHeaders = () => {
+    node.headers.push({ key: "", value: "", type: "str"})
+    node.headers = node.headers
+  }
 </script>
 
 {#if data.error}
@@ -132,12 +141,30 @@
   </Callout>
 {/if}
 
+<Assembly size={32}/>
 <TabbedPane bind:tabs>
   <TabContent tab="general">
     <General bind:node bind:data />
-    <Collapsible {node} indented={false} icon="key" label="Credentials">
+    <Collapsible {node} indented={false} icon="key" label="label.credentials">
       <Credentials bind:node bind:data />
     </Collapsible>
+    {#if node.headers}
+    <Collapsible indented={false} label="Headers" icon="list">
+      <Group clazz="paddingBottom">
+      <EditableList id="headersList" sortable removable addButton label="Headers" icon="database"  bind:elements={node.headers} let:index on:add={addHeaders} > 
+        <Row>
+          <Input inline bind:value={node.headers[index].key} placeholder="key" />
+            <TypedInput inline value={node.headers[index].value} type={node.headers[index].type} types={[ "str", "num", "bool", "json", "env"]} placeholder="value"
+              on:change={(e) => {
+                node.headers[index].type = e.detail.type
+                node.headers[index].value = e.detail.value
+              }}
+            />
+        </Row>
+      </EditableList>
+      </Group>
+    </Collapsible>
+    {/if}    
   </TabContent>
   <TabContent tab="advanced">
     <Advanced bind:node />

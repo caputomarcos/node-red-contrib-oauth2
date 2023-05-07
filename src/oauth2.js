@@ -29,27 +29,35 @@ module.exports = function (RED) {
       };
 
       if (config.headers) {
-        for (let h in config.headers) {
-          if (config.headers[h] && !options.headers.hasOwnProperty(h)) {
-            options.headers[h] = config.headers[h];
+        options.headers = Object.keys(config.headers).reduce((acc, h) => {
+          if (config.headers[h].key && !options.headers[config.headers[h].key]) {
+            acc[config.headers[h].key] = config.headers[h].value;
           }
-        }
+          return acc;
+        }, options.headers || {});
       }
-
+      
       switch (config.grantType) {
         case "oauth2Request": {
           options.headers.authorization = `Basic ${Buffer.from(`${msg.oauth2Request.credentials.clientId}:${msg.oauth2Request.credentials.clientSecret}`).toString("base64")}`;
           if (msg.oauth2Request.headers) {
-            for (let h in msg.oauth2Request.headers) {
-              if (msg.oauth2Request.headers[h] && !options.headers.hasOwnProperty(h)) {
-                options.headers[h] = msg.oauth2Request.headers[h];
+            options.headers = Object.keys(msg.oauth2Request.headers).reduce((acc, h) => {
+              if (msg.oauth2Request.headers[h] && !options.headers[h]) {
+                acc[h] = msg.oauth2Request.headers[h];
               }
-            }
+              return acc;
+            }, options.headers || {});
           }
-          options.rejectUnauthorized = msg.oauth2Request?.rejectUnauthorized;
-          options.form.grantType = msg.oauth2Request.credentials.grantType;
-          options.form.scope = msg.oauth2Request.credentials.scope;
-          console.log(`${msg.oauth2Request.credentials.grantType}: ${options}`)
+          
+          if (msg.oauth2Request){
+            for (let params in msg.oauth2Request){
+              console.log(params)
+            }
+            options.rejectUnauthorized = msg.oauth2Request.rejectUnauthorized;
+            options.form.grantType = msg.oauth2Request.credentials.grantType;
+            options.form.scope = msg.oauth2Request.credentials.scope;
+            console.log(`${msg.oauth2Request.credentials.grantType}: ${options}`)
+          }
           break;
         }
         // case "clientCredentials":{
@@ -82,6 +90,7 @@ module.exports = function (RED) {
         RED.nodes.addCredentials(node.id, credentials);
       }
 
+      // eslint-disable-next-line no-unused-vars
       const sendError = (e) => {
         node.status({ fill: "red", shape: "dot", text: "Error" });
         let errorMsg = e.message;

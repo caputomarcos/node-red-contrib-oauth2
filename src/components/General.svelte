@@ -1,8 +1,8 @@
 <script>
   export let node
   import { Button, Callout, Collapsible, Group, Input, Row, Select, TypedInput } from 'svelte-integration-red/components'
+
   // import { createApi } from '../libs/getnetHtmlFunctions.js'
-  
   const errorHandlingOptions = ['Standard', 'other output', 'throw exception']
   // const getApiFromUrl = () => {
   //   createApi(node, data).then(() => {
@@ -28,7 +28,7 @@
 	 * https://svelte.dev/tutorial/reactive-statements
 	 */
 	$: contentTypes = [...['msg'], ...testTypes]
-
+  
 </script>
 
 {#if node.showBanner}
