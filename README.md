@@ -1,7 +1,7 @@
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=FLB35ANBK99ZA)
  
 
-<img src="https://github.com/caputomarcos/node-red-contrib-oauth2/blob/Rel6.0.0-Svelte/icons/oauth2.svg" width="128" height="128">
+<img src="src/icons/oauth2.svg" width="128" height="128">
 
   node-red-contrib-oauth2
   =================
