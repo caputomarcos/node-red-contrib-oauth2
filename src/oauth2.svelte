@@ -134,11 +134,13 @@
   }
 </script>
 
-{#if data.error}
-  <Callout type="error">
-    <span slot="header">Error</span>
-    {data.error}
-  </Callout>
+{#if node.internalErrors.readUrl}
+  {#if data.error}
+    <Callout type="error">
+      <span slot="header">Error</span>
+      {data.error}
+    </Callout>
+  {/if}
 {/if}
 
 <Assembly size={32}/>

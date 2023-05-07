@@ -1213,7 +1213,7 @@ function create_else_block$4(ctx) {
 	let current;
 	let mounted;
 	let dispose;
-	let if_block = /*indented*/ ctx[2] && create_if_block_2$8(ctx);
+	let if_block = /*indented*/ ctx[2] && create_if_block_2$9(ctx);
 	const default_slot_template = /*#slots*/ ctx[9].default;
 	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[8], null);
 
@@ -1257,7 +1257,7 @@ function create_else_block$4(ctx) {
 				if (if_block) {
 					if_block.p(ctx, dirty);
 				} else {
-					if_block = create_if_block_2$8(ctx);
+					if_block = create_if_block_2$9(ctx);
 					if_block.c();
 					if_block.m(div, t);
 				}
@@ -1439,7 +1439,7 @@ function create_if_block$h(ctx) {
 }
 
 // (55:4) {#if indented}
-function create_if_block_2$8(ctx) {
+function create_if_block_2$9(ctx) {
 	let label;
 
 	return {
@@ -2110,7 +2110,7 @@ function create_if_block$f(ctx) {
 }
 
 // (149:6) {#if $$slots.header}
-function create_if_block_2$7(ctx) {
+function create_if_block_2$8(ctx) {
 	let h2;
 	let current;
 	const header_slot_template = /*#slots*/ ctx[13].header;
@@ -2217,7 +2217,7 @@ function create_default_slot$a(ctx) {
 	let t2;
 	let if_block1_anchor;
 	let current;
-	let if_block0 = /*$$slots*/ ctx[11].header && create_if_block_2$7(ctx);
+	let if_block0 = /*$$slots*/ ctx[11].header && create_if_block_2$8(ctx);
 	const default_slot_template = /*#slots*/ ctx[13].default;
 	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[15], null);
 	let if_block1 = /*closeable*/ ctx[1] && create_if_block_1$a(ctx);
@@ -2269,7 +2269,7 @@ function create_default_slot$a(ctx) {
 						transition_in(if_block0, 1);
 					}
 				} else {
-					if_block0 = create_if_block_2$7(ctx);
+					if_block0 = create_if_block_2$8(ctx);
 					if_block0.c();
 					transition_in(if_block0, 1);
 					if_block0.m(div1, t1);
@@ -2550,7 +2550,7 @@ const get_headerExtension_slot_changes = dirty => ({});
 const get_headerExtension_slot_context = ctx => ({});
 
 // (67:2) {#if isCollapsible}
-function create_if_block_2$6(ctx) {
+function create_if_block_2$7(ctx) {
 	let i;
 
 	return {
@@ -2657,7 +2657,7 @@ function create_fragment$g(ctx) {
 	let current;
 	let mounted;
 	let dispose;
-	let if_block0 = /*isCollapsible*/ ctx[7] && create_if_block_2$6(ctx);
+	let if_block0 = /*isCollapsible*/ ctx[7] && create_if_block_2$7(ctx);
 	let if_block1 = /*label*/ ctx[5] && create_if_block$e(ctx);
 	const headerExtension_slot_template = /*#slots*/ ctx[13].headerExtension;
 	const headerExtension_slot = create_slot(headerExtension_slot_template, ctx, /*$$scope*/ ctx[12], get_headerExtension_slot_context);
@@ -2707,7 +2707,7 @@ function create_fragment$g(ctx) {
 				if (if_block0) {
 					if_block0.p(ctx, dirty);
 				} else {
-					if_block0 = create_if_block_2$6(ctx);
+					if_block0 = create_if_block_2$7(ctx);
 					if_block0.c();
 					if_block0.m(div1, t0);
 				}
@@ -3868,7 +3868,7 @@ function create_if_block_3$3(ctx) {
 }
 
 // (180:12) {#if sortable}
-function create_if_block_2$5(ctx) {
+function create_if_block_2$6(ctx) {
 	let i;
 	let mounted;
 	let dispose;
@@ -3972,7 +3972,7 @@ function create_each_block$4(key_1, ctx) {
 	let current;
 	let mounted;
 	let dispose;
-	let if_block0 = /*sortable*/ ctx[11] && create_if_block_2$5(ctx);
+	let if_block0 = /*sortable*/ ctx[11] && create_if_block_2$6(ctx);
 	const default_slot_template = /*#slots*/ ctx[34].default;
 	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[54], get_default_slot_context);
 	let if_block1 = /*removable*/ ctx[10] && create_if_block_1$8(ctx);
@@ -4051,7 +4051,7 @@ function create_each_block$4(key_1, ctx) {
 				if (if_block0) {
 					if_block0.p(ctx, dirty);
 				} else {
-					if_block0 = create_if_block_2$5(ctx);
+					if_block0 = create_if_block_2$6(ctx);
 					if_block0.c();
 					if_block0.m(li, t0);
 				}
@@ -5120,7 +5120,7 @@ function create_if_block$a(ctx) {
 
 	function select_block_type_2(ctx, dirty) {
 		if (/*type*/ ctx[7] === 'text') return create_if_block_1$7;
-		if (/*type*/ ctx[7] === 'number') return create_if_block_2$4;
+		if (/*type*/ ctx[7] === 'number') return create_if_block_2$5;
 		if (/*type*/ ctx[7] === 'password') return create_if_block_3$2;
 		if (/*type*/ ctx[7] === 'email') return create_if_block_4$2;
 		if (/*type*/ ctx[7] === 'url') return create_if_block_5$2;
@@ -5793,7 +5793,7 @@ function create_if_block_3$2(ctx) {
 }
 
 // (97:30) 
-function create_if_block_2$4(ctx) {
+function create_if_block_2$5(ctx) {
 	let input;
 	let mounted;
 	let dispose;
@@ -8359,7 +8359,7 @@ function get_each_context$2(ctx, list, i) {
 }
 
 // (132:2) {#if showScrollButton}
-function create_if_block_2$3(ctx) {
+function create_if_block_2$4(ctx) {
 	let div;
 	let i;
 	let div_id_value;
@@ -8604,7 +8604,7 @@ function create_fragment$8(ctx) {
 	let div2;
 	let div2_id_value;
 	let current;
-	let if_block0 = /*showScrollButton*/ ctx[6] && create_if_block_2$3(ctx);
+	let if_block0 = /*showScrollButton*/ ctx[6] && create_if_block_2$4(ctx);
 	let each_value = /*shadowTabs*/ ctx[4];
 	const get_key = ctx => /*i*/ ctx[31];
 
@@ -8673,7 +8673,7 @@ function create_fragment$8(ctx) {
 				if (if_block0) {
 					if_block0.p(ctx, dirty);
 				} else {
-					if_block0 = create_if_block_2$3(ctx);
+					if_block0 = create_if_block_2$4(ctx);
 					if_block0.c();
 					if_block0.m(div1, t0);
 				}
@@ -9580,7 +9580,7 @@ function create_if_block_1$3(ctx) {
 
 	let current_block_type = select_block_type_2(ctx);
 	let if_block0 = current_block_type(ctx);
-	let if_block1 = /*selectedType*/ ctx[10].expand && create_if_block_2$2(ctx);
+	let if_block1 = /*selectedType*/ ctx[10].expand && create_if_block_2$3(ctx);
 
 	return {
 		c() {
@@ -9612,7 +9612,7 @@ function create_if_block_1$3(ctx) {
 				if (if_block1) {
 					if_block1.p(ctx, dirty);
 				} else {
-					if_block1 = create_if_block_2$2(ctx);
+					if_block1 = create_if_block_2$3(ctx);
 					if_block1.c();
 					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
 				}
@@ -9859,7 +9859,7 @@ function create_each_block$1(ctx) {
 }
 
 // (406:6) {#if selectedType.expand}
-function create_if_block_2$2(ctx) {
+function create_if_block_2$3(ctx) {
 	let button;
 	let i;
 	let mounted;
@@ -11390,7 +11390,7 @@ function create_default_slot_4$2(ctx) {
 }
 
 // (43:2) {#if node.devMode}
-function create_if_block_2$1(ctx) {
+function create_if_block_2$2(ctx) {
 	let callout;
 	let current;
 
@@ -11625,7 +11625,7 @@ function create_default_slot$3(ctx) {
 
 	input0 = new Input({ props: input0_props });
 	binding_callbacks.push(() => bind(input0, 'node', input0_node_binding_1));
-	let if_block0 = /*node*/ ctx[0].devMode && create_if_block_2$1(ctx);
+	let if_block0 = /*node*/ ctx[0].devMode && create_if_block_2$2(ctx);
 
 	function input1_node_binding_1(value) {
 		/*input1_node_binding_1*/ ctx[5](value);
@@ -11708,7 +11708,7 @@ function create_default_slot$3(ctx) {
 						transition_in(if_block0, 1);
 					}
 				} else {
-					if_block0 = create_if_block_2$1(ctx);
+					if_block0 = create_if_block_2$2(ctx);
 					if_block0.c();
 					transition_in(if_block0, 1);
 					if_block0.m(t1.parentNode, t1);
@@ -16487,7 +16487,7 @@ const i={},r=(e,n,t)=>t?(n in i||(i[n]={}),e in i[n]||(i[n][e]=t),t):t,s=(e,n)=>
 
 /* src/components/Credentials.svelte generated by Svelte v3.58.0 */
 
-function create_if_block_2(ctx) {
+function create_if_block_2$1(ctx) {
 	let group;
 	let current;
 
@@ -17845,7 +17845,7 @@ function create_default_slot$1(ctx) {
 	binding_callbacks.push(() => bind(typedinput, 'node', typedinput_node_binding));
 	binding_callbacks.push(() => bind(typedinput, 'types', typedinput_types_binding));
 	binding_callbacks.push(() => bind(typedinput, 'tooltip', typedinput_tooltip_binding));
-	const if_block_creators = [create_if_block$2, create_if_block_1$1, create_if_block_2];
+	const if_block_creators = [create_if_block$2, create_if_block_1$1, create_if_block_2$1];
 	const if_blocks = [];
 
 	function select_block_type(ctx, dirty) {
@@ -18367,8 +18367,64 @@ function add_css(target) {
 	append_styles(target, "svelte-cjppf0", "#oauth2-svelte-container :is(.required, .required label){font-weight:bold !important}#oauth2-svelte-container .sir-Row label{min-width:150px}#oauth2-svelte-container .sir-Row label i{min-width:14px}.sir-Group.paddingBottom > .sir-Group-container{padding-bottom:12px}.success .fa-check-square{color:var(--red-ui-text-color-success)}.sir-Group.paddingAdvanced > .sir-Group-container{background-color:#ffe;padding-bottom:12px}");
 }
 
-// (142:0) {#if data.error}
+// (142:0) {#if node.internalErrors.readUrl}
 function create_if_block_1(ctx) {
+	let if_block_anchor;
+	let current;
+	let if_block = /*data*/ ctx[1].error && create_if_block_2(ctx);
+
+	return {
+		c() {
+			if (if_block) if_block.c();
+			if_block_anchor = empty();
+		},
+		m(target, anchor) {
+			if (if_block) if_block.m(target, anchor);
+			insert(target, if_block_anchor, anchor);
+			current = true;
+		},
+		p(ctx, dirty) {
+			if (/*data*/ ctx[1].error) {
+				if (if_block) {
+					if_block.p(ctx, dirty);
+
+					if (dirty & /*data*/ 2) {
+						transition_in(if_block, 1);
+					}
+				} else {
+					if_block = create_if_block_2(ctx);
+					if_block.c();
+					transition_in(if_block, 1);
+					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+				}
+			} else if (if_block) {
+				group_outros();
+
+				transition_out(if_block, 1, 1, () => {
+					if_block = null;
+				});
+
+				check_outros();
+			}
+		},
+		i(local) {
+			if (current) return;
+			transition_in(if_block);
+			current = true;
+		},
+		o(local) {
+			transition_out(if_block);
+			current = false;
+		},
+		d(detaching) {
+			if (if_block) if_block.d(detaching);
+			if (detaching) detach(if_block_anchor);
+		}
+	};
+}
+
+// (143:2) {#if data.error}
+function create_if_block_2(ctx) {
 	let callout;
 	let current;
 
@@ -18415,7 +18471,7 @@ function create_if_block_1(ctx) {
 	};
 }
 
-// (143:2) <Callout type="error">
+// (144:4) <Callout type="error">
 function create_default_slot_8(ctx) {
 	let t_value = /*data*/ ctx[1].error + "";
 	let t;
@@ -18436,7 +18492,7 @@ function create_default_slot_8(ctx) {
 	};
 }
 
-// (144:4) 
+// (145:6) 
 function create_header_slot(ctx) {
 	let span;
 
@@ -18456,7 +18512,7 @@ function create_header_slot(ctx) {
 	};
 }
 
-// (153:4) <Collapsible {node} indented={false} icon="key" label="label.credentials">
+// (155:4) <Collapsible {node} indented={false} icon="key" label="label.credentials">
 function create_default_slot_7(ctx) {
 	let credentials;
 	let updating_node;
@@ -18525,7 +18581,7 @@ function create_default_slot_7(ctx) {
 	};
 }
 
-// (156:4) {#if node.headers}
+// (158:4) {#if node.headers}
 function create_if_block(ctx) {
 	let collapsible;
 	let current;
@@ -18572,7 +18628,7 @@ function create_if_block(ctx) {
 	};
 }
 
-// (160:8) <Row>
+// (162:8) <Row>
 function create_default_slot_6(ctx) {
 	let input;
 	let updating_value;
@@ -18656,7 +18712,7 @@ function create_default_slot_6(ctx) {
 	};
 }
 
-// (159:6) <EditableList id="headersList" sortable removable addButton label="Headers" icon="database"  bind:elements={node.headers} let:index on:add={addHeaders} >
+// (161:6) <EditableList id="headersList" sortable removable addButton label="Headers" icon="database"  bind:elements={node.headers} let:index on:add={addHeaders} >
 function create_default_slot_5(ctx) {
 	let row;
 	let current;
@@ -18700,7 +18756,7 @@ function create_default_slot_5(ctx) {
 	};
 }
 
-// (158:6) <Group clazz="paddingBottom">
+// (160:6) <Group clazz="paddingBottom">
 function create_default_slot_4(ctx) {
 	let editablelist;
 	let updating_elements;
@@ -18773,7 +18829,7 @@ function create_default_slot_4(ctx) {
 	};
 }
 
-// (157:4) <Collapsible indented={false} label="Headers" icon="list">
+// (159:4) <Collapsible indented={false} label="Headers" icon="list">
 function create_default_slot_3(ctx) {
 	let group;
 	let current;
@@ -18818,7 +18874,7 @@ function create_default_slot_3(ctx) {
 	};
 }
 
-// (151:2) <TabContent tab="general">
+// (153:2) <TabContent tab="general">
 function create_default_slot_2(ctx) {
 	let general;
 	let updating_node;
@@ -18954,7 +19010,7 @@ function create_default_slot_2(ctx) {
 	};
 }
 
-// (174:2) <TabContent tab="advanced">
+// (176:2) <TabContent tab="advanced">
 function create_default_slot_1(ctx) {
 	let advanced;
 	let updating_node;
@@ -19007,7 +19063,7 @@ function create_default_slot_1(ctx) {
 	};
 }
 
-// (150:0) <TabbedPane bind:tabs>
+// (152:0) <TabbedPane bind:tabs>
 function create_default_slot(ctx) {
 	let tabcontent0;
 	let t;
@@ -19084,7 +19140,7 @@ function create_fragment(ctx) {
 	let tabbedpane;
 	let updating_tabs;
 	let current;
-	let if_block = /*data*/ ctx[1].error && create_if_block_1(ctx);
+	let if_block = /*node*/ ctx[0].internalErrors.readUrl && create_if_block_1(ctx);
 	assembly = new Assembly({ props: { size: 32 } });
 
 	function tabbedpane_tabs_binding(value) {
@@ -19120,11 +19176,11 @@ function create_fragment(ctx) {
 			current = true;
 		},
 		p(ctx, [dirty]) {
-			if (/*data*/ ctx[1].error) {
+			if (/*node*/ ctx[0].internalErrors.readUrl) {
 				if (if_block) {
 					if_block.p(ctx, dirty);
 
-					if (dirty & /*data*/ 2) {
+					if (dirty & /*node*/ 1) {
 						transition_in(if_block, 1);
 					}
 				} else {
