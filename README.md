@@ -34,6 +34,13 @@ $ cd ~/.node-red
 $ npm install node-red-contrib-oauth2
 ```
 
+# Forms
+
+![image](https://user-images.githubusercontent.com/3945941/236672731-4f288236-147e-4a3a-b5e9-490645568e01.png)
+![image](https://user-images.githubusercontent.com/3945941/236672748-d4625311-d5af-432f-a0ae-9be0ae1ccd88.png)
+
+
+
 # Usage
 
 The node requires an access token URL and a set of client credentials to authenticate with that URL. The node will generate an HTTP request to the access token URL to retrieve the access token using the client credentials.
