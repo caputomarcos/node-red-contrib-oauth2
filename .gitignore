@@ -1,0 +1,6 @@
+.idea
+.vscode
+.venv
+/node_modules
+/lib
+index.html

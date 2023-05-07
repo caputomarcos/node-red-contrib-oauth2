@@ -1,0 +1,7 @@
+tasks:
+  - before: cd /home/gitpod/.nvm/versions/node/*/lib/node_modules/node-red/ && npm link /workspace/svelte-integration-red/test-node/ && cd /workspace/svelte-integration-red/ && npm link && npm install && sir oauth2
+image:
+  file: .gitpod.Dockerfile
+vscode:
+  extensions:
+  - svelte.svelte-vscode

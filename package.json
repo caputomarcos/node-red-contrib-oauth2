@@ -1,0 +1,38 @@
+{
+  "name": "oauth2",
+  "version": "6.0.0",
+  "description": "The node-red-contrib-oauth2 is a Node-RED node that provides an OAuth2 authentication flow. This node uses the OAuth2 protocol to obtain an access token, which can be used to make authenticated API requests.",
+  "author": "Marcos Caputo <caputo.marcos@gmail.com>",
+  "license": "MIT License",
+  "homepage": "https://github.com/caputomarcos/node-red-contrib-oauth2-api#readme",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:caputomarcos/node-red-contrib-oauth2-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/caputomarcos/node-red-contrib-oauth2-api/issues"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "keywords": [
+    "node-red",
+    "oauth2",
+    "security"
+  ],
+  "node-red": {
+    "version": ">=3.0.0",
+    "nodes": {
+      "oauth2": "src/oauth2.js"
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "carbon-components-svelte": "^0.67.9",
+    "carbon-icons-svelte": "^11.1.0",
+    "standard": "^16.0.3",
+    "i18n": "^0.15.1",
+    "svelte-integration-red": "^1.10.4",
+    "svelte-i18n": "^3.6.0"
+  }
+}
