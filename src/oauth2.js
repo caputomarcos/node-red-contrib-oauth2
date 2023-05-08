@@ -30,13 +30,18 @@ module.exports = function (RED) {
 
       if (config.headers) {
         options.headers = Object.keys(config.headers).reduce((acc, h) => {
-          if (config.headers[h].key && !options.headers[config.headers[h].key]) {
-            acc[config.headers[h].key] = config.headers[h].value;
+        if (config.headers[h].key && !options.headers[config.headers[h].key]) {
+          if (config.headers[h].type === 'json') {
+            // eslint-disable-next-line no-undef
+            acc[config.headers[h].key] = JSON.parse(config.headers[h].value);
           }
+        } else if (config.headers[h].key) {
+          acc[config.headers[h].key] = config.headers[h].value;
+        }
           return acc;
         }, options.headers || {});
       }
-      
+
       switch (config.grantType) {
         case "oauth2Request": {
           options.headers.authorization = `Basic ${Buffer.from(`${msg.oauth2Request.credentials.clientId}:${msg.oauth2Request.credentials.clientSecret}`).toString("base64")}`;
@@ -48,16 +53,21 @@ module.exports = function (RED) {
               return acc;
             }, options.headers || {});
           }
-          
-          if (msg.oauth2Request){
-            for (let params in msg.oauth2Request){
-              console.log(params)
-            }
-            options.rejectUnauthorized = msg.oauth2Request.rejectUnauthorized;
-            options.form.grantType = msg.oauth2Request.credentials.grantType;
-            options.form.scope = msg.oauth2Request.credentials.scope;
-            console.log(`${msg.oauth2Request.credentials.grantType}: ${options}`)
+
+          if (msg.oauth2Request) {
+            Object.entries(msg.oauth2Request).reduce((acc, [key, value]) => {
+              console.log(key);
+              if (key === 'rejectUnauthorized') {
+                acc.rejectUnauthorized = value;
+              } else if (key === 'credentials') {
+                acc.form.grantType = value.grantType;
+                acc.form.scope = value.scope;
+                console.log(`${value.grantType}: ${acc}`);
+              }
+              return acc;
+            }, options);
           }
+
           break;
         }
         // case "clientCredentials":{
@@ -130,7 +140,5 @@ module.exports = function (RED) {
     },
   });
 
-  RED.httpAdmin.get("/getGetnetSpec", (request, response) => {
-  });
 };
 
