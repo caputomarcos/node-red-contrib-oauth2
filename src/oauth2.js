@@ -31,10 +31,11 @@ module.exports = function (RED) {
       if (config.headers) {
         options.headers = Object.keys(config.headers).reduce((acc, h) => {
         if (config.headers[h].key && !options.headers[config.headers[h].key]) {
-          if (config.headers[h].type === 'json') {
-            // eslint-disable-next-line no-undef
-            acc[config.headers[h].key] = JSON.parse(config.headers[h].value);
-          }
+          // eslint-disable-next-line no-undef
+          if (config.headers[h].type === 'json') acc[config.headers[h].key] = JSON.parse(config.headers[h].value);
+          if (config.headers[h].type === 'num') acc[config.headers[h].key] = Number.parseInt(config.headers[h].value);
+          if (config.headers[h].type === 'str') acc[config.headers[h].key] = config.headers[h].value;
+          if (config.headers[h].type === 'bool') config.headers[h].value === 'true' ? true : false;
         } else if (config.headers[h].key) {
           acc[config.headers[h].key] = config.headers[h].value;
         }
@@ -44,6 +45,7 @@ module.exports = function (RED) {
 
       switch (config.grantType) {
         case "oauth2Request": {
+          if (!msg.oauth2Request) break
           options.headers.authorization = `Basic ${Buffer.from(`${msg.oauth2Request.credentials.clientId}:${msg.oauth2Request.credentials.clientSecret}`).toString("base64")}`;
           if (msg.oauth2Request.headers) {
             options.headers = Object.keys(msg.oauth2Request.headers).reduce((acc, h) => {
@@ -53,21 +55,6 @@ module.exports = function (RED) {
               return acc;
             }, options.headers || {});
           }
-
-          if (msg.oauth2Request) {
-            Object.entries(msg.oauth2Request).reduce((acc, [key, value]) => {
-              console.log(key);
-              if (key === 'rejectUnauthorized') {
-                acc.rejectUnauthorized = value;
-              } else if (key === 'credentials') {
-                acc.form.grantType = value.grantType;
-                acc.form.scope = value.scope;
-                console.log(`${value.grantType}: ${acc}`);
-              }
-              return acc;
-            }, options);
-          }
-
           break;
         }
         // case "clientCredentials":{

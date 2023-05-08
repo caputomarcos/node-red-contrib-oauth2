@@ -156,7 +156,7 @@
       <EditableList id="headersList" sortable removable addButton label="Headers" icon="database"  bind:elements={node.headers} let:index on:add={addHeaders} > 
         <Row>
           <Input inline bind:value={node.headers[index].key} placeholder="key" />
-            <TypedInput inline value={node.headers[index].value} type={node.headers[index].type} types={[ "str", "num", "bool", "json", "env"]} placeholder="value"
+            <TypedInput inline value={node.headers[index].value} type={node.headers[index].type} types={[ "str", "num", "bool", "json"]} placeholder="value"
               on:change={(e) => {
                 node.headers[index].type = e.detail.type
                 node.headers[index].value = e.detail.value
