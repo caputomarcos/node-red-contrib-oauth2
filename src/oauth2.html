@@ -19462,66 +19462,138 @@ class Oauth2 extends SvelteComponent {
 <script type="text/x-red" data-template-name="oauth2">
   <div id='oauth2-svelte-container'></div>
 </script>
-<script type="text/html" data-help-name="oauth2">
-    <p>This node enables you to work with the Getnet  API, giving you the ability to set parameters through the
-    Node-RED-UI and trigger the flow from within your existing flow.</p>
-<p>Use OpenAPI / Swagger with Node-Red.</p>
+<script type="text/markdown" data-help-name="oauth2">
+    
+The `oauth2` Node-RED node enables `OAuth2 authentication` and provides an `access token` for authenticated API requests.
 
-<h3>Inputs</h3>
-<dl class="message-properties">
-    <dt>Name
-        <span class="property-type">string</span>
-    </dt>
-    <dd> set a manuell name for the node. If no name is set, the node sets the selected operation name.</dd>
-    <dt>API tag
-        <span class="property-type">enum</span>
-    </dt>
-    <dd> Preselector for the operation. Grouped by the 'tags' in each operation. </dd>
-    <dt>Operation
-        <span class="property-type">enum</span>
-    </dt>
-    <dd> Selector for the OpenAPI operation. The selection name is set by the 'summary'. Behind the selector field is
-        the (unique) operation id. By mouse-over it will show the full operation Description.</dd>
-    <dt class="optional">Parameters <span class="property-type">depending</span></dt>
-    <dd> If the selected operation has parameters, they will be listed here. The description can be found by mouse-over
-        the parameter name. If the parameter is required, it will be marked with a red star behind the name.
-        For Json Objects with defined keys there will be 3 Buttons: 'set required' and 'set default' will build a
-        json-object with the correct key names and the necessary type info as the value. 'show keys' show all possible
-        key parameters with additional info by mouse-over the key name.
-    </dd>
-    <dt>Request / Response content type
-        <span class="property-type">selection</span>
-    </dt>
-    <dd> If available select the content type in which you will send / receive the data. For the most cases
-        'application/json' will be a good choice.</dd>
-</dl>
 
-<h3>Outputs</h3>
-<dl class="message-properties">
-    <dt>Payload <span class="property-type">object</span>
-    <dd> Returns the complete OpenAPI object.</dd>
-    </dt>
-</dl>
+### Inputs
 
-<h3>Authentification</h3>
-For authentification you can use the Node-Red to get your token. This token has to be set into msg.openApiToken.
+: container (string)                                  :  This refers to the name of the container that is intended to receive the message object. By default, it is set to oauth2Response.
+: grant type (object)                                 :  This specifies the grant type used to obtain the access token.
+: access token url (string)                           :  This is the URL used to obtain the access token.
+: client id (string)                                  :  This is the unique identifier for the client application.
+: client secret (string)                              :  This is the secret key used to authenticate the client application.
 
-<h3>Error handling</h3>
-This handles how to react if the server returns a http status of 4xx or 5xx. You can find the last server response in
-msg.response.
-<dl class="message-properties">
-    <dt>Standard <span class="property-type">string</span> </dt>
-    <dd> The flow will move on normally so you can choose how to handle this within your flow.</dd>
-    <dt> Other output <span class="property-type">string</span></dt>
-    <dd> The flow will move on in a second output.</dd>
-    <dt> Throw exception <span class="property-type">string</span></dt>
-    <dd> The flow will throw an exception. This exception can be catched by the 'catch' node.</dd>
-</dl>
+* grant: `password`
+: username (string)                                   :  This is the username used for authentication.
+: password (string)                                   :  This is the password used for authentication.
 
-<h3>References</h3>
-<ul>
-    <li><a href="https://developers.oauth2.com.br/api">Getnet </a> - Digital Platform API</li>
-    <li><a href="https://gitlab.com/2WeltenChris/svelte-integration-red">SIR</a> - Node designed with svelte</li>
-    <li><a href="https://www.npmjs.com/package/swagger-client">Based on npm swagger-client</a> - which does almost all the magic here</li>
-</ul>
+* grant type: `authorization code`
+: authorization endpoint (string)                     :  This is the URL of the authorization endpoint.
+: code (string)                                       :  This is the authorization code. *read only*
+
+: scope (string)                                      :  This specifies the scope of the access request.
+
+: use proxy (boolean)                                 :  This specifies whether to use a proxy or not.
+* use proxy: `true` 
+: Proxy Configuration (object)                        :  This specifies the configuration for the proxy.
+
+: only send non-2xx responses to catch node (boolean) :  This specifies whether to only catch non-2xx responses.
+: embedded credentials (boolean)                      :  This specifies whether to include the client credentials in the token request body for authentication purposes.
+: reject Unauthorized (boolean)                       :  This specifies whether to reject unauthorized requests. The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.
+
+
+**`Note:`** 
+
+> * If running behind a proxy, the standard `http_proxy=...` environment variable should be set and `Node-RED restarted, or use Proxy Configuration`. If Proxy Configuration was set, the configuration take precedence over environment variable.
+
+> * The OAuth redirect URL is set by default to `/oauth2/redirect`, which is the endpoint responsible for receiving the authorization `code`.
+
+### Outputs
+
+: access_token (string)     : This is the access token obtained from the OAuth2 server.
+: expires_in (number)       : This is the duration of time, in seconds, until the access token expires.
+: token_type (string)       : This is the type of the token. For example, "Bearer".
+: scope (string)            : This specifies the scope of the access granted by the token obtained.
+: refresh_token (string)    : This is the refresh token that can be used to obtain a new access token before the current one expires.
+
+
+### Details
+
+The `msg.oauth2Request` object contains the OAuth2 request details that are set by the node. The following are the different types of credentials that can be used for authentication:
+
+
+# `Client Credentials`
+
+The client credentials can be sent as part of the message payload to the node. The `msg.oauth2Request.credentials` object should contain the following properties:
+
+* `grant_type` (string): This specifies the grant type. For dynamic credentials, the value should be set to "client_credentials".
+* `client_id` (string): This is the client ID of the OAuth2 client.
+* `client_secret` (string): This is the client secret of the OAuth2 client.
+* `scope` (string): This specifies the scope of the access requested.
+
+Here's an example:
+```js
+msg.oauth2Request = { 
+    "access_token_url": "http://localhost:8080/v1/oauth/tokens",
+    "credentials": {
+        "grant_type": "client_credentials",
+        "client_id": "test_client_1",
+        "client_secret": "test_secret",
+        "scope": "read_write"
+    },
+};
+return msg;
+```
+
+# `Password`
+
+The username and password can be sent as part of the message payload to the node. The `msg.oauth2Request.credentials` object should contain the following properties:
+
+* `grant_type` (string): This specifies the grant type. For password credentials, the value should be set to "password".
+* `client_id` (string): This is the client ID of the OAuth2 client.
+* `client_secret` (string): This is the client secret of the OAuth2 client.
+* `scope` (string): This specifies the scope of the access requested.
+* `username` (string): This is the username of the user.
+* `password` (string): This is the password of the user.
+
+Here's an example:
+```js
+msg.oauth2Request = {
+    "access_token_url": "http://localhost:8080/v1/oauth/tokens",
+    "credentials": {
+        "grant_type": "password",
+        "client_id": "test_client_1",
+        "client_secret": "test_secret",
+        "scope": "read_write",
+        "username": "test@user",
+        "password": "test_password"
+    },
+};
+return msg;
+```
+
+# `refreshToken`
+
+A refresh token can be used to obtain a new access token without requiring the user to re-authenticate. The `msg.oauth2Request.credentials` object should contain the following properties:
+
+* `grant_type` (string): This specifies the grant type. For refresh token credentials, the value should be set to "refresh_token".
+* `client_id` (string): This is the client ID of the OAuth2 client.
+* `client_secret` (string): This is the client secret of the OAuth2 client.
+* `scope` (string): This specifies the scope of the access requested.
+* `refresh_token` (string): This is the refresh token obtained from a previous authentication.
+
+Here's an example:
+```js
+let refreshToken = global.get('refreshToken');
+
+msg.oauth2Request = { 
+    "access_token_url": "http://localhost:8080/v1/oauth/tokens",
+    "credentials": {
+        "grant_type": "refresh_token",
+        "client_id": "test_client_1",
+        "client_secret": "test_secret",
+        "scope": "read_write",
+        "refresh_token": refreshToken   
+    },
+};
+return msg;
+```
+
+### References
+- `RFC 6749` - [The OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749) 
+- `RFC 5849` - [The OAuth 1.0 Protocol](https://www.rfc-editor.org/rfc/rfc5849)
+    
+
 </script>

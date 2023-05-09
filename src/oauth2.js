@@ -1,5 +1,5 @@
 const { createBackwardCompatible } = require("./libs/utils.js");
-const  adapter   = require("./libs/adapter.js");
+const  optionsAdapter   = require("./libs/adapter.js");
 
 module.exports = function (RED) {
   function OAuth2(config) {
@@ -13,7 +13,7 @@ module.exports = function (RED) {
       // Backwards compatibility - https://nodered.org/blog/2019/09/20/node-donew
 
       createBackwardCompatible(config);
-      let options = adapter(config, msg)
+      let options = optionsAdapter(config, msg)
       const credentials = RED.nodes.getCredentials(node.id);
       if (!credentials) {
         RED.nodes.addCredentials(node.id, options);
