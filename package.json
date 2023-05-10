@@ -26,14 +26,16 @@
       "oauth2": "src/oauth2.js"
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "gitpod-plugin-for-p-red": "file:gitpod-plugin"
+  },
   "devDependencies": {
     "carbon-components-svelte": "^0.67.9",
     "carbon-icons-svelte": "^11.1.0",
-    "standard": "^16.0.3",
     "i18n": "^0.15.1",
-    "svelte-integration-red": "^1.10.4",
-    "svelte-i18n": "^3.6.0"
+    "standard": "^16.0.3",
+    "svelte-i18n": "^3.6.0",
+    "svelte-integration-red": "^1.10.4"
   },
   "scripts": {
     "build": "sir",
@@ -41,4 +43,3 @@
     "dev": "./scripts/dev.sh"
   }
 }
-
