@@ -1,5 +1,4 @@
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://github.com/caputomarcos/node-red-contrib-oauth2/)
-
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/caputomarcos/node-red-contrib-oauth2/tree/Rel6.0.0-Svelte)
 
 <img src="src/icons/oauth2.svg" width="128" height="128">
 
