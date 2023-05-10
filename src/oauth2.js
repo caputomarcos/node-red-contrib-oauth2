@@ -1,5 +1,5 @@
 const { createBackwardCompatible } = require("./libs/utils.js");
-const  optionsAdapter   = require("./libs/adapter.js");
+const optionsAdapter = require("./libs/adapter.js");
 
 module.exports = function (RED) {
   function OAuth2(config) {
@@ -24,24 +24,16 @@ module.exports = function (RED) {
       // eslint-disable-next-line no-unused-vars
       const sendError = (e) => {
         node.status({ fill: "red", shape: "dot", text: "Error" });
-        let errorMsg = e.message;
-        if (e.message && isNaN(e.message.substring(0, 1)) && e.status) {
-          errorMsg = e.status + " " + e.message;
-        }
-        msg.response = e.response;
         if (config.errorHandling === "other output") {
-          send([null, msg]);
+          send([msg, { message: e, source: { id: node.id } }]);
         } else if (config.errorHandling === "throw exception") {
-          if (done) {
-            done(errorMsg);
-          } else {
-            node.error(errorMsg, msg);
-          }
+          node.error({ message: e, source: { id: node.id } });
         } else {
           send(msg);
-          if (done) done();
         }
+        if (done) done();
       };
+      sendError({ message: 'error', status: 'test', errorMsg: 'eita!' })
 
       // generate the options for the request
     })

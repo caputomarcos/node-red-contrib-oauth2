@@ -1,0 +1,13 @@
+{
+    "name": "gitpod-plugin-for-p-red",
+    "version": "1.0.0",
+    "description": "A plugin to fix HMR when running inside gitpod.",
+    "author": "Christian Geiger",
+    "license": "MIT",
+    "pekfinger-red": "gitpod.js",
+    "keywords": [
+      "pekfinger-red",
+      "gitpod"
+    ]
+  }
+  
