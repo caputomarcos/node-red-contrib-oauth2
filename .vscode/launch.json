@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "name": "Local - Debug Node-RED",
+        "program": "/home/user/.nvm/versions/node/v18.15.0/lib/node_modules/node-red/red.js",
+        "cwd": "/home/user/.node-red/",
+        "skipFiles": [
+          "<node_internals>/**"
+        ],
+        "runtimeArgs": [
+          "--preserve-symlinks",
+          "--experimental-modules"
+        ],
+        "request": "launch"
+      },
+      { 
+        "type": "node",
+        "request": "attach",
+        "name": "GitPOD - Attach to Process",
+        "processId": "${command:PickProcess}"
+      }
+    ]
+  }
