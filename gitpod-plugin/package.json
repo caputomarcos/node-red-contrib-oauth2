@@ -1,12 +1,12 @@
 {
-    "name": "gitpod-plugin-for-p-red",
+    "name": "gitpod-plugin-for-oauth2",
     "version": "1.0.0",
     "description": "A plugin to fix HMR when running inside gitpod.",
-    "author": "Christian Geiger",
+    "author": "Marcos Caputo",
     "license": "MIT",
-    "pekfinger-red": "gitpod.js",
+    "node-red-contrib-oauth2": "gitpod.js",
     "keywords": [
-      "pekfinger-red",
+      "node-red-contrib-oauth2",
       "gitpod"
     ]
   }

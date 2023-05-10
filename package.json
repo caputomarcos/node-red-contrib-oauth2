@@ -39,6 +39,7 @@
   },
   "scripts": {
     "build": "sir",
+    "update":"./scripts/save.sh", 
     "setup": "./scripts/setup.sh",
     "dev": "./scripts/dev.sh"
   }
