@@ -38,7 +38,7 @@
   "scripts": {
     "build": "sir",
     "setup": "./scripts/setup.sh",
-    "dev": "./scripts/dev.sh",
+    "dev": "./scripts/dev.sh"
   }
 }
 
