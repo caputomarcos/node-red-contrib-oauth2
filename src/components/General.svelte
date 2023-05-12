@@ -2,14 +2,7 @@
   export let node
   import { Button, Callout, Collapsible, Group, Input, Row, Select, TypedInput } from 'svelte-integration-red/components'
 
-  // import { createApi } from '../libs/getnetHtmlFunctions.js'
   const errorHandlingOptions = ['Standard', 'other output', 'throw exception']
-  // const getApiFromUrl = () => {
-  //   createApi(node, data).then(() => {
-  //     node = node
-  //     data = data
-  //   })
-  // }
 
   let testTypes = [
     { value: "oauth2Response", 

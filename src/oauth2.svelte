@@ -66,7 +66,7 @@
       keepAuth: { value: false, label: "Keep authentification", icon: "lock" },
       devMode: { value: false, label: "Development Mode", icon: "at" },
       showBanner: { value: true, label: "Show Banner", icon: "eye" },
-
+            
       outputs: { value: 1 },
     },
 
@@ -95,9 +95,12 @@
       this.outputs = "other output" === this.errorHandling ? 2 : 1;
     },
 
-    oneditcancel: function () {
-      revert(this);
-    },
+		oneditcancel: function () {
+			revert(this)
+		},
+    onadd: function () { 
+      addCurrentNodeVersion(this) 
+    }
   });
 </script>
 
@@ -120,6 +123,7 @@
   import Credentials from "./components/Credentials.svelte";
   import { createBackwardCompatible } from "./libs/utils.js";
   import Assembly from "carbon-icons-svelte/lib/Assembly.svelte";
+
   createBackwardCompatible(node);
 
   node.internalErrors.readUrl = false;
