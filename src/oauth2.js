@@ -1,5 +1,30 @@
-const { createBackwardCompatible } = require("./libs/utils.js");
-const optionsAdapter = require("./libs/adapter.js");
+const { CreateBackwardCompatible } = require("./libs/utils.js");
+const { GetToken } = require("./libs/post.js");
+const StoreCredentials = require("./libs/adapter.js");
+const axios = require("axios");
+const url = require("url");
+const crypto = require("crypto");
+const https = require("https");
+
+/**
+ * This function replaces circular references in the provided object to allow
+ * safe stringification.
+ *
+ * @param {object} obj - The object to check for circular references
+ * @returns {object} The object with circular references replaced
+ */
+const getCircularReplacer = () => {
+  const seen = new WeakSet();
+  return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
 
 module.exports = function (RED) {
   function OAuth2(config) {
@@ -7,51 +32,200 @@ module.exports = function (RED) {
     const node = this;
 
     node.on("input", function (msg, send, done) {
+      CreateBackwardCompatible(config);
+      StoreCredentials(RED, config, msg);
 
       // If this is pre-1.0, 'send' will be undefined, so fallback to node.send 
+      // Backwards compatibility - https://nodered.org/blog/2019/09/20/node-done
       send = send || function () { node.send.apply(node, arguments) }
-      // Backwards compatibility - https://nodered.org/blog/2019/09/20/node-donew
 
-      createBackwardCompatible(config);
-      let options = optionsAdapter(config, msg)
-      const credentials = RED.nodes.getCredentials(node.id);
-      if (!credentials) {
-        RED.nodes.addCredentials(node.id, options);
-      } else {
-        RED.nodes.addCredentials(node.id, credentials);
-      }
-
-      // eslint-disable-next-line no-unused-vars
       const sendError = (e) => {
         node.status({ fill: "red", shape: "dot", text: "Error" });
         if (config.errorHandling === "other output") {
-          send([msg, { message: e, source: { id: node.id } }]);
+          send([msg, { msg: { error: { ...e, source: { id: node.id } } } }]);
+        } else if (config.errorHandling === "all in one") {
+          msg.error = { ...e, source: { id: node.id } }
+          node.error(msg);
         } else if (config.errorHandling === "throw exception") {
-          node.error({ message: e, source: { id: node.id } });
+          delete msg.topic; delete msg.payload
+          msg.error = { ...e, source: { id: node.id } }
+          node.error(msg);
         } else {
           send(msg);
         }
         if (done) done();
       };
-      sendError({ message: 'error', status: 'test', errorMsg: 'eita!' })
 
-      // generate the options for the request
+      const payload = RED.nodes.getCredentials(config.id);
+
+      GetToken(payload)
+        .then((response) => {
+          msg[config.container] = response.data || {};
+          send(msg);
+          done();
+        })
+        .catch((error) => {
+          sendError({ message: error, status: 'test', errorMsg: 'eita!' })
+        });
     })
   }
-  RED.nodes.registerType("oauth2", OAuth2);
 
-  RED.nodes.registerType("oauth2-credentials", OAuth2, {
-    credentials: {
-      displayName: { type: "text" },
-      clientId: { type: "text" },
-      clientSecret: { type: "password" },
-      accessToken: { type: "password" },
-      refreshToken: { type: "password" },
-      expireTime: { type: "password" },
-      code: { type: "password" },
-      proxy: { type: "json" },
-    },
+
+  /**
+   * Endpoint to retrieve OAuth2 credentials based on a token
+   * @param {Object} req - The HTTP request object
+   * @param {Object} res - The HTTP response object
+   */
+  RED.httpAdmin.get("/oauth2/credentials/:token", function (req, res) {
+    let credentials = RED.nodes.getCredentials(req.params.token);
+    if (credentials) {
+      return res.status(200).json({
+        code: credentials.code,
+        redirect_uri: credentials.redirect_uri,
+      });
+    } else {
+      return res.status(400).send("oauth2.error.no-credentials");
+    }
   });
+
+  /**
+   * Handles GET requests to /oauth2/redirect
+   * @param {object} req - the HTTP request object
+   * @param {object} res - the HTTP response object
+   */
+  RED.httpAdmin.get("/oauth2/redirect", function (req, res) {
+    if (req.query.code) {
+      const state = req.query.state.split(":");
+      const node_id = state[0];
+      const credentials = RED.nodes.getCredentials(node_id);
+      if (credentials) {
+        credentials.code = req.query.code;
+        RED.nodes.addCredentials(node_id, credentials);
+        const html = `<HTML>
+      <HEAD>
+          <script language=\"javascript\" type=\"text/javascript\">
+            function closeWindow() {
+                window.open('','_parent','');
+                window.close();
+            }
+            function delay() {\n
+                setTimeout(\"closeWindow()\", 1000);\n
+            }\n
+          </script>
+      </HEAD>
+      <BODY onload=\"javascript:delay();\">
+              <p>Success! This page can be closed if it doesn't do so automatically.</p>
+      </BODY>
+      </HTML>`;
+        return res.status(200).send(html);
+      }
+    } else {
+      return res.status(400).send("oauth2.error.no-credentials");
+    }
+  });
+
+  /**
+   * Endpoint to handle the OAuth2 authorization code flow
+   * @param {Object} req - The HTTP request object
+   * @param {Object} res - The HTTP response object
+   */
+  RED.httpAdmin.get("/oauth2/auth", async function (req, res) {
+    if (
+      !req.query.clientId ||
+      !req.query.clientSecret ||
+      !req.query.id ||
+      !req.query.callback
+    ) {
+      return res.status(400).send("Bad Request");
+    }
+
+    const node_id = req.query.id;
+    const callback = req.query.callback;
+    const redirectUri = req.query.redirectUri;
+    const credentials = JSON.parse(
+      JSON.stringify(req.query, getCircularReplacer())
+    );
+    const proxy = RED.nodes.getNode(credentials.proxy);
+
+    let proxyOptions;
+    if (proxy) {
+      let match = proxy.url.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
+      if (match) {
+        let proxyURL = new URL(proxy.url);
+        proxyOptions = {
+          protocol: proxyURL.protocol,
+          hostname: proxyURL.hostname,
+          port: proxyURL.port,
+          username: proxyURL.username,
+          password: proxyURL.password,
+        };
+      }
+    }
+
+    const scope = req.query.scope;
+    const csrfToken = crypto
+      .randomBytes(18)
+      .toString("base64")
+      .replace(/\//g, "-")
+      .replace(/\+/g, "_");
+
+    credentials.csrfToken = csrfToken;
+    credentials.callback = callback;
+    credentials.redirectUri = redirectUri;
+
+    res.cookie("csrf", csrfToken);
+
+    const l = url.parse(req.query.authorizationEndpoint, true);
+    const redirectUrl = url.format({
+      protocol: l.protocol.replace(":", ""),
+      hostname: l.hostname,
+      port: l.port,
+      pathname: l.pathname,
+      query: {
+        client_id: credentials.clientId,
+        redirect_uri: redirectUri,
+        state: node_id + ":" + csrfToken,
+        scope: scope,
+        response_type: "code",
+      },
+    });
+
+    try {
+      const response = await axios.get(redirectUrl, {
+        proxy: proxyOptions,
+      });
+      res.redirect(response.request.res.responseUrl);
+      RED.nodes.addCredentials(node_id, credentials);
+    } catch (error) {
+      return res.sendStatus(error.response.status);
+    }
+  });
+
+  /**
+   * Endpoint to handle the OAuth2 authorization callback
+   * @param {Object} req - The HTTP request object
+   * @param {Object} res - The HTTP response object
+   */
+  RED.httpAdmin.get("/oauth2/auth/callback", function (req, res) {
+    if (req.query.error) {
+      return res.send("oauth2.error.error", {
+        error: req.query.error,
+        description: req.query.error_description,
+      });
+    }
+    if (!req.query.state) return res.status(401).send("oauth2.error.state")
+    const state = req.query.state.split(":");
+    const node_id = state[0];
+    const credentials = RED.nodes.getCredentials(node_id);
+    if (!credentials || !credentials.clientId || !credentials.clientSecret) {
+      return res.send("oauth2.error.no-credentials");
+    }
+    if (state[1] !== credentials.csrfToken) {
+      return res.status(401).send("oauth2.error.token-mismatch");
+    }
+  });
+
+  RED.nodes.registerType("oauth2", OAuth2);
 
 };
 

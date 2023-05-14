@@ -2,7 +2,7 @@
   export let node
   import { Button, Callout, Collapsible, Group, Input, Row, Select, TypedInput } from 'svelte-integration-red/components'
 
-  const errorHandlingOptions = ['Standard', 'other output', 'throw exception']
+  const errorHandlingOptions = ['standard', 'other output', 'throw exception', 'all in one']
 
   let testTypes = [
     { value: "oauth2Response", 

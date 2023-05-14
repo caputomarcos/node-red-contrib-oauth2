@@ -19,7 +19,7 @@
         placeholder: "placeholder.container",
         validate: RED.validators.typedInput("containerOpts"),
       },
-      containerOpts: { value: "oauth2Response" },
+      containerOpts: { value: "containerOpts" },
 
       errorHandling: { value: "Standard", label: "label.errorHandling" },
 
@@ -29,7 +29,7 @@
         icon: "lock",
         validate: RED.validators.typedInput("grantOpts"),
       },
-      grantOpts: { value: "oauth2Request" },
+      grantOpts: { value: "grantOpts" },
 
       accessTokenUrl: { value: "", label: "label.accessTokenUrl", placeholder: "placeholder.accessTokenUrl" },
       clientId: { value: "", placeholder: "placeholder.clientId" },
@@ -66,7 +66,9 @@
       keepAuth: { value: false, label: "Keep authentification", icon: "lock" },
       devMode: { value: false, label: "Development Mode", icon: "at" },
       showBanner: { value: true, label: "Show Banner", icon: "eye" },
-            
+      proxy: {type:"http proxy",required: false,
+                    label:RED._("node-red:httpin.proxy-config") },
+
       outputs: { value: 1 },
     },
 
@@ -87,6 +89,25 @@
     },
 
     oneditprepare: function () {
+      const id = this.id;
+
+      var pathname = document.location.pathname;
+      if (pathname.slice(-1) != "/") {
+        pathname += "/";
+      }
+
+      var callback;
+      var privateIPRegex = /(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/;
+      if (privateIPRegex.test(location.hostname)) { // if private IP has been detected
+        var dummyDomain = "node-red.example.com";
+        var actualIP = location.hostname;
+        callback = `${location.protocol}//${dummyDomain}${(location.port ? ":" + location.port : "")}${pathname}oauth2/auth/callback`;
+      } else {
+        callback = `${location.protocol}//${location.hostname}${(location.port ? ":" + location.port : "")}${pathname}oauth2/auth/callback`;
+      }
+      var redirectUri = `${location.protocol}//${location.hostname}${(location.port ? ":" + location.port : "")}${pathname}oauth2/redirect`;
+      this.callback = callback
+      this.redirectUri = redirectUri
       render(this, { minWidth: "600px" });
     },
 
@@ -121,6 +142,8 @@
   import Advanced from "./components/Advanced.svelte";
   import General from "./components/General.svelte";
   import Credentials from "./components/Credentials.svelte";
+  import Yell from "./components/Yell.svelte";
+
   import { createBackwardCompatible } from "./libs/utils.js";
   import Assembly from "carbon-icons-svelte/lib/Assembly.svelte";
 
@@ -130,30 +153,50 @@
 
   let tabs = { general: "General", advanced: "Advanced" };
 
-  export let data = { error: "Error" };
+  export let data = { };
 
   const addHeaders = () => {
     node.headers.push({ key: "", value: "", type: "str"})
     node.headers = node.headers
   }
+  let yells=[], click = 0;
+
+	let showYell = () => {
+		click++;
+    const yell = data.code ? data.code : undefined
+		const id = Math.floor(Math.random() * 999);
+		yells = [...yells, {yell, id}];
+	}
+
+	//Fired by Event Dispatcher
+	function removeYell(event) {
+		yells = yells.filter( arr =>  arr.id !== event.detail.id )
+	}
+
 </script>
 
-{#if node.internalErrors.readUrl}
-  {#if data.error}
-    <Callout type="error">
-      <span slot="header">Error</span>
-      {data.error}
-    </Callout>
-  {/if}
+{#if yell}
+  {#each yells as yell (yell.id)}
+    <div>
+      <Yell {yell} on:change={removeYell}/>
+    </div>
+  {/each }
 {/if}
 
-<Assembly size={32}/>
+<p>
+  Click Count: {click}
+</p>
+<div class=bottom on:mouseenter={showYell}><Assembly size={32}/></div>
 <TabbedPane bind:tabs>
   <TabContent tab="general">
     <General bind:node bind:data />
     <Collapsible {node} indented={false} icon="key" label="label.credentials">
       <Credentials bind:node bind:data />
     </Collapsible>
+
+		<Input type='config' {node} prop="proxy" disabled={node.disableInput}/>
+
+
     {#if node.headers}
     <Collapsible indented={false} label="Headers" icon="list">
       <Group clazz="paddingBottom">

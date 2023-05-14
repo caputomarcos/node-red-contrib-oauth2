@@ -99,7 +99,7 @@ msg.oauth2Request = {
 return msg;
 ```
 
-# `refreshToken`
+# `refresh_token`
 
 A refresh token can be used to obtain a new access token without requiring the user to re-authenticate. The `msg.oauth2Request.credentials` object should contain the following properties:
 
@@ -111,7 +111,7 @@ A refresh token can be used to obtain a new access token without requiring the u
 
 Here's an example:
 ```js
-let refreshToken = global.get('refreshToken');
+let refresh_token = global.get('refresh_token');
 
 msg.oauth2Request = { 
     "access_token_url": "http://localhost:8080/v1/oauth/tokens",
@@ -120,7 +120,7 @@ msg.oauth2Request = {
         "client_id": "test_client_1",
         "client_secret": "test_secret",
         "scope": "read_write",
-        "refresh_token": refreshToken   
+        "refresh_token": refresh_token   
     },
 };
 return msg;

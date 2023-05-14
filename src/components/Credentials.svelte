@@ -1,29 +1,40 @@
 <script>
-  export let node
-  import { Button, Callout, Collapsible, Group, Row, Select, TypedInput, Input } from 'svelte-integration-red/components'
-    
-  import { _ } from 'svelte-i18n'
-  import { dictionary, locale, locales } from 'svelte-i18n';
-  
-  dictionary.set({
-      "en-US" : {
-        label: { 
-          clientId: "CAPUTO"
-        },
-        tooltip: {
-            settings: "This is a group. It has 2 input fields grouped.\n\nThose fields like it very much to be grouped as they feel really close to each other."
-        }
-      }
-  });
-  locale.set('en-US');
+  export let node, data;
+  import {
+    Button,
+    Callout,
+    Collapsible,
+    Group,
+    Row,
+    Select,
+    TypedInput,
+    Input,
+  } from "svelte-integration-red/components";
 
-  /* 
-	 * Reactivity declarations / statements are a great way to create a dynamic editor. You'll find more on this here:
-	 * https://svelte.dev/tutorial/reactive-declarations
-	 * https://svelte.dev/tutorial/reactive-statements
-	 */
-	$: grantOpts = [
-    { value: "oauth2Request", 
+  import { _ } from "svelte-i18n";
+  import { dictionary, locale, locales } from "svelte-i18n";
+
+  dictionary.set({
+    "en-US": {
+      label: {
+        clientId: "CAPUTO",
+      },
+      tooltip: {
+        settings:
+          "This is a group. It has 2 input fields grouped.\n\nThose fields like it very much to be grouped as they feel really close to each other.",
+      },
+    },
+  });
+  locale.set("en-US");
+
+  /*
+   * Reactivity declarations / statements are a great way to create a dynamic editor. You'll find more on this here:
+   * https://svelte.dev/tutorial/reactive-declarations
+   * https://svelte.dev/tutorial/reactive-statements
+   */
+  $: grantOpts = [
+    {
+      value: "oauth2Request",
       label: "grant type",
       icon: "red/images/typedInput/bool.svg",
       options: [
@@ -31,22 +42,46 @@
         { value: "clientCredentials", label: "Client Credentials" },
         { value: "password", label: "Password" },
         { value: "authorizationCode", label: "Authorization Code" },
-    ]}
-  ]
+      ],
+    },
+  ];
 
-  let show_password = false
-  let show_client_secret = false
+  let show_password = false;
+  let show_client_secret = false;
+  let show_code = false;
 
+  function onClick() {
+    let url;
+    if (node.authorizationEndpoint) {
+      url = `oauth2/auth?id=${encodeURIComponent(node.id)}&clientId=${encodeURIComponent(node.clientId)}&clientSecret=${encodeURIComponent(node.clientSecret)}&scope=${encodeURIComponent(node.scope)}&callback=${encodeURIComponent(node.callback)}&authorizationEndpoint=${encodeURIComponent(node.authorizationEndpoint)}&redirectUri=${encodeURIComponent(node.redirectUri)}&proxy=${encodeURIComponent(node.proxy)}`;
+    } else {
+      url = `oauth2/auth?id=${encodeURIComponent(node.id)}&clientId=${encodeURIComponent(node.clientId)}&clientSecret=${encodeURIComponent(node.clientSecret)}&scope=${encodeURIComponent(node.scope)}&callback=${encodeURIComponent(node.callback)}&proxy=${encodeURIComponent(node.proxy)}`;
+    }
+    Object.assign(document.createElement("a"), {
+      target: "_blank",
+      rel: "noopener noreferrer",
+      href: url,
+    }).click();
+    const getCode = async function () {
+      const res = await fetch(`oauth2/credentials/${node.id}`);
+      data = await res.json();
+      if (res.ok) {
+        node.code = data.code;
+      } else {
+        throw new Error(data);
+      }
+    };
+    window.configNodeIntervalId = window.setTimeout(getCode, 5000);
+  }
 </script>
-
-<style></style>
-
 
 <!-- <select bind:value={$locale}>
   {#each $locales as locale}
     <option value={locale}>{locale}</option>
   {/each}
 </select> -->
+
+<style></style>
 
 <Group clazz="paddingBottom">
   <TypedInput bind:node inline prop="grantType" typeProp="grantOpts" bind:types={grantOpts} disabled={node.disableInput}  bind:tooltip={node.grantType}/>
@@ -86,8 +121,9 @@
         </Row>
         <Input bind:node prop="scope" maximize icon="code" label = "label.scope" disabled={node.disableInput}/>
         <Row>
-          <Input bind:node prop="code" maximize icon="sign-in" label="label.code" inline disabled={node.disableInput}/>
-          <Button inline  icon="key" on:click={() => alert("You selected: " + node.selection)} disabled={node.disableInput}/>
+          <Input bind:node prop="code" maximize icon="sign-in" inline label="label.code" type={show_code ? "text" : "password"} disabled={node.disableInput}/>
+          <Button inline icon={show_client_secret ? "eye" : "eye-slash"}  type="button" on:click="{ () => show_code = !show_code }">{show_code ? 'Hide' : 'Show'}</Button>
+          <Button inline  icon="key" on:click={onClick} disabled={node.disableInput}/>
         </Row>
       </Group>
     {/if}

@@ -5,6 +5,7 @@
   "author": "Marcos Caputo <caputo.marcos@gmail.com>",
   "license": "MIT License",
   "homepage": "https://github.com/caputomarcos/node-red-contrib-oauth2-api#readme",
+  "main": "oauth2.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:caputomarcos/node-red-contrib-oauth2-api.git"
@@ -27,7 +28,9 @@
     }
   },
   "dependencies": {
-    "gitpod-plugin-for-p-red": "file:gitpod-plugin"
+    "axios": ">=1.3.3",
+    "json-schema": ">=0.4.0",
+    "gitpod-plugin-for-oauth2-red": "file:gitpod-plugin"
   },
   "devDependencies": {
     "carbon-components-svelte": "^0.67.9",
