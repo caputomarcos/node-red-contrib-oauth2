@@ -7,7 +7,7 @@ const oauthConfig = {
     introspectEndpoint: 'http://localhost:8080/v1/oauth/introspect',
     clientId: 'test_client_1',
     clientSecret: 'test_secret',
-    redirectUri: 'https://www.example.com'
+    redirectUri: 'http://localhost:1888/admin/oauth2/redirect'
 };
 
 // Define JWT configuration
@@ -37,31 +37,8 @@ async function clientCredentials() {
     return tokenResponse.data;
 }
 
-async function authorizationCode(jwtToken = null) {
+async function authorizationCode(code, jwtToken = null) {
     // Define the authorization request
-    const authorizationRequest = {
-        response_type: 'code',
-        client_id: oauthConfig.clientId,
-        redirect_uri: oauthConfig.redirectUri,
-        scope: 'read_write',
-        state: Math.random().toString(36).substring(2)
-    };
-
-    if (jwtToken) {
-        authorizationRequest.nonce = jwtToken;
-    }
-
-    // Send authorization request
-    const authorizationResponse = await axios.get(`${oauthConfig.tokenEndpoint}?${new URLSearchParams(authorizationRequest)}`, {
-        maxRedirects: 0,
-        validateStatus: function (status) {
-            return status === 302;
-        }
-    });
-
-    // Extract code from redirect URL
-    const code = authorizationResponse.headers.location.match(/code=([^&]+)/)[1];
-
     const formData = new URLSearchParams();
     formData.append('grant_type', 'authorization_code');
     formData.append('code', code);
@@ -133,15 +110,15 @@ function generateJwtToken(tokenData) {
 }
 
 // Define async function to get an access token
-async function getAccessToken(grantType, jwtToken = null) {
+async function getAccessToken(code, grantType, jwtToken = null) {
     let tokenResponse;
 
     switch (grantType) {
-        case 'client_credentials':
+        case 'clientCredentials':
             tokenResponse = await clientCredentials();
             break;
-        case 'authorization_code':
-            tokenResponse = await authorizationCode(jwtToken);
+        case 'authorizationCode':
+            tokenResponse = await authorizationCode(code, jwtToken);
             break;
         case 'password':
             tokenResponse = await password(jwtToken);

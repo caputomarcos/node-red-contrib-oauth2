@@ -81,7 +81,7 @@ const StoreCredentials = (RED, config, msg) => {
         options.form.username = config.userName;
         options.form.password = config.password;
     }
-    if (config.grantType === "authorization_code") {
+    if (config.grantType === "authorizationCode") {
         // Some services accept these via Authorization while other require it in the POST body
         if (config.clientCredentialsInBody) {
           options.form.client_id = config.clientId;

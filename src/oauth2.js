@@ -60,7 +60,7 @@ module.exports = function (RED) {
       let payload = StoreCredentials(RED, config, msg);
 
       // const payload = RED.nodes.getCredentials(config.id);
-      getAccessToken(payload.form["grantType"])
+      getAccessToken(config.code, payload.form["grantType"])
         .then((data) => {
           msg[config.container] = data ? data : {};
           send(msg);
