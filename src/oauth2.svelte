@@ -19,9 +19,9 @@
         placeholder: "placeholder.container",
         validate: RED.validators.typedInput("containerOpts"),
       },
-      containerOpts: { value: "containerOpts" },
+      containerOpts: { value: "oauth2Response" },
 
-      errorHandling: { value: "Standard", label: "label.errorHandling" },
+      errorHandling: { value: "standard", label: "label.errorHandling" },
 
       grantType: {
         value: "",
@@ -29,7 +29,7 @@
         icon: "lock",
         validate: RED.validators.typedInput("grantOpts"),
       },
-      grantOpts: { value: "grantOpts" },
+      grantOpts: { value: "oauth2Request" },
 
       accessTokenUrl: { value: "", label: "label.accessTokenUrl", placeholder: "placeholder.accessTokenUrl" },
       clientId: { value: "", placeholder: "placeholder.clientId" },
@@ -62,7 +62,7 @@
         label: "label.disableInput",
         icon: "lock",
       },
-
+      clientCredentialsInBody: { value: true },
       keepAuth: { value: false, label: "Keep authentification", icon: "lock" },
       devMode: { value: false, label: "Development Mode", icon: "at" },
       showBanner: { value: true, label: "Show Banner", icon: "eye" },
@@ -89,25 +89,22 @@
     },
 
     oneditprepare: function () {
-      const id = this.id;
-
       var pathname = document.location.pathname;
       if (pathname.slice(-1) != "/") {
         pathname += "/";
       }
-
-      var callback;
+      this.callback = '';
       var privateIPRegex = /(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/;
       if (privateIPRegex.test(location.hostname)) { // if private IP has been detected
         var dummyDomain = "node-red.example.com";
         var actualIP = location.hostname;
-        callback = `${location.protocol}//${dummyDomain}${(location.port ? ":" + location.port : "")}${pathname}oauth2/auth/callback`;
+        this.callback = `${location.protocol}//${dummyDomain}${(location.port ? ":" + location.port : "")}${pathname}oauth2/auth/callback`;
       } else {
-        callback = `${location.protocol}//${location.hostname}${(location.port ? ":" + location.port : "")}${pathname}oauth2/auth/callback`;
+        this.callback = `${location.protocol}//${location.hostname}${(location.port ? ":" + location.port : "")}${pathname}oauth2/auth/callback`;
       }
-      var redirectUri = `${location.protocol}//${location.hostname}${(location.port ? ":" + location.port : "")}${pathname}oauth2/redirect`;
-      this.callback = callback
-      this.redirectUri = redirectUri
+      this.redirectUri = `${location.protocol}//${location.hostname}${(location.port ? ":" + location.port : "")}${pathname}oauth2/redirect`;
+      console.log(this.redirectUri)
+      console.log(this.callback)
       render(this, { minWidth: "600px" });
     },
 
@@ -126,7 +123,7 @@
 </script>
 
 <script>
-  export let node;
+  export let node, data;
 
   import {
     Callout,
@@ -153,40 +150,27 @@
 
   let tabs = { general: "General", advanced: "Advanced" };
 
-  export let data = { };
-
   const addHeaders = () => {
     node.headers.push({ key: "", value: "", type: "str"})
     node.headers = node.headers
   }
-  let yells=[], click = 0;
+	let messages = []
+  function deleteMessage(event){
+	  // delete first element in arr
+	  messages = messages.slice(1)
+	  console.log(messages)
+  }	
 
-	let showYell = () => {
-		click++;
-    const yell = data.code ? data.code : undefined
-		const id = Math.floor(Math.random() * 999);
-		yells = [...yells, {yell, id}];
-	}
-
-	//Fired by Event Dispatcher
-	function removeYell(event) {
-		yells = yells.filter( arr =>  arr.id !== event.detail.id )
-	}
-
+  let Click = () => {
+	  messages = [data]
+  }	
 </script>
 
-{#if yell}
-  {#each yells as yell (yell.id)}
-    <div>
-      <Yell {yell} on:change={removeYell}/>
-    </div>
-  {/each }
-{/if}
+{#each messages as message}
+	<Yell {message} on:delete={deleteMessage}/>
+{/each}
 
-<p>
-  Click Count: {click}
-</p>
-<div class=bottom on:mouseenter={showYell}><Assembly size={32}/></div>
+<div class=bottom on:mouseenter={Click}><Assembly size={32}/></div>
 <TabbedPane bind:tabs>
   <TabContent tab="general">
     <General bind:node bind:data />

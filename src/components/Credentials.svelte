@@ -57,15 +57,18 @@
     } else {
       url = `oauth2/auth?id=${encodeURIComponent(node.id)}&clientId=${encodeURIComponent(node.clientId)}&clientSecret=${encodeURIComponent(node.clientSecret)}&scope=${encodeURIComponent(node.scope)}&callback=${encodeURIComponent(node.callback)}&proxy=${encodeURIComponent(node.proxy)}`;
     }
+    
     Object.assign(document.createElement("a"), {
       target: "_blank",
       rel: "noopener noreferrer",
       href: url,
     }).click();
+
     const getCode = async function () {
       const res = await fetch(`oauth2/credentials/${node.id}`);
       data = await res.json();
       if (res.ok) {
+        data = data
         node.code = data.code;
       } else {
         throw new Error(data);

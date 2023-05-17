@@ -1,5 +1,5 @@
 const { CreateBackwardCompatible } = require("./libs/utils.js");
-const { GetToken } = require("./libs/post.js");
+const { getAccessToken } = require("./libs/post.js");
 const StoreCredentials = require("./libs/adapter.js");
 const axios = require("axios");
 const url = require("url");
@@ -27,14 +27,13 @@ const getCircularReplacer = () => {
 };
 
 module.exports = function (RED) {
+  
   function OAuth2(config) {
+
     RED.nodes.createNode(this, config);
     const node = this;
 
     node.on("input", function (msg, send, done) {
-      CreateBackwardCompatible(config);
-      StoreCredentials(RED, config, msg);
-
       // If this is pre-1.0, 'send' will be undefined, so fallback to node.send 
       // Backwards compatibility - https://nodered.org/blog/2019/09/20/node-done
       send = send || function () { node.send.apply(node, arguments) }
@@ -56,11 +55,14 @@ module.exports = function (RED) {
         if (done) done();
       };
 
-      const payload = RED.nodes.getCredentials(config.id);
+      CreateBackwardCompatible(config);
+      
+      let payload = StoreCredentials(RED, config, msg);
 
-      GetToken(payload)
-        .then((response) => {
-          msg[config.container] = response.data || {};
+      // const payload = RED.nodes.getCredentials(config.id);
+      getAccessToken(payload.form["grantType"])
+        .then((data) => {
+          msg[config.container] = data ? data : {};
           send(msg);
           done();
         })
@@ -81,7 +83,7 @@ module.exports = function (RED) {
     if (credentials) {
       return res.status(200).json({
         code: credentials.code,
-        redirect_uri: credentials.redirect_uri,
+        redirectUri: credentials.redirectUri,
       });
     } else {
       return res.status(400).send("oauth2.error.no-credentials");
@@ -95,11 +97,11 @@ module.exports = function (RED) {
    */
   RED.httpAdmin.get("/oauth2/redirect", function (req, res) {
     if (req.query.code) {
-      const state = req.query.state.split(":");
-      const node_id = state[0];
-      const credentials = RED.nodes.getCredentials(node_id);
+      const [node_id,] = req.query.state.split(":");
+      let credentials = RED.nodes.getCredentials(node_id);
       if (credentials) {
-        credentials.code = req.query.code;
+        credentials.code = req.query.code ? req.query.code : null;
+        credentials.state = req.query.state ? req.query.state : null;
         RED.nodes.addCredentials(node_id, credentials);
         const html = `<HTML>
       <HEAD>
@@ -142,7 +144,7 @@ module.exports = function (RED) {
     const node_id = req.query.id;
     const callback = req.query.callback;
     const redirectUri = req.query.redirectUri;
-    const credentials = JSON.parse(
+    let credentials = JSON.parse(
       JSON.stringify(req.query, getCircularReplacer())
     );
     const proxy = RED.nodes.getNode(credentials.proxy);
@@ -170,8 +172,9 @@ module.exports = function (RED) {
       .replace(/\+/g, "_");
 
     credentials.csrfToken = csrfToken;
-    credentials.callback = callback;
-    credentials.redirectUri = redirectUri;
+    // credentials.callback = callback;
+    // credentials.redirectUri = redirectUri;
+    RED.nodes.addCredentials(node_id, credentials);
 
     res.cookie("csrf", csrfToken);
 
@@ -183,9 +186,9 @@ module.exports = function (RED) {
       pathname: l.pathname,
       query: {
         client_id: credentials.clientId,
-        redirect_uri: redirectUri,
-        state: node_id + ":" + csrfToken,
-        scope: scope,
+        redirect_uri: credentials.redirectUri,
+        state: credentials.id + ":" + credentials.csrfToken,
+        scope: credentials.scope,
         response_type: "code",
       },
     });
@@ -195,7 +198,6 @@ module.exports = function (RED) {
         proxy: proxyOptions,
       });
       res.redirect(response.request.res.responseUrl);
-      RED.nodes.addCredentials(node_id, credentials);
     } catch (error) {
       return res.sendStatus(error.response.status);
     }
@@ -226,6 +228,24 @@ module.exports = function (RED) {
   });
 
   RED.nodes.registerType("oauth2", OAuth2);
-
+  
+  /**
+   * Registers an OAuth2Node node type with credentials object
+   * @param {string} "oauth2-credentials" - the name of the node type to register
+   * @param {OAuth2Node} OAuth2Node - the constructor function for the node type
+   * @param {object} {credentials: {...}} - an object specifying the credentials properties and their types
+   */
+  RED.nodes.registerType("oauth2-credentials", OAuth2, {
+    credentials: {
+      displayName: { type: "text" },
+      clientId: { type: "text" },
+      clientSecret: { type: "password" },
+      accessToken: { type: "password" },
+      refreshToken: { type: "password" },
+      expireTime: { type: "password" },
+      code: { type: "password" },
+      proxy: { type: "json" },
+    },
+  });
 };
 

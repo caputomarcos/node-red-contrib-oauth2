@@ -1,26 +1,23 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import { Callout } from "svelte-integration-red/components";
 
+  import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
 
-  export let yell;
+  export let message;
 
-  function deleteYell(id) {
-    dispatch("change", {
-      id,
-    });
-  }
-
-  setTimeout(function () {
-    deleteYell(yell.id);
-  }, 5000);
+  onMount(() => {
+    setTimeout(function () {
+      dispatch("delete", {});
+    }, 3000);
+  });
 </script>
 
 <div out:fade>
   <Callout type="error">
     <span slot="header">Error</span>
-    {yell.yell}
+    {message}
   </Callout>
 </div>

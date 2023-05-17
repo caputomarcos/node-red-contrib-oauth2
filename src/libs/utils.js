@@ -20,6 +20,7 @@ const CreateBackwardCompatible = (obj) => {
   if (typeof obj.devMode === 'undefined') obj.devMode = false
   if (typeof obj.keepAuth === 'undefined') obj.keepAuth = false 
   if (typeof obj.rejectUnauthorized === 'undefined') obj.rejectUnauthorized = false
+  if (typeof obj.clientCredentialsInBody === 'undefined') obj.clientCredentialsInBody = false
   if (typeof obj.clientCredentialsInBody === 'undefined') obj.clientCredentialsInBody = false 
   if (typeof obj.headers === 'undefined') obj.headers = {} 
   if (typeof obj.proxy === 'undefined') obj.proxy = '' 

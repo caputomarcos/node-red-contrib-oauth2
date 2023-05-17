@@ -1,4 +1,13 @@
 const StoreCredentials = (RED, config, msg) => {
+    
+    // Define OAuth2 configuration
+    let oauthConfig = {
+        tokenEndpoint: config.accessTokenUrl,
+        introspectEndpoint: 'http://localhost:8080/v1/oauth/introspect',
+        clientId: config.clientId,
+        clientSecret: config.clientSecret,
+        redirectUri: 'https://www.example.com'
+    };
 
     let options = {
         method: "POST",
@@ -50,9 +59,9 @@ const StoreCredentials = (RED, config, msg) => {
             }, options.headers || {});
         }
 
-        if (msg.oauth2Request.credentials.grant_type) options.form.grantType = msg.oauth2Request.credentials.grant_type;
+        if (msg.oauth2Request.credentials.grant_type) options.form.grant_type = msg.oauth2Request.credentials.grant_type;
         if (options.form.grantType === 'password') {
-            options.form.userName = msg.oauth2Request.credentials.username
+            options.form.username = msg.oauth2Request.credentials.username
             options.form.password = msg.oauth2Request.credentials.password
         }
         if (options.form.grantType=== 'refresh_token') options.form.refreshToken = msg.oauth2Request.credentials.refresh_token;        
@@ -61,25 +70,35 @@ const StoreCredentials = (RED, config, msg) => {
         if (msg.oauth2Request.rejectUnauthorized) options.rejectUnauthorized = msg.oauth2Request.rejectUnauthorized;
 
         if (msg.oauth2Request.credentials.client_id && msg.oauth2Request.credentials.client_secret) {
-            options.form.clientId = msg.oauth2Request.credentials.client_id;
-            options.form.clientSecret = msg.oauth2Request.credentials.client_secret;
+            options.form.client_id = msg.oauth2Request.credentials.client_id;
+            options.form.client_secret = msg.oauth2Request.credentials.client_secret;
             options.headers.authorization = `Basic ${Buffer.from(`${options.form.clientId}:${options.form.clientSecret}`).toString("base64")}`;
         }
         delete msg.oauth2Request
     }
 
     if (config.grantType === 'password') {
-        options.form.userName = config.userName;
+        options.form.username = config.userName;
         options.form.password = config.password;
     }
-    if (config.grantType === 'authorizationCode') {
-        options.form.code = config.code;
-        options.form.redirectUri = config.redirectUri;
-    }
+    if (config.grantType === "authorization_code") {
+        // Some services accept these via Authorization while other require it in the POST body
+        if (config.clientCredentialsInBody) {
+          options.form.client_id = config.clientId;
+          options.form.client_secret = config.clientSecret;
+        }
+
+        const credentials = RED.nodes.getCredentials(config.id);
+        if (credentials) {
+          options.form.code = credentials.code;
+          options.form.redirect_uri = credentials.redirectUri;
+        }
+      }
     if (config.grantType === 'refreshToken') options.form.refreshToken = config.refreshToken;
+    
     return options;
 }
 
 module.exports = (RED, config, msg) => {
-    RED.nodes.addCredentials(config.id, StoreCredentials(RED,config, msg)); 
+    return StoreCredentials(RED,config, msg);
 }
