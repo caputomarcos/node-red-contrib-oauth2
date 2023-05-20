@@ -1,104 +1,136 @@
-const StoreCredentials = (RED, config, msg) => {
-    
-    // Define OAuth2 configuration
-    let oauthConfig = {
-        tokenEndpoint: config.accessTokenUrl,
-        introspectEndpoint: 'http://localhost:8080/v1/oauth/introspect',
+/**
+ * Store credentials based on configuration and message.
+ * @param {object} RED - The Node-RED runtime object.
+ * @param {object} config - The configuration object.
+ * @param {object} msg - The message object.
+ * @returns {object} - The options object containing stored credentials.
+ */
+const storeCredentials = (RED, config, msg) => {
+    const options = {
+      url: config.accessTokenUrl,
+      grantType: config.grantType,
+      rejectUnauthorized: config.rejectUnauthorized,
+      form: {
         clientId: config.clientId,
         clientSecret: config.clientSecret,
-        redirectUri: 'https://www.example.com'
+        scope: config.scope,
+      },
     };
-
-    let options = {
-        method: "POST",
-        url: config.accessTokenUrl,
-        headers: {
-            authorization: `Basic ${Buffer.from(`${config.clientId}:${config.clientSecret}`).toString("base64")}`,
-            contentType: "application/x-www-form-urlencoded",
-            accept: "application/json"
-        },
-        rejectUnauthorized: config.rejectUnauthorized,
-        form: {
-            grantType: config.grantType,
-            scope: config.scope,
-        },
-    };
-
+  
     if (config.proxy) {
-        options.proxy = {type:'', name:'', url:'', noproxy:[], credentials:{}}
-        const proxy = RED.nodes.getNode(config.proxy);
-        options.proxy.type =  proxy.type ? proxy.type : null 
-        options.proxy.name =  proxy.name ? proxy.name : null
-        options.proxy.url = proxy.url ?  proxy.url : null 
-        options.proxy.noproxy = proxy.noproxy ?  proxy.noproxy : null 
-        options.proxy.credentials = proxy.credentials ?  proxy.credentials : null 
-    }
-
-    if (config.headers) {
-        options.headers = Object.keys(config.headers).reduce((acc, h) => {
-            if (config.headers[h].key && !options.headers[config.headers[h].key]) {
-                if (config.headers[h].type === 'json') acc[config.headers[h].key] = JSON.parse(config.headers[h].value);
-                if (config.headers[h].type === 'num') acc[config.headers[h].key] = Number.parseInt(config.headers[h].value);
-                if (config.headers[h].type === 'str') acc[config.headers[h].key] = config.headers[h].value;
-                if (config.headers[h].type === 'bool') config.headers[h].value === 'true' ? true : false;
-            } else if (config.headers[h].key) {
-                acc[config.headers[h].key] = config.headers[h].value;
-            }
-            return acc;
-        }, options.headers || {});
-    }
-
-    if (config.grantType === 'oauth2Request' && msg.oauth2Request) {
-        options.url = msg.oauth2Request.access_token_url ? msg.oauth2Request.access_token_url : null;
-        if (msg.oauth2Request.headers) {
-            options.headers = Object.keys(msg.oauth2Request.headers).reduce((acc, h) => {
-                if (msg.oauth2Request.headers[h] && !options.headers[h]) {
-                    acc[h] = msg.oauth2Request.headers[h];
-                }
-                return acc;
-            }, options.headers || {});
-        }
-
-        if (msg.oauth2Request.credentials.grant_type) options.form.grant_type = msg.oauth2Request.credentials.grant_type;
-        if (options.form.grantType === 'password') {
-            options.form.username = msg.oauth2Request.credentials.username
-            options.form.password = msg.oauth2Request.credentials.password
-        }
-        if (options.form.grantType=== 'refresh_token') options.form.refreshToken = msg.oauth2Request.credentials.refresh_token;        
-        
-        if (msg.oauth2Request.credentials.scope) options.form.scope = msg.oauth2Request.credentials.scope;
-        if (msg.oauth2Request.rejectUnauthorized) options.rejectUnauthorized = msg.oauth2Request.rejectUnauthorized;
-
-        if (msg.oauth2Request.credentials.client_id && msg.oauth2Request.credentials.client_secret) {
-            options.form.client_id = msg.oauth2Request.credentials.client_id;
-            options.form.client_secret = msg.oauth2Request.credentials.client_secret;
-            options.headers.authorization = `Basic ${Buffer.from(`${options.form.clientId}:${options.form.clientSecret}`).toString("base64")}`;
-        }
-        delete msg.oauth2Request
-    }
-
-    if (config.grantType === 'password') {
-        options.form.username = config.userName;
-        options.form.password = config.password;
-    }
-    if (config.grantType === "authorizationCode") {
-        // Some services accept these via Authorization while other require it in the POST body
-        if (config.clientCredentialsInBody) {
-          options.form.client_id = config.clientId;
-          options.form.client_secret = config.clientSecret;
-        }
-
-        const credentials = RED.nodes.getCredentials(config.id);
-        if (credentials) {
-          options.form.code = credentials.code;
-          options.form.redirect_uri = credentials.redirectUri;
-        }
+      // Check environment variables for proxy settings
+      const proxyEnv = process.env.http_proxy || process.env.HTTP_PROXY;
+      const noProxyEnv = process.env.no_proxy || process.env.NO_PROXY;
+  
+      options.proxy = {
+        type: '',
+        name: '',
+        url: '',
+        noproxy: [],
+        credentials: {},
+      };
+  
+      if (proxyEnv) {
+        options.proxy.type = 'http';
+        options.proxy.url = proxyEnv;
       }
-    if (config.grantType === 'refreshToken') options.form.refreshToken = config.refreshToken;
-    
+  
+      if (noProxyEnv) {
+        options.proxy.noproxy = noProxyEnv.split(",");
+      }
+  
+      const proxy = RED.nodes.getNode(config.proxy);
+      options.proxy.type = proxy?.type || null;
+      options.proxy.name = proxy?.name || null;
+      options.proxy.url = proxy?.url || null;
+      options.proxy.noproxy = proxy?.noproxy || null;
+      options.proxy.credentials = proxy?.credentials || null;
+    }
+  
+    if (config.headers) {
+      options.headers = { ...(options.headers || {}) };
+      Object.keys(config.headers).forEach((h) => {
+        const header = config.headers[h];
+        if (header.key && !options.headers[header.key]) {
+          switch (header.type) {
+            case 'json':
+              options.headers[header.key] = JSON.parse(header.value);
+              break;
+            case 'num':
+              options.headers[header.key] = parseInt(header.value, 10);
+              break;
+            case 'str':
+              options.headers[header.key] = header.value;
+              break;
+            case 'bool':
+              options.headers[header.key] = header.value === 'true';
+              break;
+          }
+        } else if (header.key) {
+          options.headers[header.key] = header.value;
+        }
+      });
+    }
+  
+    if (config.grantType === 'oauth2Request' && msg.oauth2Request) {
+      options.url = msg.oauth2Request.accessTokenUrl || null;
+      if (msg.oauth2Request.headers) {
+        options.headers = { ...(options.headers || {}) };
+        Object.keys(msg.oauth2Request.headers).forEach((h) => {
+          if (msg.oauth2Request.headers[h] && !options.headers[h]) {
+            options.headers[h] = msg.oauth2Request.headers[h];
+          }
+        });
+      }
+  
+      const credentials = msg.oauth2Request.credentials;
+      if (credentials) {
+        options.grantType = credentials.grantType || options.grantType;
+        options.form.username = credentials.username || options.form.username;
+        options.form.password = credentials.password || options.form.password;
+        options.form.refreshToken = credentials.refreshToken || options.form.refreshToken;
+        options.form.scope = credentials.scope || options.form.scope;
+        options.rejectUnauthorized = credentials.rejectUnauthorized || options.rejectUnauthorized;
+        options.form.clientId = credentials.clientId || options.form.clientId;
+        options.form.clientSecret = credentials.clientSecret || options.form.clientSecret;
+      }
+  
+      delete msg.oauth2Request;
+    }
+  
+    if (config.grantType === 'password') {
+      options.form.username = config.userName;
+      options.form.password = config.password;
+    }
+  
+    if (config.grantType === 'authorizationCode') {
+      if (config.clientCredentialsInBody) {
+        options.form.clientId = config.clientId;
+        options.form.clientSecret = config.clientSecret;
+      }
+  
+      const credentials = RED.nodes.getCredentials(config.id);
+      if (credentials) {
+        options.form.code = credentials.code;
+        options.form.redirectUri = credentials.redirectUri;
+      }
+    }
+  
+    if (config.grantType === 'refreshToken') {
+      options.form.refreshToken = config.refreshToken;
+    }
+  
     return options;
-}
-
-module.exports = (RED, config, msg) => {
-    return StoreCredentials(RED,config, msg);
-}
+  };
+  
+  /**
+   * Create options object by invoking storeCredentials function.
+   * @param {object} RED - The Node-RED runtime object.
+   * @param {object} config - The configuration object.
+   * @param {object} msg - The message object.
+   * @returns {object} - The options object containing stored credentials.
+   */
+  module.exports = (RED, config, msg) => {
+    return storeCredentials(RED, config, msg);
+  };
+  

@@ -1,141 +1,232 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 
-// Define OAuth2 configuration
-const oauthConfig = {
-    tokenEndpoint: 'http://localhost:8080/v1/oauth/tokens',
-    introspectEndpoint: 'http://localhost:8080/v1/oauth/introspect',
-    clientId: 'test_client_1',
-    clientSecret: 'test_secret',
-    redirectUri: 'http://localhost:1888/admin/oauth2/redirect'
-};
+/**
+ * Configuration for OAuth and JWT.
+ * @typedef {Object} OAuthConfig
+ * @property {string} tokenEndpoint - The token endpoint URL.
+ * @property {string} introspectEndpoint - The introspect endpoint URL.
+ * @property {string} clientId - The client ID.
+ * @property {string} clientSecret - The client secret.
+ * @property {string} redirectUri - The redirect URI.
+ */
 
-// Define JWT configuration
-const jwtConfig = {
-    algorithm: 'HS256',
-    expiresIn: '1h',
-    issuer: 'myapp',
-    audience: oauthConfig.clientId
-};
+/**
+ * Configuration for JWT.
+ * @typedef {Object} JWTConfig
+ * @property {string} algorithm - The algorithm used for signing the JWT.
+ * @property {string} expiresIn - The expiration time for the JWT.
+ * @property {string} issuer - The issuer of the JWT.
+ * @property {string} audience - The audience of the JWT.
+ */
 
-// Define functions for each grant type
-async function clientCredentials() {
-    const formData = new URLSearchParams();
-    formData.append('grant_type', 'client_credentials');
-    formData.append('scope', 'read_write');
+/**
+ * Payload for different grant types.
+ * @typedef {Object} GrantTypePayload
+ * @property {string} grantType - The grant type.
+ * @property {Object} form - The form data.
+ * @property {string} form.clientId - The client ID.
+ * @property {string} form.clientSecret - The client secret.
+ * @property {string} form.scope - The scope.
+ * @property {string} form.code - The authorization code.
+ * @property {string} form.redirectUri - The redirect URI.
+ * @property {string} form.username - The username.
+ * @property {string} form.password - The password.
+ * @property {string} form.refreshToken - The refresh token.
+ * @property {Object} headers - The headers for the request.
+ * @property {string} url - The URL for the request.
+ */
 
-    const tokenResponse = await axios.post(oauthConfig.tokenEndpoint, formData, {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        auth: {
-            username: oauthConfig.clientId,
-            password: oauthConfig.clientSecret
-        }
-    });
+/**
+ * Response from the OAuth server.
+ * @typedef {Object} TokenResponse
+ * @property {string} access_token - The access token.
+ * @property {number} expires_in - The expiration time in seconds.
+ * @property {string} token_type - The type of token.
+ * @property {string} scope - The scope.
+ * @property {string} refresh_token - The refresh token.
+ */
 
-    return tokenResponse.data;
-}
+/**
+ * Function to obtain an access token using the client credentials grant.
+ * @param {GrantTypePayload} payload - The payload for the request.
+ * @returns {Promise<TokenResponse>} The token response.
+ * @throws {Error} If failed to obtain the access token.
+ */
+async function clientCredentials(payload) {
+    try {
+        const formData = new URLSearchParams();
+        formData.append('grant_type', 'client_credentials');
+        formData.append('scope', payload.form.scope);
 
-async function authorizationCode(code, jwtToken = null) {
-    // Define the authorization request
-    const formData = new URLSearchParams();
-    formData.append('grant_type', 'authorization_code');
-    formData.append('code', code);
-    formData.append('redirect_uri', oauthConfig.redirectUri);
+        const headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            ...payload.headers,
+        };
 
-    // Exchange code for access token
-    const tokenResponse = await axios.post(oauthConfig.tokenEndpoint, formData, {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        auth: {
-            username: oauthConfig.clientId,
-            password: oauthConfig.clientSecret
-        }
-    });
+        const tokenResponse = await axios.post(payload.url, formData, {
+            headers,
+            auth: {
+                username: payload.form.clientId,
+                password: payload.form.clientSecret,
+            },
+        });
 
-    return tokenResponse.data;
-}
-
-async function password(jwtToken = null) {
-    // Define the password grant request
-    const passwordGrantRequest = {
-        grant_type: 'password',
-        username: 'test@user',
-        password: 'test_password',
-        scope: 'read_write'
-    };
-
-    if (jwtToken) {
-        passwordGrantRequest.nonce = jwtToken;
+        return tokenResponse.data;
+    } catch (error) {
+        throw new Error('Failed to obtain access token using client credentials');
     }
-
-    const formData = new URLSearchParams(passwordGrantRequest);
-
-    const tokenResponse = await axios.post(oauthConfig.tokenEndpoint, formData, {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        auth: {
-            username: oauthConfig.clientId,
-            password: oauthConfig.clientSecret
-        }
-    });
-
-    return tokenResponse.data;
 }
 
-async function refreshToken() {
-    const formData = new URLSearchParams();
-    formData.append('grant_type', 'refresh_token');
-    formData.append('refresh_token', '6fd8d272-375a-4d8a-8d0f-43367dc8b791');
+/**
+ * Function to obtain an access token using the authorization code grant.
+ * @param {GrantTypePayload} payload - The payload for the request.
+ * @returns {Promise<TokenResponse>} The token response.
+ * @throws {Error} If failed to obtain the access token.
+ */
+async function authorizationCode(payload) {
+    try {
+        const formData = new URLSearchParams();
+        formData.append('grant_type', 'authorization_code');
+        formData.append('code', payload.form.code);
+        formData.append('redirect_uri', payload.form.redirectUri);
 
-    const tokenResponse = await axios.post(oauthConfig.tokenEndpoint, formData, {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        auth: {
-            username: oauthConfig.clientId,
-            password: oauthConfig.clientSecret
-        }
-    });
+        const headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            ...payload.headers,
+        };
 
-    return tokenResponse.data;
+        const tokenResponse = await axios.post(payload.url, formData, {
+            headers,
+            auth: {
+                username: payload.form.clientId,
+                password: payload.form.clientSecret,
+            },
+        });
+
+        return tokenResponse.data;
+    } catch (error) {
+        throw new Error('Failed to obtain access token using authorization code');
+    }
 }
 
-// Define function to generate JWT token
-function generateJwtToken(tokenData) {
-    return jwt.sign(tokenData, oauthConfig.clientSecret, jwtConfig);
+/**
+ * Function to obtain an access token using the password grant.
+ * @param {GrantTypePayload} payload - The payload for the request.
+ * @returns {Promise<TokenResponse>} The token response.
+ * @throws {Error} If failed to obtain the access token.
+ */
+async function password(payload) {
+    try {
+        const formData = new URLSearchParams();
+        formData.append('grant_type', 'password');
+        formData.append('username', payload.form.username);
+        formData.append('password', payload.form.password);
+        formData.append('scope', payload.form.scope);
+
+        const headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            ...payload.headers,
+        };
+
+        const tokenResponse = await axios.post(payload.url, formData, {
+            headers,
+            auth: {
+                username: payload.form.clientId,
+                password: payload.form.clientSecret,
+            },
+        });
+
+        return tokenResponse.data;
+    } catch (error) {
+        throw new Error('Failed to obtain access token using password grant');
+    }
 }
 
-// Define async function to get an access token
-async function getAccessToken(code, grantType, jwtToken = null) {
+/**
+ * Function to refresh an access token.
+ * @param {GrantTypePayload} payload - The payload for the request.
+ * @returns {Promise<TokenResponse>} The token response.
+ * @throws {Error} If failed to refresh the access token.
+ */
+async function refreshToken(payload) {
+    try {
+        const formData = new URLSearchParams();
+        formData.append('grant_type', 'refresh_token');
+        formData.append('refresh_token', payload.form.refreshToken);
+        const headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            ...payload.headers,
+        };
+
+        const tokenResponse = await axios.post(payload.url, formData, {
+            headers,
+            auth: {
+                username: payload.form.clientId,
+                password: payload.form.clientSecret,
+            },
+        });
+
+        return tokenResponse.data;
+    } catch (error) {
+        throw new Error('Failed to refresh access token');
+    }
+}
+
+/**
+ * Generates a JWT token.
+ * @param {string} clientSecret - The client secret used for signing.
+ * @param {Object} tokenData - The data to be included in the JWT token.
+ * @param {JWTConfig} jwtConfig - The JWT configuration.
+ * @returns {string} The generated JWT token.
+ */
+function generateJwtToken(clientSecret, tokenData, jwtConfig) {
+    return jwt.sign(tokenData, clientSecret, jwtConfig);
+}
+
+/**
+ * Function to get an access token based on the grant type.
+ * @param {GrantTypePayload} payload - The payload for the request.
+ * @returns {Promise<Object>} The access token response.
+ * @throws {Error} If an unsupported grant type is provided.
+ */
+async function getAccessToken(payload) {
     let tokenResponse;
 
-    switch (grantType) {
+    switch (payload.grantType) {
         case 'clientCredentials':
-            tokenResponse = await clientCredentials();
+            tokenResponse = await clientCredentials(payload);
             break;
         case 'authorizationCode':
-            tokenResponse = await authorizationCode(code, jwtToken);
+            tokenResponse = await authorizationCode(payload);
             break;
         case 'password':
-            tokenResponse = await password(jwtToken);
+            tokenResponse = await password(payload);
             break;
-        case 'refresh_token':
-            tokenResponse = await refreshToken();
+        case 'refreshToken':
+            tokenResponse = await refreshToken(payload);
             break;
         default:
-            throw new Error(`Unsupported grant type: ${ grantType }`);
+            throw new Error(`Unsupported grant type: ${payload.grantType}`);
     }
 
-    // Generate JWT token
+    const jwtConfig = {
+        algorithm: 'HS256',
+        expiresIn: '1h',
+        issuer: 'node-red-contrib-oauth2',
+        audience: payload.form.clientId,
+    };
+
     const jwtTokenData = {
         sub: tokenResponse.access_token,
-        scope: tokenResponse.scope
+        scope: tokenResponse.scope,
     };
-    jwtToken = generateJwtToken(jwtTokenData);
+
+    const generatedJwtToken = generateJwtToken(
+        payload.form.clientSecret,
+        jwtTokenData,
+        jwtConfig
+    );
 
     return {
         accessToken: tokenResponse.access_token,
@@ -143,10 +234,10 @@ async function getAccessToken(code, grantType, jwtToken = null) {
         tokenType: tokenResponse.token_type,
         scope: tokenResponse.scope,
         refreshToken: tokenResponse.refresh_token,
-        jwtToken: jwtToken
+        jwtToken: generatedJwtToken,
     };
 }
 
 module.exports = {
-    getAccessToken
+    getAccessToken,
 };

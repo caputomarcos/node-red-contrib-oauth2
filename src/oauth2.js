@@ -2,9 +2,8 @@ const { CreateBackwardCompatible } = require("./libs/utils.js");
 const { getAccessToken } = require("./libs/post.js");
 const StoreCredentials = require("./libs/adapter.js");
 const axios = require("axios");
-const url = require("url");
+const { URL } = require("url");
 const crypto = require("crypto");
-const https = require("https");
 
 /**
  * This function replaces circular references in the provided object to allow
@@ -27,10 +26,11 @@ const getCircularReplacer = () => {
 };
 
 module.exports = function (RED) {
-  
+
   function OAuth2(config) {
 
     RED.nodes.createNode(this, config);
+
     const node = this;
 
     node.on("input", function (msg, send, done) {
@@ -39,6 +39,9 @@ module.exports = function (RED) {
       send = send || function () { node.send.apply(node, arguments) }
 
       const sendError = (e) => {
+        setTimeout(() => {
+          node.status({});
+        }, 5000);
         node.status({ fill: "red", shape: "dot", text: "Error" });
         if (config.errorHandling === "other output") {
           send([msg, { msg: { error: { ...e, source: { id: node.id } } } }]);
@@ -56,12 +59,16 @@ module.exports = function (RED) {
       };
 
       CreateBackwardCompatible(config);
-      
+
       let payload = StoreCredentials(RED, config, msg);
 
       // const payload = RED.nodes.getCredentials(config.id);
-      getAccessToken(config.code, payload.form["grantType"])
+      getAccessToken(payload)
         .then((data) => {
+          setTimeout(() => {
+            node.status({});
+          }, 5000);
+          node.status({ fill: "green", shape: "dot", text: "ok" });
           msg[config.container] = data ? data : {};
           send(msg);
           done();
@@ -74,7 +81,7 @@ module.exports = function (RED) {
 
 
   /**
-   * Endpoint to retrieve OAuth2 credentials based on a token
+   * GET handler for OAuth2 credentials retrieval based on a token
    * @param {Object} req - The HTTP request object
    * @param {Object} res - The HTTP response object
    */
@@ -91,7 +98,7 @@ module.exports = function (RED) {
   });
 
   /**
-   * Handles GET requests to /oauth2/redirect
+   * GET handler for /oauth2/redirect requests
    * @param {object} req - the HTTP request object
    * @param {object} res - the HTTP response object
    */
@@ -127,7 +134,7 @@ module.exports = function (RED) {
   });
 
   /**
-   * Endpoint to handle the OAuth2 authorization code flow
+   * GET handler for OAuth2 authorization code flow
    * @param {Object} req - The HTTP request object
    * @param {Object} res - The HTTP response object
    */
@@ -172,29 +179,20 @@ module.exports = function (RED) {
       .replace(/\+/g, "_");
 
     credentials.csrfToken = csrfToken;
-    // credentials.callback = callback;
-    // credentials.redirectUri = redirectUri;
     RED.nodes.addCredentials(node_id, credentials);
 
     res.cookie("csrf", csrfToken);
 
-    const l = url.parse(req.query.authorizationEndpoint, true);
-    const redirectUrl = url.format({
-      protocol: l.protocol.replace(":", ""),
-      hostname: l.hostname,
-      port: l.port,
-      pathname: l.pathname,
-      query: {
-        client_id: credentials.clientId,
-        redirect_uri: credentials.redirectUri,
-        state: credentials.id + ":" + credentials.csrfToken,
-        scope: credentials.scope,
-        response_type: "code",
-      },
-    });
+    const l = new URL(req.query.authorizationEndpoint);
+    const redirectUrl = new URL(l);
+    redirectUrl.searchParams.set("client_id", credentials.clientId);
+    redirectUrl.searchParams.set("redirect_uri", credentials.redirectUri);
+    redirectUrl.searchParams.set("state", credentials.id + ":" + credentials.csrfToken);
+    redirectUrl.searchParams.set("scope", credentials.scope);
+    redirectUrl.searchParams.set("response_type", "code");
 
     try {
-      const response = await axios.get(redirectUrl, {
+      const response = await axios.get(redirectUrl.toString(), {
         proxy: proxyOptions,
       });
       res.redirect(response.request.res.responseUrl);
@@ -202,7 +200,6 @@ module.exports = function (RED) {
       return res.sendStatus(error.response.status);
     }
   });
-
   /**
    * Endpoint to handle the OAuth2 authorization callback
    * @param {Object} req - The HTTP request object
@@ -228,7 +225,7 @@ module.exports = function (RED) {
   });
 
   RED.nodes.registerType("oauth2", OAuth2);
-  
+
   /**
    * Registers an OAuth2Node node type with credentials object
    * @param {string} "oauth2-credentials" - the name of the node type to register
@@ -248,4 +245,3 @@ module.exports = function (RED) {
     },
   });
 };
-
