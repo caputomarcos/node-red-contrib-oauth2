@@ -11038,13 +11038,13 @@ function create_if_block_5(ctx) {
 	};
 }
 
-// (19:6) <Callout type="info" small>
+// (10:3) <Callout type="info" small>
 function create_default_slot_8$1(ctx) {
 	let t;
 
 	return {
 		c() {
-			t = text("Ensure that the client credentials are included in the token request\n        body for authentication purposes.");
+			t = text("Ensure that the client credentials are included in the token request body for authentication\n\t\t\t\tpurposes.");
 		},
 		m(target, anchor) {
 			insert(target, t, anchor);
@@ -11055,7 +11055,7 @@ function create_default_slot_8$1(ctx) {
 	};
 }
 
-// (25:4) {#if node.rejectUnauthorized}
+// (16:2) {#if node.rejectUnauthorized}
 function create_if_block_4(ctx) {
 	let callout;
 	let current;
@@ -11092,7 +11092,7 @@ function create_if_block_4(ctx) {
 	};
 }
 
-// (26:6) <Callout type="info" small>
+// (17:3) <Callout type="info" small>
 function create_default_slot_7$2(ctx) {
 	let t0;
 	let b;
@@ -11103,7 +11103,7 @@ function create_default_slot_7$2(ctx) {
 			t0 = text("The ");
 			b = element("b");
 			b.textContent = "rejectUnauthorized";
-			t2 = text(" parameter controls SSL/TLS certificate validation\n        for the server, with true enforcing validation and false disabling it.");
+			t2 = text(" parameter controls SSL/TLS certificate validation for the server,\n\t\t\t\twith true enforcing validation and false disabling it.");
 		},
 		m(target, anchor) {
 			insert(target, t0, anchor);
@@ -11119,7 +11119,7 @@ function create_default_slot_7$2(ctx) {
 	};
 }
 
-// (32:4) {#if node.keepAuth}
+// (23:2) {#if node.keepAuth}
 function create_if_block_3(ctx) {
 	let callout;
 	let current;
@@ -11156,13 +11156,13 @@ function create_if_block_3(ctx) {
 	};
 }
 
-// (33:6) <Callout type="info" small>
+// (24:3) <Callout type="info" small>
 function create_default_slot_6$2(ctx) {
 	let t;
 
 	return {
 		c() {
-			t = text("msg.openApiToken and msg.headers will not be deleted and can be seen by\n        other nodes in the flow.");
+			t = text("msg.openApiToken and msg.headers will not be deleted and can be seen by other nodes in the\n\t\t\t\tflow.");
 		},
 		m(target, anchor) {
 			insert(target, t, anchor);
@@ -11173,7 +11173,7 @@ function create_default_slot_6$2(ctx) {
 	};
 }
 
-// (12:2) <Collapsible label="Request" indented={false}>
+// (7:1) <Collapsible label="Request" indented={false}>
 function create_default_slot_5$2(ctx) {
 	let input0;
 	let updating_node;
@@ -11400,7 +11400,7 @@ function create_default_slot_5$2(ctx) {
 	};
 }
 
-// (11:0) <Group clazz="paddingAdvanced">
+// (6:0) <Group clazz="paddingAdvanced">
 function create_default_slot_4$2(ctx) {
 	let collapsible;
 	let current;
@@ -11446,7 +11446,7 @@ function create_default_slot_4$2(ctx) {
 	};
 }
 
-// (43:2) {#if node.devMode}
+// (34:1) {#if node.devMode}
 function create_if_block_2$1(ctx) {
 	let callout;
 	let current;
@@ -11485,7 +11485,7 @@ function create_if_block_2$1(ctx) {
 	};
 }
 
-// (44:4) <Callout type="warning">
+// (35:2) <Callout type="warning">
 function create_default_slot_3$2(ctx) {
 	let p0;
 	let t1;
@@ -11497,7 +11497,7 @@ function create_default_slot_3$2(ctx) {
 			p0.textContent = "Dev mode is experimental!";
 			t1 = space();
 			p1 = element("p");
-			p1.textContent = "Allows to make otherwise rejected calls like when using self signed or\n        expired certificates.";
+			p1.textContent = "Allows to make otherwise rejected calls like when using self signed or expired certificates.";
 		},
 		m(target, anchor) {
 			insert(target, p0, anchor);
@@ -11513,7 +11513,7 @@ function create_default_slot_3$2(ctx) {
 	};
 }
 
-// (45:6) 
+// (36:3) 
 function create_header_slot$1(ctx) {
 	let span;
 
@@ -11533,7 +11533,7 @@ function create_header_slot$1(ctx) {
 	};
 }
 
-// (54:2) {#if node.showBanner}
+// (44:1) {#if node.showBanner}
 function create_if_block_1$1(ctx) {
 	let callout;
 	let current;
@@ -11570,7 +11570,7 @@ function create_if_block_1$1(ctx) {
 	};
 }
 
-// (55:4) <Callout type="info" small>
+// (45:2) <Callout type="info" small>
 function create_default_slot_2$3(ctx) {
 	let t0;
 	let b;
@@ -11597,7 +11597,7 @@ function create_default_slot_2$3(ctx) {
 	};
 }
 
-// (60:2) {#if node.disableInput}
+// (50:1) {#if node.disableInput}
 function create_if_block$4(ctx) {
 	let callout;
 	let current;
@@ -11634,7 +11634,7 @@ function create_if_block$4(ctx) {
 	};
 }
 
-// (61:4) <Callout type="info" small>
+// (51:2) <Callout type="info" small>
 function create_default_slot_1$3(ctx) {
 	let t;
 
@@ -11651,7 +11651,7 @@ function create_default_slot_1$3(ctx) {
 	};
 }
 
-// (41:0) <Collapsible label="Options" indented={false}>
+// (32:0) <Collapsible label="Options" indented={false}>
 function create_default_slot$4(ctx) {
 	let input0;
 	let updating_node;
@@ -12011,7 +12011,7 @@ function get_each_context$1(ctx, list, i) {
 	return child_ctx;
 }
 
-// (27:0) {#if node.showBanner}
+// (37:0) {#if node.showBanner}
 function create_if_block$3(ctx) {
 	let button;
 	let t0;
@@ -12037,8 +12037,9 @@ function create_if_block$3(ctx) {
 			div1 = element("div");
 
 			div1.innerHTML = `<div style="display:flex; flex-direction:column;"><p style="float: left"><img src="icons/oauth2/logo.svg" alt="oauth2"/></p> 
-      <p style="margin:0;">This node enables authentication using the OAuth2 protocol by obtaining an access token, which allows for authenticated API requests.</p> 
-      <p style="float: right;"><a href="https://www.ietf.org/rfc/rfc6749.txt" style="color: #2687E9; float: right;" target="_blank" title="The OAuth 2.0 Authorization Framework">rfc6749</a></p></div>`;
+			<p style="margin:0;">This node enables authentication using the OAuth2 protocol by obtaining an access token,
+				which allows for authenticated API requests.</p> 
+			<p style="float: right;"><a href="https://www.ietf.org/rfc/rfc6749.txt" style="color: #2687E9; float: right;" target="_blank" title="The OAuth 2.0 Authorization Framework">rfc6749</a></p></div>`;
 
 			t6 = space();
 			br1 = element("br");
@@ -12085,7 +12086,7 @@ function create_if_block$3(ctx) {
 	};
 }
 
-// (51:6) {#each errorHandlingOptions as eOption}
+// (76:3) {#each errorHandlingOptions as eOption}
 function create_each_block$1(ctx) {
 	let option;
 	let t_value = /*eOption*/ ctx[9] + "";
@@ -12109,7 +12110,7 @@ function create_each_block$1(ctx) {
 	};
 }
 
-// (50:4) <Select bind:node prop="errorHandling" icon="warning" disabled={node.disableInput} >
+// (75:2) <Select bind:node prop="errorHandling" icon="warning" disabled={node.disableInput}>
 function create_default_slot_2$2(ctx) {
 	let each_1_anchor;
 	let each_value = /*errorHandlingOptions*/ ctx[2];
@@ -12167,7 +12168,7 @@ function create_default_slot_2$2(ctx) {
 	};
 }
 
-// (47:2) <Group clazz="paddingBottom">
+// (65:1) <Group clazz="paddingBottom">
 function create_default_slot_1$2(ctx) {
 	let input;
 	let updating_node;
@@ -12320,7 +12321,7 @@ function create_default_slot_1$2(ctx) {
 	};
 }
 
-// (46:0) <Collapsible label="General" indented={false} icon="globe">
+// (64:0) <Collapsible label="General" indented={false} icon="globe">
 function create_default_slot$3(ctx) {
 	let group;
 	let current;
@@ -12451,16 +12452,16 @@ function instance$4($$self, $$props, $$invalidate) {
 
 	let testTypes = [
 		{
-			value: "oauth2Response",
-			label: "default",
-			icon: "red/images/typedInput/bool.svg",
+			value: 'oauth2Response',
+			label: 'default',
+			icon: 'red/images/typedInput/bool.svg',
 			options: [
 				{
-					value: "oauth2Response",
-					label: "oauth2Response"
+					value: 'oauth2Response',
+					label: 'oauth2Response'
 				},
-				{ value: "response", label: "response" },
-				{ value: "payload", label: "payload" }
+				{ value: 'response', label: 'response' },
+				{ value: 'payload', label: 'payload' }
 			]
 		}
 	];
@@ -16586,7 +16587,7 @@ function create_if_block_2(ctx) {
 	};
 }
 
-// (101:44) 
+// (105:41) 
 function create_if_block_1(ctx) {
 	let group;
 	let current;
@@ -16637,7 +16638,7 @@ function create_if_block_1(ctx) {
 	};
 }
 
-// (91:4) {#if node.grantType === 'clientCredentials'}
+// (95:1) {#if node.grantType === 'clientCredentials'}
 function create_if_block$2(ctx) {
 	let group;
 	let current;
@@ -16688,7 +16689,7 @@ function create_if_block$2(ctx) {
 	};
 }
 
-// (123:10) <Button inline icon={show_client_secret ? "eye" : "eye-slash"}  type="button" on:click="{ () => show_client_secret = !show_client_secret }">
+// (127:3) <Button inline icon={show_client_secret ? "eye" : "eye-slash"}  type="button" on:click="{ () => show_client_secret = !show_client_secret }">
 function create_default_slot_13(ctx) {
 	let t_value = (/*show_client_secret*/ ctx[2] ? 'Hide' : 'Show') + "";
 	let t;
@@ -16709,7 +16710,7 @@ function create_default_slot_13(ctx) {
 	};
 }
 
-// (121:8) <Row>
+// (125:3) <Row>
 function create_default_slot_12(ctx) {
 	let input;
 	let updating_node;
@@ -16802,7 +16803,7 @@ function create_default_slot_12(ctx) {
 	};
 }
 
-// (128:10) <Button inline icon={show_client_secret ? "eye" : "eye-slash"}  type="button" on:click="{ () => show_code = !show_code }">
+// (132:3) <Button inline icon={show_client_secret ? "eye" : "eye-slash"}  type="button" on:click="{ () => show_code = !show_code }">
 function create_default_slot_11(ctx) {
 	let t_value = (/*show_code*/ ctx[3] ? 'Hide' : 'Show') + "";
 	let t;
@@ -16823,7 +16824,7 @@ function create_default_slot_11(ctx) {
 	};
 }
 
-// (126:8) <Row>
+// (130:3) <Row>
 function create_default_slot_10(ctx) {
 	let input;
 	let updating_node;
@@ -16939,7 +16940,7 @@ function create_default_slot_10(ctx) {
 	};
 }
 
-// (117:6) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip="{$_('tooltip.settings')}">
+// (121:2) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip="{$_('tooltip.settings')}">
 function create_default_slot_9(ctx) {
 	let input0;
 	let updating_node;
@@ -17166,7 +17167,7 @@ function create_default_slot_9(ctx) {
 	};
 }
 
-// (107:10) <Button inline icon={show_password ? "eye" : "eye-slash"}  type="button" on:click="{ () => show_password = !show_password }">
+// (111:3) <Button inline icon={show_password ? "eye" : "eye-slash"}  type="button" on:click="{ () => show_password = !show_password }">
 function create_default_slot_8(ctx) {
 	let t_value = (/*show_password*/ ctx[1] ? 'Hide' : 'Show') + "";
 	let t;
@@ -17187,7 +17188,7 @@ function create_default_slot_8(ctx) {
 	};
 }
 
-// (105:8) <Row>
+// (109:3) <Row>
 function create_default_slot_7$1(ctx) {
 	let input;
 	let updating_node;
@@ -17280,7 +17281,7 @@ function create_default_slot_7$1(ctx) {
 	};
 }
 
-// (112:10) <Button inline icon={show_client_secret ? "eye" : "eye-slash"}  type="button" on:click="{ () => show_client_secret = !show_client_secret }">
+// (116:3) <Button inline icon={show_client_secret ? "eye" : "eye-slash"}  type="button" on:click="{ () => show_client_secret = !show_client_secret }">
 function create_default_slot_6$1(ctx) {
 	let t_value = (/*show_client_secret*/ ctx[2] ? 'Hide' : 'Show') + "";
 	let t;
@@ -17301,7 +17302,7 @@ function create_default_slot_6$1(ctx) {
 	};
 }
 
-// (110:8) <Row>
+// (114:3) <Row>
 function create_default_slot_5$1(ctx) {
 	let input;
 	let updating_node;
@@ -17394,7 +17395,7 @@ function create_default_slot_5$1(ctx) {
 	};
 }
 
-// (102:6) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip="{$_('tooltip.settings')}">
+// (106:2) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip="{$_('tooltip.settings')}">
 function create_default_slot_4$1(ctx) {
 	let input0;
 	let updating_node;
@@ -17622,7 +17623,7 @@ function create_default_slot_4$1(ctx) {
 	};
 }
 
-// (97:10) <Button inline icon={show_client_secret ? "eye" : "eye-slash"}  type="button" on:click="{ () => show_client_secret = !show_client_secret }">
+// (101:3) <Button inline icon={show_client_secret ? "eye" : "eye-slash"}  type="button" on:click="{ () => show_client_secret = !show_client_secret }">
 function create_default_slot_3$1(ctx) {
 	let t_value = (/*show_client_secret*/ ctx[2] ? 'Hide' : 'Show') + "";
 	let t;
@@ -17643,7 +17644,7 @@ function create_default_slot_3$1(ctx) {
 	};
 }
 
-// (95:8) <Row>
+// (99:3) <Row>
 function create_default_slot_2$1(ctx) {
 	let input;
 	let updating_node;
@@ -17736,7 +17737,7 @@ function create_default_slot_2$1(ctx) {
 	};
 }
 
-// (92:6) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip="{$_('tooltip.settings')}">
+// (96:2) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip="{$_('tooltip.settings')}">
 function create_default_slot_1$1(ctx) {
 	let input0;
 	let updating_node;
@@ -17900,7 +17901,7 @@ function create_default_slot_1$1(ctx) {
 	};
 }
 
-// (89:0) <Group clazz="paddingBottom">
+// (93:0) <Group clazz="paddingBottom">
 function create_default_slot$2(ctx) {
 	let typedinput;
 	let updating_node;
@@ -18112,15 +18113,15 @@ function instance$3($$self, $$props, $$invalidate) {
 	let { node, data } = $$props;
 
 	a.set({
-		"en-US": {
-			label: { clientId: "CAPUTO" },
+		'en-US': {
+			label: { clientId: 'Client Id' },
 			tooltip: {
-				settings: "This is a group. It has 2 input fields grouped.\n\nThose fields like it very much to be grouped as they feel really close to each other."
+				settings: 'This is a group. It has 2 input fields grouped.\n\nThose fields like it very much to be grouped as they feel really close to each other.'
 			}
 		}
 	});
 
-	x.set("en-US");
+	x.set('en-US');
 	let show_password = false;
 	let show_client_secret = false;
 	let show_code = false;
@@ -18134,9 +18135,9 @@ function instance$3($$self, $$props, $$invalidate) {
 			url = `oauth2/auth?id=${encodeURIComponent(node.id)}&clientId=${encodeURIComponent(node.clientId)}&clientSecret=${encodeURIComponent(node.clientSecret)}&scope=${encodeURIComponent(node.scope)}&callback=${encodeURIComponent(node.callback)}&proxy=${encodeURIComponent(node.proxy)}`;
 		}
 
-		Object.assign(document.createElement("a"), {
-			target: "_blank",
-			rel: "noopener noreferrer",
+		Object.assign(document.createElement('a'), {
+			target: '_blank',
+			rel: 'noopener noreferrer',
 			href: url
 		}).click();
 
@@ -18269,22 +18270,22 @@ function instance$3($$self, $$props, $$invalidate) {
 
 	$$invalidate(4, grantOpts = [
 		{
-			value: "oauth2Request",
-			label: "grant type",
-			icon: "red/images/typedInput/bool.svg",
+			value: 'oauth2Request',
+			label: 'grant type',
+			icon: 'red/images/typedInput/bool.svg',
 			options: [
 				{
-					value: "oauth2Request",
-					label: "Set by msg.oauth2Request"
+					value: 'oauth2Request',
+					label: 'Set by msg.oauth2Request'
 				},
 				{
-					value: "clientCredentials",
-					label: "Client Credentials"
+					value: 'clientCredentials',
+					label: 'Client Credentials'
 				},
-				{ value: "password", label: "Password" },
+				{ value: 'password', label: 'Password' },
 				{
-					value: "authorizationCode",
-					label: "Authorization Code"
+					value: 'authorizationCode',
+					label: 'Authorization Code'
 				}
 			]
 		}
@@ -18354,7 +18355,7 @@ function create_default_slot$1(ctx) {
 	};
 }
 
-// (20:4) 
+// (20:2) 
 function create_header_slot(ctx) {
 	let span;
 
@@ -18436,7 +18437,7 @@ function instance$2($$self, $$props, $$invalidate) {
 	onMount(() => {
 		setTimeout(
 			function () {
-				dispatch("delete", {});
+				dispatch('delete', {});
 			},
 			3000
 		);
@@ -18456,35 +18457,39 @@ class Yell extends SvelteComponent {
 	}
 }
 
-// for node (client) and config (server)
+/**
+ * Creates a backward compatible object by assigning default values to properties if they are undefined.
+ *
+ * @param {object} obj - The object to make backward compatible.
+ * @returns {void}
+ */
 const CreateBackwardCompatible = (obj) => {
   if (typeof obj.name === 'undefined') obj.name = '';
   if (typeof obj.container === 'undefined') obj.container = '';
   if (typeof obj.containerOpts === 'undefined') obj.containerOpts = '';
   if (typeof obj.errorHandling === 'undefined') obj.errorHandling = '';
-  
+
   if (typeof obj.grantType === 'undefined') obj.grantType = '';
   if (typeof obj.grantOpts === 'undefined') obj.grantOpts = '';
-  if (typeof obj.accessTokenUrl === 'undefined') obj.accessTokenUrl =  '';
-  if (typeof obj.clientSecret === 'undefined') obj.clientSecret =  '';
-  if (typeof obj.clientId === 'undefined') obj.clientId =  '';
-  if (typeof obj.scope === 'undefined') obj.scope =  '';
-  if (typeof obj.userName === 'undefined') obj.userName =  '';
-  if (typeof obj.password === 'undefined') obj.password =  '';
-  if (typeof obj.authorizationEndpoint === 'undefined') obj.authorizationEndpoint =  '';
-  if (typeof obj.code === 'undefined') obj.code =  '';
+  if (typeof obj.accessTokenUrl === 'undefined') obj.accessTokenUrl = '';
+  if (typeof obj.clientSecret === 'undefined') obj.clientSecret = '';
+  if (typeof obj.clientId === 'undefined') obj.clientId = '';
+  if (typeof obj.scope === 'undefined') obj.scope = '';
+  if (typeof obj.userName === 'undefined') obj.userName = '';
+  if (typeof obj.password === 'undefined') obj.password = '';
+  if (typeof obj.authorizationEndpoint === 'undefined') obj.authorizationEndpoint = '';
+  if (typeof obj.code === 'undefined') obj.code = '';
 
   if (typeof obj.internalErrors === 'undefined') obj.internalErrors = {};
   if (typeof obj.devMode === 'undefined') obj.devMode = false;
-  if (typeof obj.keepAuth === 'undefined') obj.keepAuth = false; 
+  if (typeof obj.keepAuth === 'undefined') obj.keepAuth = false;
   if (typeof obj.rejectUnauthorized === 'undefined') obj.rejectUnauthorized = false;
   if (typeof obj.clientCredentialsInBody === 'undefined') obj.clientCredentialsInBody = false;
-  if (typeof obj.clientCredentialsInBody === 'undefined') obj.clientCredentialsInBody = false; 
-  if (typeof obj.headers === 'undefined') obj.headers = {}; 
-  if (typeof obj.proxy === 'undefined') obj.proxy = ''; 
+  if (typeof obj.headers === 'undefined') obj.headers = {};
+  if (typeof obj.proxy === 'undefined') obj.proxy = '';
 
   if (typeof obj.showBanner === 'undefined') obj.showBanner = false;
-  if (typeof obj.disableInput === 'undefined') obj.disableInput = false; 
+  if (typeof obj.disableInput === 'undefined') obj.disableInput = false;
 };
 
 var utils = {
@@ -18627,7 +18632,7 @@ class Assembly extends SvelteComponent {
 /* src/oauth2.svelte generated by Svelte v3.58.0 */
 
 function add_css(target) {
-	append_styles(target, "svelte-cjppf0", "#oauth2-svelte-container :is(.required, .required label){font-weight:bold !important}#oauth2-svelte-container .sir-Row label{min-width:150px}#oauth2-svelte-container .sir-Row label i{min-width:14px}.sir-Group.paddingBottom > .sir-Group-container{padding-bottom:12px}.success .fa-check-square{color:var(--red-ui-text-color-success)}.sir-Group.paddingAdvanced > .sir-Group-container{background-color:#ffe;padding-bottom:12px}");
+	append_styles(target, "svelte-1mmn8g2", "#oauth2-svelte-container :is(.required, .required label){font-weight:bold !important}#oauth2-svelte-container .sir-Row label{min-width:150px}#oauth2-svelte-container .sir-Row label i{min-width:14px}.sir-Group.paddingBottom > .sir-Group-container{padding-bottom:12px}.success .fa-check-square{color:var(--red-ui-text-color-success)}.sir-Group.paddingAdvanced > .sir-Group-container{background-color:#ffe;padding-bottom:12px}");
 }
 
 function get_each_context(ctx, list, i) {
@@ -18636,7 +18641,7 @@ function get_each_context(ctx, list, i) {
 	return child_ctx;
 }
 
-// (174:0) {#each messages as message}
+// (185:0) {#each messages as message}
 function create_each_block(ctx) {
 	let yell;
 	let current;
@@ -18671,7 +18676,7 @@ function create_each_block(ctx) {
 	};
 }
 
-// (182:4) <Collapsible {node} indented={false} icon="key" label="label.credentials">
+// (193:2) <Collapsible {node} indented={false} icon="key" label="label.credentials">
 function create_default_slot_7(ctx) {
 	let credentials;
 	let updating_node;
@@ -18740,7 +18745,7 @@ function create_default_slot_7(ctx) {
 	};
 }
 
-// (189:4) {#if node.headers}
+// (199:2) {#if node.headers}
 function create_if_block(ctx) {
 	let collapsible;
 	let current;
@@ -18787,7 +18792,7 @@ function create_if_block(ctx) {
 	};
 }
 
-// (193:8) <Row>
+// (213:6) <Row>
 function create_default_slot_6(ctx) {
 	let input;
 	let updating_value;
@@ -18817,7 +18822,7 @@ function create_default_slot_6(ctx) {
 				inline: true,
 				value: /*node*/ ctx[0].headers[/*index*/ ctx[16]].value,
 				type: /*node*/ ctx[0].headers[/*index*/ ctx[16]].type,
-				types: ["str", "num", "bool", "json"],
+				types: ['str', 'num', 'bool', 'json'],
 				placeholder: "value"
 			}
 		});
@@ -18871,7 +18876,7 @@ function create_default_slot_6(ctx) {
 	};
 }
 
-// (192:6) <EditableList id="headersList" sortable removable addButton label="Headers" icon="database"  bind:elements={node.headers} let:index on:add={addHeaders} >
+// (202:5) <EditableList       id="headersList"       sortable       removable       addButton       label="Headers"       icon="database"       bind:elements={node.headers}       let:index       on:add={addHeaders}      >
 function create_default_slot_5(ctx) {
 	let row;
 	let current;
@@ -18915,7 +18920,7 @@ function create_default_slot_5(ctx) {
 	};
 }
 
-// (191:6) <Group clazz="paddingBottom">
+// (201:4) <Group clazz="paddingBottom">
 function create_default_slot_4(ctx) {
 	let editablelist;
 	let updating_elements;
@@ -18988,7 +18993,7 @@ function create_default_slot_4(ctx) {
 	};
 }
 
-// (190:4) <Collapsible indented={false} label="Headers" icon="list">
+// (200:3) <Collapsible indented={false} label="Headers" icon="list">
 function create_default_slot_3(ctx) {
 	let group;
 	let current;
@@ -19033,7 +19038,7 @@ function create_default_slot_3(ctx) {
 	};
 }
 
-// (180:2) <TabContent tab="general">
+// (191:1) <TabContent tab="general">
 function create_default_slot_2(ctx) {
 	let general;
 	let updating_node;
@@ -19192,7 +19197,7 @@ function create_default_slot_2(ctx) {
 	};
 }
 
-// (207:2) <TabContent tab="advanced">
+// (232:1) <TabContent tab="advanced">
 function create_default_slot_1(ctx) {
 	let advanced;
 	let updating_node;
@@ -19245,7 +19250,7 @@ function create_default_slot_1(ctx) {
 	};
 }
 
-// (179:0) <TabbedPane bind:tabs>
+// (190:0) <TabbedPane bind:tabs>
 function create_default_slot(ctx) {
 	let tabcontent0;
 	let t;
@@ -19468,129 +19473,129 @@ const update = sir_update;
 const revert = sir_revert;
 const addCurrentNodeVersion = sir_addCurrentNodeVersion;
 
-RED.nodes.registerType("oauth2", {
-	paletteLabel: "oauth2",
-	category: "payment methods",
-	color: "#fff",
+RED.nodes.registerType('oauth2', {
+	paletteLabel: 'oauth2',
+	category: 'payment methods',
+	color: '#fff',
 	defaults: {
 		name: {
-			value: "",
-			label: "label.name",
-			placeholder: "placeholder.name",
-			icon: "tag"
+			value: '',
+			label: 'label.name',
+			placeholder: 'placeholder.name',
+			icon: 'tag'
 		},
 		container: {
-			value: "",
-			label: "label.container",
-			icon: "cube",
-			placeholder: "placeholder.container",
-			validate: RED.validators.typedInput("containerOpts")
+			value: '',
+			label: 'label.container',
+			icon: 'cube',
+			placeholder: 'placeholder.container',
+			validate: RED.validators.typedInput('containerOpts')
 		},
-		containerOpts: { value: "oauth2Response" },
+		containerOpts: { value: 'oauth2Response' },
 		errorHandling: {
-			value: "standard",
-			label: "label.errorHandling"
+			value: 'standard',
+			label: 'label.errorHandling'
 		},
 		grantType: {
-			value: "",
-			label: "label.grantType",
-			icon: "lock",
-			validate: RED.validators.typedInput("grantOpts")
+			value: '',
+			label: 'label.grantType',
+			icon: 'lock',
+			validate: RED.validators.typedInput('grantOpts')
 		},
-		grantOpts: { value: "oauth2Request" },
+		grantOpts: { value: 'oauth2Request' },
 		accessTokenUrl: {
-			value: "",
-			label: "label.accessTokenUrl",
-			placeholder: "placeholder.accessTokenUrl"
+			value: '',
+			label: 'label.accessTokenUrl',
+			placeholder: 'placeholder.accessTokenUrl'
 		},
 		clientId: {
-			value: "",
-			placeholder: "placeholder.clientId"
+			value: '',
+			placeholder: 'placeholder.clientId'
 		},
 		clientSecret: {
-			value: "",
-			placeholder: "placeholder.clientSecret"
+			value: '',
+			placeholder: 'placeholder.clientSecret'
 		},
 		scope: {
-			value: "",
-			placeholder: "placeholder.scope"
+			value: '',
+			placeholder: 'placeholder.scope'
 		},
 		userName: {
-			value: "",
-			placeholder: "placeholder.userName"
+			value: '',
+			placeholder: 'placeholder.userName'
 		},
 		password: {
-			value: "",
-			placeholder: "placeholder.password"
+			value: '',
+			placeholder: 'placeholder.password'
 		},
 		authorizationEndpoint: {
-			value: "",
-			placeholder: "placeholder.authorizationEndpoint"
+			value: '',
+			placeholder: 'placeholder.authorizationEndpoint'
 		},
 		code: {
-			value: "",
-			placeholder: "placeholder.code"
+			value: '',
+			placeholder: 'placeholder.code'
 		},
 		internalErrors: { value: {} },
 		rejectUnauthorized: {
 			value: false,
-			label: "label.rejectUnauthorized",
-			icon: "lock"
+			label: 'label.rejectUnauthorized',
+			icon: 'lock'
 		},
 		clientCredentialsInBody: {
 			value: false,
-			label: "label.clientCredentialsInBody",
-			icon: "lock"
+			label: 'label.clientCredentialsInBody',
+			icon: 'lock'
 		},
 		headers: {
-			value: [{ key: "", value: "", type: "str" }],
-			label: "label.headers"
+			value: [{ key: '', value: '', type: 'str' }],
+			label: 'label.headers'
 		},
 		disableInput: {
 			value: false,
-			label: "label.disableInput",
-			icon: "lock"
+			label: 'label.disableInput',
+			icon: 'lock'
 		},
 		clientCredentialsInBody: { value: true },
 		keepAuth: {
 			value: false,
-			label: "Keep authentification",
-			icon: "lock"
+			label: 'Keep authentification',
+			icon: 'lock'
 		},
 		devMode: {
 			value: false,
-			label: "Development Mode",
-			icon: "at"
+			label: 'Development Mode',
+			icon: 'at'
 		},
 		showBanner: {
 			value: true,
-			label: "Show Banner",
-			icon: "eye"
+			label: 'Show Banner',
+			icon: 'eye'
 		},
 		proxy: {
-			type: "http proxy",
+			type: 'http proxy',
 			required: false,
-			label: RED._("node-red:httpin.proxy-config")
+			label: RED._('node-red:httpin.proxy-config')
 		},
 		outputs: { value: 1 }
 	},
 	inputs: 1,
 	outputs: 1,
-	icon: "icons/oauth2/logo-x16.svg",
+	icon: 'icons/oauth2/logo-x16.svg',
 	i18nOptions: {
 		// If there should be translation, each DOM needs the object 'node' (mostly it's already bound) or a 'i18n' property with the path to the folder e.g.: node.name + ':'.
 		// if the node is not in the main folder, set here the folder name (which is in this case the same name as the node)
-		folder: "oauth2/"
+		folder: 'oauth2/'
 	},
 	label() {
 		if (this.name) return this.name; else //  else if (this.operation) return this.operation
-		return "OAuth2 Svelte";
+		return 'OAuth2 Svelte';
 	},
 	oneditprepare() {
 		var pathname = document.location.pathname;
 
-		if (pathname.slice(-1) != "/") {
-			pathname += "/";
+		if (pathname.slice(-1) != '/') {
+			pathname += '/';
 		}
 
 		this.callback = '';
@@ -19598,20 +19603,20 @@ RED.nodes.registerType("oauth2", {
 
 		if (privateIPRegex.test(location.hostname)) {
 			// if private IP has been detected
-			var dummyDomain = "node-red.example.com";
-			this.callback = `${location.protocol}//${dummyDomain}${location.port ? ":" + location.port : ""}${pathname}oauth2/auth/callback`;
+			var dummyDomain = 'node-red.example.com';
+			this.callback = `${location.protocol}//${dummyDomain}${location.port ? ':' + location.port : ''}${pathname}oauth2/auth/callback`;
 		} else {
-			this.callback = `${location.protocol}//${location.hostname}${location.port ? ":" + location.port : ""}${pathname}oauth2/auth/callback`;
+			this.callback = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/auth/callback`;
 		}
 
-		this.redirectUri = `${location.protocol}//${location.hostname}${location.port ? ":" + location.port : ""}${pathname}oauth2/redirect`;
+		this.redirectUri = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/redirect`;
 		console.log(this.redirectUri);
 		console.log(this.callback);
-		render(this, { minWidth: "600px" });
+		render(this, { minWidth: '600px' });
 	},
 	oneditsave() {
 		update(this);
-		this.outputs = "other output" === this.errorHandling ? 2 : 1;
+		this.outputs = 'other output' === this.errorHandling ? 2 : 1;
 	},
 	oneditcancel() {
 		revert(this);
@@ -19625,10 +19630,10 @@ function instance($$self, $$props, $$invalidate) {
 	let { node, data } = $$props;
 	utils.createBackwardCompatible(node);
 	node.internalErrors.readUrl = false;
-	let tabs = { general: "General", advanced: "Advanced" };
+	let tabs = { general: 'General', advanced: 'Advanced' };
 
 	const addHeaders = () => {
-		node.headers.push({ key: "", value: "", type: "str" });
+		node.headers.push({ key: '', value: '', type: 'str' });
 		$$invalidate(0, node);
 	};
 
@@ -19737,134 +19742,134 @@ class Oauth2 extends SvelteComponent {
     
 The `oauth2` Node-RED node enables `OAuth2 authentication` and provides an `access token` for authenticated API requests.
 
-
 ### Inputs
 
-: container (string)                                  :  This refers to the name of the container that is intended to receive the message object. By default, it is set to oauth2Response.
-: grant type (object)                                 :  This specifies the grant type used to obtain the access token.
-: access token url (string)                           :  This is the URL used to obtain the access token.
-: client id (string)                                  :  This is the unique identifier for the client application.
-: client secret (string)                              :  This is the secret key used to authenticate the client application.
+: container (string) : This refers to the name of the container that is intended to receive the message object. By default, it is set to oauth2Response.
+: grant type (object) : This specifies the grant type used to obtain the access token.
+: access token url (string) : This is the URL used to obtain the access token.
+: client id (string) : This is the unique identifier for the client application.
+: client secret (string) : This is the secret key used to authenticate the client application.
 
-* grant: `password`
-: username (string)                                   :  This is the username used for authentication.
-: password (string)                                   :  This is the password used for authentication.
+- grant: `password`
+  : username (string) : This is the username used for authentication.
+  : password (string) : This is the password used for authentication.
 
-* grant type: `authorization code`
-: authorization endpoint (string)                     :  This is the URL of the authorization endpoint.
-: code (string)                                       :  This is the authorization code. *read only*
+- grant type: `authorization code`
+  : authorization endpoint (string) : This is the URL of the authorization endpoint.
+  : code (string) : This is the authorization code. _read only_
 
-: scope (string)                                      :  This specifies the scope of the access request.
+: scope (string) : This specifies the scope of the access request.
 
-: use proxy (boolean)                                 :  This specifies whether to use a proxy or not.
-* use proxy: `true` 
-: Proxy Configuration (object)                        :  This specifies the configuration for the proxy.
+: use proxy (boolean) : This specifies whether to use a proxy or not.
 
-: only send non-2xx responses to catch node (boolean) :  This specifies whether to only catch non-2xx responses.
-: embedded credentials (boolean)                      :  This specifies whether to include the client credentials in the token request body for authentication purposes.
-: reject Unauthorized (boolean)                       :  This specifies whether to reject unauthorized requests. The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.
+- use proxy: `true`
+  : Proxy Configuration (object) : This specifies the configuration for the proxy.
 
+: only send non-2xx responses to catch node (boolean) : This specifies whether to only catch non-2xx responses.
+: embedded credentials (boolean) : This specifies whether to include the client credentials in the token request body for authentication purposes.
+: reject Unauthorized (boolean) : This specifies whether to reject unauthorized requests. The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.
 
-**`Note:`** 
+**`Note:`**
 
-> * If running behind a proxy, the standard `http_proxy=...` environment variable should be set and `Node-RED restarted, or use Proxy Configuration`. If Proxy Configuration was set, the configuration take precedence over environment variable.
+> - If running behind a proxy, the standard `http_proxy=...` environment variable should be set and `Node-RED restarted, or use Proxy Configuration`. If Proxy Configuration was set, the configuration take precedence over environment variable.
 
-> * The OAuth redirect URL is set by default to `/oauth2/redirect`, which is the endpoint responsible for receiving the authorization `code`.
+> - The OAuth redirect URL is set by default to `/oauth2/redirect`, which is the endpoint responsible for receiving the authorization `code`.
 
 ### Outputs
 
-: access_token (string)     : This is the access token obtained from the OAuth2 server.
-: expires_in (number)       : This is the duration of time, in seconds, until the access token expires.
-: token_type (string)       : This is the type of the token. For example, "Bearer".
-: scope (string)            : This specifies the scope of the access granted by the token obtained.
-: refresh_token (string)    : This is the refresh token that can be used to obtain a new access token before the current one expires.
-
+: access_token (string) : This is the access token obtained from the OAuth2 server.
+: expires_in (number) : This is the duration of time, in seconds, until the access token expires.
+: token_type (string) : This is the type of the token. For example, "Bearer".
+: scope (string) : This specifies the scope of the access granted by the token obtained.
+: refresh_token (string) : This is the refresh token that can be used to obtain a new access token before the current one expires.
 
 ### Details
 
 The `msg.oauth2Request` object contains the OAuth2 request details that are set by the node. The following are the different types of credentials that can be used for authentication:
 
-
 # `Client Credentials`
 
 The client credentials can be sent as part of the message payload to the node. The `msg.oauth2Request.credentials` object should contain the following properties:
 
-* `grant_type` (string): This specifies the grant type. For dynamic credentials, the value should be set to "client_credentials".
-* `client_id` (string): This is the client ID of the OAuth2 client.
-* `client_secret` (string): This is the client secret of the OAuth2 client.
-* `scope` (string): This specifies the scope of the access requested.
+- `grant_type` (string): This specifies the grant type. For dynamic credentials, the value should be set to "client_credentials".
+- `client_id` (string): This is the client ID of the OAuth2 client.
+- `client_secret` (string): This is the client secret of the OAuth2 client.
+- `scope` (string): This specifies the scope of the access requested.
 
 Here's an example:
+
 ```js
-msg.oauth2Request = { 
-    "access_token_url": "http://localhost:8080/v1/oauth/tokens",
-    "credentials": {
-        "grant_type": "client_credentials",
-        "client_id": "test_client_1",
-        "client_secret": "test_secret",
-        "scope": "read_write"
-    },
-};
-return msg;
+msg.oauth2Request = {
+	access_token_url: 'http://localhost:8080/v1/oauth/tokens',
+	credentials: {
+		grant_type: 'client_credentials',
+		client_id: 'test_client_1',
+		client_secret: 'test_secret',
+		scope: 'read_write'
+	}
+}
+return msg
 ```
 
 # `Password`
 
 The username and password can be sent as part of the message payload to the node. The `msg.oauth2Request.credentials` object should contain the following properties:
 
-* `grant_type` (string): This specifies the grant type. For password credentials, the value should be set to "password".
-* `client_id` (string): This is the client ID of the OAuth2 client.
-* `client_secret` (string): This is the client secret of the OAuth2 client.
-* `scope` (string): This specifies the scope of the access requested.
-* `username` (string): This is the username of the user.
-* `password` (string): This is the password of the user.
+- `grant_type` (string): This specifies the grant type. For password credentials, the value should be set to "password".
+- `client_id` (string): This is the client ID of the OAuth2 client.
+- `client_secret` (string): This is the client secret of the OAuth2 client.
+- `scope` (string): This specifies the scope of the access requested.
+- `username` (string): This is the username of the user.
+- `password` (string): This is the password of the user.
 
 Here's an example:
+
 ```js
 msg.oauth2Request = {
-    "access_token_url": "http://localhost:8080/v1/oauth/tokens",
-    "credentials": {
-        "grant_type": "password",
-        "client_id": "test_client_1",
-        "client_secret": "test_secret",
-        "scope": "read_write",
-        "username": "test@user",
-        "password": "test_password"
-    },
-};
-return msg;
+	access_token_url: 'http://localhost:8080/v1/oauth/tokens',
+	credentials: {
+		grant_type: 'password',
+		client_id: 'test_client_1',
+		client_secret: 'test_secret',
+		scope: 'read_write',
+		username: 'test@user',
+		password: 'test_password'
+	}
+}
+return msg
 ```
 
 # `refresh_token`
 
 A refresh token can be used to obtain a new access token without requiring the user to re-authenticate. The `msg.oauth2Request.credentials` object should contain the following properties:
 
-* `grant_type` (string): This specifies the grant type. For refresh token credentials, the value should be set to "refresh_token".
-* `client_id` (string): This is the client ID of the OAuth2 client.
-* `client_secret` (string): This is the client secret of the OAuth2 client.
-* `scope` (string): This specifies the scope of the access requested.
-* `refresh_token` (string): This is the refresh token obtained from a previous authentication.
+- `grant_type` (string): This specifies the grant type. For refresh token credentials, the value should be set to "refresh_token".
+- `client_id` (string): This is the client ID of the OAuth2 client.
+- `client_secret` (string): This is the client secret of the OAuth2 client.
+- `scope` (string): This specifies the scope of the access requested.
+- `refresh_token` (string): This is the refresh token obtained from a previous authentication.
 
 Here's an example:
-```js
-let refresh_token = global.get('refresh_token');
 
-msg.oauth2Request = { 
-    "access_token_url": "http://localhost:8080/v1/oauth/tokens",
-    "credentials": {
-        "grant_type": "refresh_token",
-        "client_id": "test_client_1",
-        "client_secret": "test_secret",
-        "scope": "read_write",
-        "refresh_token": refresh_token   
-    },
-};
-return msg;
+```js
+let refresh_token = global.get('refresh_token')
+
+msg.oauth2Request = {
+	access_token_url: 'http://localhost:8080/v1/oauth/tokens',
+	credentials: {
+		grant_type: 'refresh_token',
+		client_id: 'test_client_1',
+		client_secret: 'test_secret',
+		scope: 'read_write',
+		refresh_token: refresh_token
+	}
+}
+return msg
 ```
 
 ### References
-- `RFC 6749` - [The OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749) 
+
+- `RFC 6749` - [The OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749)
 - `RFC 5849` - [The OAuth 1.0 Protocol](https://www.rfc-editor.org/rfc/rfc5849)
-    
 
 </script>

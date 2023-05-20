@@ -6,4 +6,4 @@ image:
   file: .gitpod.Dockerfile
 vscode:
   extensions:
-  - svelte.svelte-vscode
+    - svelte.svelte-vscode

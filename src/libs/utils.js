@@ -1,7 +1,7 @@
 /**
  * Creates a backward compatible object by assigning default values to properties if they are undefined.
  *
- * @param {Object} obj - The object to make backward compatible.
+ * @param {object} obj - The object to make backward compatible.
  * @returns {void}
  */
 const CreateBackwardCompatible = (obj) => {
