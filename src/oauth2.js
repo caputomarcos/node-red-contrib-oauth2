@@ -59,10 +59,7 @@ module.exports = function (RED) {
       };
 
       CreateBackwardCompatible(config);
-
       let payload = StoreCredentials(RED, config, msg);
-
-      // const payload = RED.nodes.getCredentials(config.id);
       getAccessToken(payload)
         .then((data) => {
           setTimeout(() => {
@@ -93,7 +90,7 @@ module.exports = function (RED) {
         redirectUri: credentials.redirectUri,
       });
     } else {
-      return res.status(400).send("oauth2.error.no-credentials");
+      return res.status(401).json({ error: "oauth2.error.no-credentials" });
     }
   });
 
@@ -110,26 +107,54 @@ module.exports = function (RED) {
         credentials.code = req.query.code ? req.query.code : null;
         credentials.state = req.query.state ? req.query.state : null;
         RED.nodes.addCredentials(node_id, credentials);
-        const html = `<HTML>
-      <HEAD>
-          <script language=\"javascript\" type=\"text/javascript\">
+        const html = `<html>
+          <head>
+          <script language="javascript" type="text/javascript">
             function closeWindow() {
-                window.open('','_parent','');
-                window.close();
+              window.open("", "_parent", "");
+              window.close();
             }
-            function delay() {\n
-                setTimeout(\"closeWindow()\", 1000);\n
-            }\n
+            function delay() {
+              setTimeout("closeWindow()", 2000);
+            }
           </script>
-      </HEAD>
-      <BODY onload=\"javascript:delay();\">
-              <p>Success! This page can be closed if it doesn't do so automatically.</p>
-      </BODY>
-      </HTML>`;
+        </head>
+        <body onload="javascript:delay();">
+            <div style="text-align: center;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="90" fill="#42b983" />
+                <text x="50%" y="50%" text-anchor="middle" fill="#ffffff" font-size="24px" font-weight="bold" dy=".3em">Success!</text>
+              </svg>
+              <p>This page can be closed if it doesn't do so automatically.</p>
+            </div>
+          </body>
+        </html>`;
         return res.status(200).send(html);
       }
     } else {
-      return res.status(400).send("oauth2.error.no-credentials");
+      const html = `<html>
+       <head>
+          <script language="javascript" type="text/javascript">
+            function closeWindow() {
+              window.open("", "_parent", "");
+              window.close();
+            }
+            function delay() {
+              setTimeout("closeWindow()", 2000);
+            }
+          </script>
+        </head>
+        <body onload="javascript:delay();">        
+          <div style="text-align: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="90" fill="#ff0000" />
+              <text x="50%" y="50%" text-anchor="middle" fill="#ffffff" font-size="24px" font-weight="bold" dy=".3em">Error 400</text>
+            </svg>
+            <p>An error occurred. Please check your credentials and try again.</p>
+          </div>
+        </body>
+      </html>`;
+      return res.status(400).send(html);
     }
   });
 
@@ -145,12 +170,10 @@ module.exports = function (RED) {
       !req.query.id ||
       !req.query.callback
     ) {
-      return res.status(400).send("Bad Request");
+      return res.status(400).json({ error: "Bad Request" });
     }
 
     const node_id = req.query.id;
-    const callback = req.query.callback;
-    const redirectUri = req.query.redirectUri;
     let credentials = JSON.parse(
       JSON.stringify(req.query, getCircularReplacer())
     );
@@ -165,13 +188,12 @@ module.exports = function (RED) {
           protocol: proxyURL.protocol,
           hostname: proxyURL.hostname,
           port: proxyURL.port,
-          username: proxyURL.username,
-          password: proxyURL.password,
+          username: proxy.credentials.username,
+          password: proxy.credentials.password,
         };
       }
     }
 
-    const scope = req.query.scope;
     const csrfToken = crypto
       .randomBytes(18)
       .toString("base64")
@@ -197,7 +219,31 @@ module.exports = function (RED) {
       });
       res.redirect(response.request.res.responseUrl);
     } catch (error) {
-      return res.sendStatus(error.response.status);
+      const statusCode = error.response.status;
+      const statusText = error.response.statusText;
+      const html = `<html>
+        <head>
+          <script language="javascript" type="text/javascript">
+            function closeWindow() {
+              window.open("", "_parent", "");
+              window.close();
+            }
+            function delay() {
+              setTimeout("closeWindow()", 2000);
+            }
+          </script>
+        </head>
+        <body onload="javascript:delay();">
+          <div style="text-align: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="90" fill="#ff0000" />
+              <text x="50%" y="50%" text-anchor="middle" fill="#ffffff" font-size="24px" font-weight="bold" dy=".3em">Error ${statusCode}</text>
+            </svg>
+            <p>${statusText}</p>
+          </div>
+        </body>
+      </html>`;
+      return res.status(statusCode).send(html);
     }
   });
   /**
@@ -220,7 +266,7 @@ module.exports = function (RED) {
       return res.send("oauth2.error.no-credentials");
     }
     if (state[1] !== credentials.csrfToken) {
-      return res.status(401).send("oauth2.error.token-mismatch");
+      return res.status(401).json({ error: "oauth2.error.token-mismatch" });
     }
   });
 
