@@ -1,34 +1,34 @@
 {
-	"label": {
-		"name": "Name",
-		"container": "Container",
-		"errorHandling": "Error Handling",
-		"grantType": "Grant Types",
-		"settings": "Settings",
-		"rejectUnauthorized": "Reject Unauthorized",
-		"clientCredentialsInBody": "Embedded Credentials",
-		"disableInput": "Disable Input",
-		"accessTokenUrl": "Access Token URL",
-		"code": "Code",
-		"scope": "Scope",
-		"credentials": "Credentials",
-		"clientSecret": "Client Secret",
-		"authorizationEndpoint": "Authorization Endpoint",
-		"password": "Password",
-		"userName": "User Name",
-		"clientId": "Client Id",
-		"headers": "Headers"
-	},
-	"placeholder": {
-		"name": "Here could stand your individual node name. E.g. OAuth2",
-		"container": "oauth2Response",
-		"accessTokenUrl": "Access Token URL",
-		"clientId": "Client Id",
-		"clientSecret": "Client Secret",
-		"scope": "Scope",
-		"userName": "User Name",
-		"password": "Password",
-		"authorizationEndpoint": "Authorization Endpoint",
-		"code": "Code"
-	}
+  "label": {
+    "name": "Name",
+    "container": "Container",
+    "errorHandling": "Error Handling",
+    "grantType": "Grant Types",
+    "settings": "Settings",
+    "rejectUnauthorized": "Reject Unauthorized",
+    "clientCredentialsInBody": "Embedded Credentials",
+    "disableInput": "Disable Input",
+    "accessTokenUrl": "Access Token URL",
+    "code": "Code",
+    "scope": "Scope",
+    "credentials": "Credentials",
+    "clientSecret": "Client Secret",
+    "authorizationEndpoint": "Authorization Endpoint",
+    "password": "Password",
+    "userName": "User Name",
+    "clientId": "Client Id",
+    "headers": "Headers"
+  },
+  "placeholder": {
+    "name": "Here could stand your individual node name. E.g. OAuth2",
+    "container": "oauth2Response",
+    "accessTokenUrl": "Access Token URL",
+    "clientId": "Client Id",
+    "clientSecret": "Client Secret",
+    "scope": "Scope",
+    "userName": "User Name",
+    "password": "Password",
+    "authorizationEndpoint": "Authorization Endpoint",
+    "code": "Code"
+  }
 }

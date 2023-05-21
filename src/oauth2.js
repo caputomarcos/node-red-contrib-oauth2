@@ -37,10 +37,10 @@ module.exports = function (RED) {
       // If this is pre-1.0, 'send' will be undefined, so fallback to node.send
       // Backwards compatibility - https://nodered.org/blog/2019/09/20/node-done
       send =
-				send ||
-				function () {
-				  node.send.apply(node, arguments);
-				};
+        send ||
+        function () {
+          node.send.apply(node, arguments);
+        };
 
       const sendError = (e) => {
         setTimeout(() => {
@@ -86,10 +86,10 @@ module.exports = function (RED) {
   }
 
   /**
-	 * GET handler for OAuth2 credentials retrieval based on a token.
-	 * @param {object} req - The HTTP request object.
-	 * @param {object} res - The HTTP response object.
-	 */
+   * GET handler for OAuth2 credentials retrieval based on a token.
+   * @param {object} req - The HTTP request object.
+   * @param {object} res - The HTTP response object.
+   */
   RED.httpAdmin.get('/oauth2/credentials/:token', (req, res) => {
     const credentials = RED.nodes.getCredentials(req.params.token);
     if (credentials) {
@@ -103,10 +103,10 @@ module.exports = function (RED) {
   });
 
   /**
-	 * GET handler for /oauth2/redirect requests.
-	 * @param {object} req - The HTTP request object.
-	 * @param {object} res - The HTTP response object.
-	 */
+   * GET handler for /oauth2/redirect requests.
+   * @param {object} req - The HTTP request object.
+   * @param {object} res - The HTTP response object.
+   */
   RED.httpAdmin.get('/oauth2/redirect', (req, res) => {
     if (req.query.code) {
       const [node_id] = req.query.state.split(':');
@@ -167,10 +167,10 @@ module.exports = function (RED) {
   });
 
   /**
-	 * GET handler for OAuth2 authorization code flow.
-	 * @param {object} req - The HTTP request object.
-	 * @param {object} res - The HTTP response object.
-	 */
+   * GET handler for OAuth2 authorization code flow.
+   * @param {object} req - The HTTP request object.
+   * @param {object} res - The HTTP response object.
+   */
   RED.httpAdmin.get('/oauth2/auth', async (req, res) => {
     if (!req.query.clientId || !req.query.clientSecret || !req.query.id || !req.query.callback) {
       return res.status(400).json({ error: 'Bad Request' });
@@ -195,11 +195,7 @@ module.exports = function (RED) {
       }
     }
 
-    const csrfToken = crypto
-      .randomBytes(18)
-      .toString('base64')
-      .replace(/\//g, '-')
-      .replace(/\+/g, '_');
+    const csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
 
     credentials.csrfToken = csrfToken;
     RED.nodes.addCredentials(node_id, credentials);
@@ -220,12 +216,12 @@ module.exports = function (RED) {
       });
       const response = await axios.get(redirectUrl.toString(), {
         proxy: proxyOptions,
-        httpsAgent: agent,
+        httpsAgent: agent
       });
       res.redirect(response.request.res.responseUrl);
     } catch (error) {
       const statusCode = error?.code ? 500 : error?.response?.status || 404;
-      const statusText  = error?.message ? error.message :  error?.response || 'Not Found';
+      const statusText = error?.message ? error.message : error?.response || 'Not Found';
       const html = `<html>
         <head>
           <script language="javascript" type="text/javascript">
@@ -252,10 +248,10 @@ module.exports = function (RED) {
     }
   });
   /**
-	 * Endpoint to handle the OAuth2 authorization callback.
-	 * @param {object} req - The HTTP request object.
-	 * @param {object} res - The HTTP response object.
-	 */
+   * Endpoint to handle the OAuth2 authorization callback.
+   * @param {object} req - The HTTP request object.
+   * @param {object} res - The HTTP response object.
+   */
   RED.httpAdmin.get('/oauth2/auth/callback', (req, res) => {
     if (req.query.error) {
       return res.send('oauth2.error.error', {
@@ -283,11 +279,11 @@ module.exports = function (RED) {
   RED.nodes.registerType('oauth2', OAuth2);
 
   /**
-	 * Registers an OAuth2Node node type with credentials object.
-	 * @param {string} "oauth2-credentials" - The name of the node type to register.
-	 * @param {OAuth2} OAuth2 - The constructor function for the node type.
-	 * @param {object} {Credentials} - an object specifying the credentials properties and their types.
-	 */
+   * Registers an OAuth2Node node type with credentials object.
+   * @param {string} "oauth2-credentials" - The name of the node type to register.
+   * @param {OAuth2} OAuth2 - The constructor function for the node type.
+   * @param {object} {Credentials} - an object specifying the credentials properties and their types.
+   */
   RED.nodes.registerType('oauth2-credentials', OAuth2, {
     credentials: {
       displayName: { type: 'text' },

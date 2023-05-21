@@ -34,8 +34,7 @@ const oauth2DataPt = {
       code: 'Code'
     },
     tooltip: {
-      proxy:
-        'This is a group. It has 2 input fields grouped.\n\nThose fields like it very much to be grouped as they feel really close to each other.'
+      proxy: 'This is a group. It has 2 input fields grouped.\n\nThose fields like it very much to be grouped as they feel really close to each other.'
     }
   }
 };

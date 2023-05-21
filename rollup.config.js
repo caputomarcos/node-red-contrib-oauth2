@@ -6,6 +6,6 @@ export default {
 
   plugins: [
     // ... outros plugins ...
-    json(),
-  ],
+    json()
+  ]
 };

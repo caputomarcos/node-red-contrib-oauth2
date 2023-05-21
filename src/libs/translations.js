@@ -1,9 +1,8 @@
 export default {
   'en-US': {
-    
     'about.oauth2': 'This node enables authentication using the OAuth2 protocol by obtaining an access token, which allows for authenticated API requests.',
     'standard.label': 'standard',
-    
+
     'general.title': 'General',
     'general.name': 'Name',
     'general.password': 'Password',
@@ -21,12 +20,11 @@ export default {
     'credentials.code': 'Code',
     'credentials.accessTokenUrl': 'Access Token URL',
     'credentials.authorizationEndpoint': 'Authorization Endpoint',
-    "credentials.tooltip.clientCredentials": "To use the client credentials grant type,\nenter the access token URL, client ID, client secret, and scope.",
+    'credentials.tooltip.clientCredentials': 'To use the client credentials grant type,\nenter the access token URL, client ID, client secret, and scope.',
     'credentials.proxy': 'Proxy',
     'credentials.settings': 'Proxy Settings',
     'credentials.Headers': 'Headers',
     'credentials.Headers.Parameters': 'Parameters',
-
 
     'label.settings': 'Settings',
     'label.rejectUnauthorized': 'Reject Unauthorized',
@@ -44,12 +42,12 @@ export default {
     'placeholder.authorizationEndpoint': 'Authorization Endpoint',
     'placeholder.code': 'Code',
     'tooltip.settings': 'Here could stand your individual node name. E.g. OAuth2',
-    'tooltip.proxy': 'This is a group. It has 2 input fields grouped.\n\nThose fields like it very much to be grouped as they feel really close to each other.'    
+    'tooltip.proxy': 'This is a group. It has 2 input fields grouped.\n\nThose fields like it very much to be grouped as they feel really close to each other.'
   },
   'pt-BR': {
     'standard.label': 'padrão',
     'about.oauth2': 'Este nó habilita a autenticação usando o protocolo OAuth2 obtendo um token de acesso, que permite solicitações de API autenticadas.',
-    
+
     'general.title': 'Geral',
     'general.name': 'Nome',
     'general.container': 'Container',
@@ -66,7 +64,7 @@ export default {
     'credentials.code': 'Código',
     'credentials.accessTokenUrl': 'URL do token de acesso',
     'credentials.authorizationEndpoint': 'Ponto de Autorização',
-    "credentials.tooltip.clientCredentials": "Para usar o tipo de concessão de credenciais do cliente,\ninforme a URL do token de acesso, o ID do cliente, o segredo do cliente e o escopo.",    
+    'credentials.tooltip.clientCredentials': 'Para usar o tipo de concessão de credenciais do cliente,\ninforme a URL do token de acesso, o ID do cliente, o segredo do cliente e o escopo.',
     'credentials.proxy': 'Proxy',
     'credentials.settings': 'Configurações do Proxy',
 
@@ -91,6 +89,5 @@ export default {
     'placeholder.code': 'Código',
     'tooltip.settings': 'Here could stand your individual node name. E.g. OAuth2',
     'tooltip.proxy': 'Este é um grupo. Ele possui 2 campos de entrada agrupados.\n\nEsses campos gostam muito de ser agrupados, pois se sentem realmente próximos um do outro.'
-  },
+  }
 };
-  

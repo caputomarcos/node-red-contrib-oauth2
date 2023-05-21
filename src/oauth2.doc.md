@@ -1,4 +1,3 @@
-
 The `oauth2` Node-RED node enables `OAuth2 authentication` and provides an `access token` for authenticated API requests.
 
 ### Inputs
@@ -59,15 +58,15 @@ Here's an example:
 
 ```js
 msg.oauth2Request = {
-	access_token_url: 'http://localhost:8080/v1/oauth/tokens',
-	credentials: {
-		grant_type: 'client_credentials',
-		client_id: 'test_client_1',
-		client_secret: 'test_secret',
-		scope: 'read_write'
-	}
-}
-return msg
+  access_token_url: 'http://localhost:8080/v1/oauth/tokens',
+  credentials: {
+    grant_type: 'client_credentials',
+    client_id: 'test_client_1',
+    client_secret: 'test_secret',
+    scope: 'read_write'
+  }
+};
+return msg;
 ```
 
 # `Password`
@@ -85,17 +84,17 @@ Here's an example:
 
 ```js
 msg.oauth2Request = {
-	access_token_url: 'http://localhost:8080/v1/oauth/tokens',
-	credentials: {
-		grant_type: 'password',
-		client_id: 'test_client_1',
-		client_secret: 'test_secret',
-		scope: 'read_write',
-		username: 'test@user',
-		password: 'test_password'
-	}
-}
-return msg
+  access_token_url: 'http://localhost:8080/v1/oauth/tokens',
+  credentials: {
+    grant_type: 'password',
+    client_id: 'test_client_1',
+    client_secret: 'test_secret',
+    scope: 'read_write',
+    username: 'test@user',
+    password: 'test_password'
+  }
+};
+return msg;
 ```
 
 # `refresh_token`
@@ -111,19 +110,19 @@ A refresh token can be used to obtain a new access token without requiring the u
 Here's an example:
 
 ```js
-let refresh_token = global.get('refresh_token')
+let refresh_token = global.get('refresh_token');
 
 msg.oauth2Request = {
-	access_token_url: 'http://localhost:8080/v1/oauth/tokens',
-	credentials: {
-		grant_type: 'refresh_token',
-		client_id: 'test_client_1',
-		client_secret: 'test_secret',
-		scope: 'read_write',
-		refresh_token: refresh_token
-	}
-}
-return msg
+  access_token_url: 'http://localhost:8080/v1/oauth/tokens',
+  credentials: {
+    grant_type: 'refresh_token',
+    client_id: 'test_client_1',
+    client_secret: 'test_secret',
+    scope: 'read_write',
+    refresh_token: refresh_token
+  }
+};
+return msg;
 ```
 
 ### References

@@ -1,12 +1,12 @@
 {
-	"name": "gitpod-plugin-for-oauth2",
-	"version": "1.0.0",
-	"description": "A plugin to fix HMR when running inside gitpod.",
-	"author": "Marcos Caputo",
-	"license": "MIT",
-	"node-red-contrib-oauth2": "gitpod.js",
-	"keywords": [
-		"node-red-contrib-oauth2",
-		"gitpod"
-	]
+  "name": "gitpod-plugin-for-oauth2",
+  "version": "1.0.0",
+  "description": "A plugin to fix HMR when running inside gitpod.",
+  "author": "Marcos Caputo",
+  "license": "MIT",
+  "node-red-contrib-oauth2": "gitpod.js",
+  "keywords": [
+    "node-red-contrib-oauth2",
+    "gitpod"
+  ]
 }
