@@ -4,7 +4,7 @@ const StoreCredentials = require('./libs/adapter.js');
 const axios = require('axios');
 const { URL } = require('url');
 const crypto = require('crypto');
-
+const https = require('https');
 /**
  * This function replaces circular references in the provided object to allow
  * safe stringification.
@@ -215,13 +215,17 @@ module.exports = function (RED) {
     redirectUrl.searchParams.set('response_type', 'code');
 
     try {
+      const agent = new https.Agent({
+        rejectUnauthorized: false
+      });
       const response = await axios.get(redirectUrl.toString(), {
-        proxy: proxyOptions
+        proxy: proxyOptions,
+        httpsAgent: agent,
       });
       res.redirect(response.request.res.responseUrl);
     } catch (error) {
-      const statusCode = error.response.status;
-      const { statusText } = error.response;
+      const statusCode = error?.code ? 500 : error?.response?.status || 404;
+      const statusText  = error?.message ? error.message :  error?.response || 'Not Found';
       const html = `<html>
         <head>
           <script language="javascript" type="text/javascript">
@@ -230,7 +234,7 @@ module.exports = function (RED) {
               window.close();
             }
             function delay() {
-              setTimeout("closeWindow()", 2000);
+              setTimeout("closeWindow()", 5000);
             }
           </script>
         </head>

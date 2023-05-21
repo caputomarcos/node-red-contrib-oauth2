@@ -67,6 +67,7 @@
 				icon: 'lock'
 			},
 			clientCredentialsInBody: { value: true },
+			language: { value: 'pt-BR' },
 			keepAuth: { value: false, label: 'Keep authentification', icon: 'lock' },
 			devMode: { value: false, label: 'Development Mode', icon: 'at' },
 			showBanner: { value: true, label: 'Show Banner', icon: 'eye' },
@@ -114,7 +115,7 @@
 			this.redirectUri = `${location.protocol}//${location.hostname}${
 				location.port ? ':' + location.port : ''
 			}${pathname}oauth2/redirect`
-			console.log(this.redirectUri)
+			console.log(this.language)
 			console.log(this.callback)
 			render(this, { minWidth: '600px' })
 		},
@@ -145,15 +146,19 @@
 		Group,
 		EditableList,
 		Row,
+		Select,
 		TypedInput
 	} from 'svelte-integration-red/components'
 	import Advanced from './components/Advanced.svelte'
 	import General from './components/General.svelte'
+	import Proxy from './components/Proxy.svelte'
 	import Credentials from './components/Credentials.svelte'
 	import Yell from './components/Yell.svelte'
 
 	import { createBackwardCompatible } from './libs/utils.js'
 	import Assembly from 'carbon-icons-svelte/lib/Assembly.svelte'
+
+	import { _ } from "./libs/i18n";
 
 	createBackwardCompatible(node)
 
@@ -175,6 +180,7 @@
 	let Click = () => {
 		messages = [data]
 	}
+
 </script>
 
 {#each messages as message}
@@ -184,45 +190,34 @@
 <div class="bottom" on:mouseenter={Click}><Assembly size={32} /></div>
 <TabbedPane bind:tabs>
 	<TabContent tab="general">
+		
 		<General bind:node bind:data />
-		<Collapsible {node} indented={false} icon="key" label="label.credentials">
+
+		<Collapsible {node} indented={false} icon="key" label="{$_("credentials.title")}">
 			<Credentials bind:node bind:data />
 		</Collapsible>
 
-		<Input type="config" {node} prop="proxy" disabled={node.disableInput} />
+		<Collapsible {node} indented={false} icon="key" label="{$_("credentials.settings")}">
+			<Proxy bind:node bind:data />
+		</Collapsible>
 
 		{#if node.headers}
-			<Collapsible indented={false} label="Headers" icon="list">
-				<Group clazz="paddingBottom">
-					<EditableList
-						id="headersList"
-						sortable
-						removable
-						addButton
-						label="Headers"
-						icon="database"
-						bind:elements={node.headers}
-						let:index
-						on:add={addHeaders}
-					>
-						<Row>
-							<Input inline bind:value={node.headers[index].key} placeholder="key" />
-							<TypedInput
-								inline
-								value={node.headers[index].value}
-								type={node.headers[index].type}
-								types={['str', 'num', 'bool', 'json']}
-								placeholder="value"
-								on:change={(e) => {
-									node.headers[index].type = e.detail.type
-									node.headers[index].value = e.detail.value
-								}}
-							/>
-						</Row>
-					</EditableList>
-				</Group>
-			</Collapsible>
-		{/if}
+		<Collapsible indented={false} label="{$_("credentials.Headers")}" icon="list">
+		  <Group clazz="paddingBottom">
+		  <EditableList id="headersList" sortable removable addButton label="{$_("credentials.Headers.Parameters")}" icon="database"  bind:elements={node.headers} let:index on:add={addHeaders} > 
+			<Row>
+			  <Input inline bind:value={node.headers[index].key} placeholder="key" />
+				<TypedInput inline value={node.headers[index].value} type={node.headers[index].type} types={[ "str", "num", "bool", "json"]} placeholder="value"
+				  on:change={(e) => {
+					node.headers[index].type = e.detail.type
+					node.headers[index].value = e.detail.value
+				  }}
+				/>
+			</Row>
+		  </EditableList>
+		  </Group>
+		</Collapsible>
+		{/if}   
 	</TabContent>
 	<TabContent tab="advanced">
 		<Advanced bind:node />
@@ -230,6 +225,13 @@
 </TabbedPane>
 
 <style>
+
+	.container {
+		position: absolute;
+		right: 5%;
+		display: inline-block;
+		cursor: pointer;
+	}	
 	:global(#oauth2-svelte-container :is(.required, .required label)) {
 		font-weight: bold !important;
 	}

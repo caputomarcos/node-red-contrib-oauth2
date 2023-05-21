@@ -21,7 +21,9 @@ const storeCredentials = (RED, config, msg) => {
     // Check environment variables for proxy settings
     const proxyEnv = process.env.http_proxy || process.env.HTTP_PROXY;
     const noProxyEnv = process.env.no_proxy || process.env.NO_PROXY;
-
+    
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+    
     options.proxy = {
       type: '',
       name: '',

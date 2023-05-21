@@ -28,6 +28,7 @@ const CreateBackwardCompatible = (obj) => {
   if (typeof obj.clientCredentialsInBody === 'undefined') obj.clientCredentialsInBody = false;
   if (typeof obj.headers === 'undefined') obj.headers = {};
   if (typeof obj.proxy === 'undefined') obj.proxy = '';
+  if (typeof obj.language === 'undefined') obj.language = '';
 
   if (typeof obj.showBanner === 'undefined') obj.showBanner = false;
   if (typeof obj.disableInput === 'undefined') obj.disableInput = false;

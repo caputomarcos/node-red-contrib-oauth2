@@ -1,8 +1,33 @@
 <script>
 	export let node
-	import { Callout, Collapsible, Group, Input } from 'svelte-integration-red/components'
-</script>
+	import {
+		Callout,
+		Collapsible,
+		Group,
+		Input,
+		Row,
+		Button
+	} from 'svelte-integration-red/components'
+	import { _, locale, locales } from '../libs/i18n'
+	import { onMount } from 'svelte'
 
+	onMount(() => {
+		locale.set(node.language)
+	})
+</script>
+<Group slot="header" clazz="paddingBottom" style="justify-content: space-between; margin-right: 6px;">
+	<Row>
+		<label class="block">
+			<!-- <label for="locale-select">{$_("general.locale")}</label> -->
+			<span class="block">{$_("general.language")}</span>
+			<select class="block select" bind:value={$locale} icon="warning" disabled={node.disableInput} on:change="{event => node.language = event.target.value}">
+				{#each locales as l}
+					<option value={l}>{l}</option>
+				{/each}
+			</select>
+		</label>
+	</Row>		
+</Group>
 <Group clazz="paddingAdvanced">
 	<Collapsible label="Request" indented={false}>
 		<Input bind:node prop="clientCredentialsInBody" labelBeforeCheckbox={true} />
@@ -51,3 +76,17 @@
 		<Callout type="info" small>Disable Input.</Callout>
 	{/if}
 </Collapsible>
+
+<style>
+	.select {
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		padding: 6px 10px 6px 4px;
+	}
+
+	.block {
+		display: block;
+		justify-content: space-between;
+		margin-right: 6px;
+	}
+</style>
