@@ -1720,10 +1720,10 @@ caniuse-lite@^1.0.30001449:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001488.tgz#d19d7b6e913afae3e98f023db97c19e9ddc5e91f"
   integrity sha512-NORIQuuL4xGpIy6iCCQGN4iFjlBXtfKWIenlUuyZJumLRIindLb7wXM+GO8erEhb7vXfcnf4BAg2PrSDN5TNLQ==
 
-carbon-components-svelte@^0.67.9:
-  version "0.67.9"
-  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.67.9.tgz#6c4c0aaeac5e87228accc3b7c35362f8fec09f1c"
-  integrity sha512-QZd7oxWlBjWx3TbXZhke8voFAQtuoZeQoGx/RkCRbUqBbWsMAaGLn/umTP9+kpiHeMX8/7Hl/CTML+CkKOfE1g==
+carbon-components-svelte@^0.75.0:
+  version "0.75.0"
+  resolved "https://registry.yarnpkg.com/carbon-components-svelte/-/carbon-components-svelte-0.75.0.tgz#45f1ba1175d2ccd9a8d8c17082bac74b4e4eb463"
+  integrity sha512-0KWqs5rgN0eBhFdTTHkzOM7HAiqBBg3gE4k6eYz49pBdcGt4z/BIzpCBjKhQHd+QdfYF6Tba70EXvZG8fOGqbw==
   dependencies:
     flatpickr "4.6.9"
 

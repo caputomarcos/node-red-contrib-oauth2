@@ -10,6 +10,7 @@ export default {
     'general.errorHandling': 'Error Handling',
     'general.language': 'Language',
 
+    'advanced.global': 'Global',
     'credentials.grantType': 'Grant Types',
     'credentials.title': 'Credentials',
     'credentials.clientId': 'Client Id',
@@ -53,6 +54,8 @@ export default {
     'general.container': 'Container',
     'general.errorHandling': 'Tratamento de Erro',
     'general.language': 'Idioma',
+
+    'advanced.global': 'Global',
 
     'credentials.grantType': 'Tipos de Concessão',
     'credentials.title': 'Credenciais',

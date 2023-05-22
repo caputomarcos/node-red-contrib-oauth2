@@ -66,7 +66,11 @@
         label: 'label.disableInput',
         icon: 'lock'
       },
-      clientCredentialsInBody: { value: true },
+      clientCredentialsInBody: {
+        value: false,
+        label: 'label.clientCredentialsInBody',
+        icon: 'lock'
+      },
       language: { value: 'pt-BR' },
       keepAuth: { value: false, label: 'Keep authentification', icon: 'lock' },
       devMode: { value: false, label: 'Development Mode', icon: 'at' },
@@ -133,7 +137,6 @@
   import { Callout, Input, TabbedPane, TabContent, Collapsible, Group, EditableList, Row, Select, TypedInput } from 'svelte-integration-red/components';
   import Advanced from './components/Advanced.svelte';
   import General from './components/General.svelte';
-  import Proxy from './components/Proxy.svelte';
   import Credentials from './components/Credentials.svelte';
   import Yell from './components/Yell.svelte';
 
@@ -148,10 +151,6 @@
 
   let tabs = { general: 'General', advanced: 'Advanced' };
 
-  const addHeaders = () => {
-    node.headers.push({ key: '', value: '', type: 'str' });
-    node.headers = node.headers;
-  };
   let messages = [];
   function deleteMessage(event) {
     // delete first element in arr
@@ -177,35 +176,10 @@
       <Credentials bind:node bind:data />
     </Collapsible>
 
-    <Collapsible {node} indented={false} icon="key" label={$_('credentials.settings')}>
-      <Proxy bind:node bind:data />
-    </Collapsible>
 
-    {#if node.headers}
-      <Collapsible indented={false} label={$_('credentials.Headers')} icon="list">
-        <Group clazz="paddingBottom">
-          <EditableList id="headersList" sortable removable addButton label={$_('credentials.Headers.Parameters')} icon="database" bind:elements={node.headers} let:index on:add={addHeaders}>
-            <Row>
-              <Input inline bind:value={node.headers[index].key} placeholder="key" />
-              <TypedInput
-                inline
-                value={node.headers[index].value}
-                type={node.headers[index].type}
-                types={['str', 'num', 'bool', 'json']}
-                placeholder="value"
-                on:change={(e) => {
-                  node.headers[index].type = e.detail.type;
-                  node.headers[index].value = e.detail.value;
-                }}
-              />
-            </Row>
-          </EditableList>
-        </Group>
-      </Collapsible>
-    {/if}
   </TabContent>
   <TabContent tab="advanced">
-    <Advanced bind:node />
+    <Advanced bind:node bind:data/>
   </TabContent>
 </TabbedPane>
 
@@ -220,7 +194,7 @@
     font-weight: bold !important;
   }
   :global(#oauth2-svelte-container .sir-Row label) {
-    min-width: 150px;
+    min-width: 180px;
   }
   :global(#oauth2-svelte-container .sir-Row label i) {
     min-width: 14px;
