@@ -3,7 +3,18 @@
   import { Button, Callout, Collapsible, Group, Input, Row, Select, TypedInput } from 'svelte-integration-red/components';
   import { _ } from '../libs/i18n';
 
-  const errorHandlingOptions = [`${$_('standard.label')}`, 'other output', 'throw exception', 'all in one'];
+  let errorHandlingOpts = [
+    {
+      value: 'standard',
+      label: 'default',
+      icon: 'red/images/typedInput/bool.svg',
+      options: [
+        { value: 'standard', label: `${$_('standard.label')}` },
+        { value: 'other output', label: 'other output' },
+        { value: 'throw exception', label: 'throw exception' }
+      ]
+    }
+  ];
 
   let testTypes = [
     {
@@ -49,11 +60,7 @@
   <Group clazz="paddingBottom">
     <Input bind:node prop="name" label={$_('general.name')} />
     <TypedInput {node} prop="container" typeProp="containerOpts" bind:types={contentTypes} label={$_('general.container')} disabled={node.disableInput} bind:tooltip={node.container} />
-    <Select bind:node prop="errorHandling" label={$_('general.errorHandling')} icon="warning" disabled={node.disableInput}>
-      {#each errorHandlingOptions as eOption}
-        <option value={eOption}>{eOption}</option>
-      {/each}
-    </Select>
+    <TypedInput {node} prop="errorHandling" typeProp="errorHandlingOpts" bind:types={errorHandlingOpts} label={$_('general.errorHandling')} disabled={node.disableInput} bind:tooltip={node.errorHandling} />
   </Group>
 </Collapsible>
 

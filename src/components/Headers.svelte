@@ -3,12 +3,10 @@
   import { Collapsible, Group, Input, Row, EditableList, TypedInput } from 'svelte-integration-red/components';
   import { _ } from '../libs/i18n';
 
-
   const addHeaders = () => {
     node.headers.push({ key: '', value: '', type: 'str' });
     node.headers = node.headers;
   };
-  
 </script>
 
 {#if node.headers}

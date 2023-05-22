@@ -92,14 +92,15 @@ module.exports = function (RED) {
    */
   RED.httpAdmin.get('/oauth2/credentials/:token', (req, res) => {
     const credentials = RED.nodes.getCredentials(req.params.token);
-    if (credentials) {
+    // if (!credentials) return res.status(401).json({ error: 'Token was missing or invalid!' });
+    // if (!credentials.code) return res.status(401).json({ error: 'Token was missing or invalid!' });
+    // if (!credentials.redirectUri) return res.status(401).json({ error: 'redirectUri was missing or invalid!' });
+    if (credentials && credentials.code && credentials.redirectUri) {
       return res.status(200).json({
         code: credentials.code,
         redirectUri: credentials.redirectUri
       });
     }
-
-    return res.status(401).json({ error: 'oauth2.error.no-credentials' });
   });
 
   /**

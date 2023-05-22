@@ -21,7 +21,13 @@
       },
       containerOpts: { value: 'oauth2Response' },
 
-      errorHandling: { value: 'standard', label: 'label.errorHandling' },
+      errorHandling: {
+        value: '',
+        icon: 'warning',
+        label: 'label.errorHandling',
+        validate: RED.validators.typedInput('containerOpts')
+      },
+      errorHandlingOpts: { value: 'standard' },
 
       grantType: {
         value: '',
@@ -112,6 +118,7 @@
         this.callback = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/auth/callback`;
       }
       this.redirectUri = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/redirect`;
+
       console.log(this.language);
       console.log(this.callback);
       render(this, { minWidth: '600px' });
@@ -159,7 +166,10 @@
   }
 
   let Click = () => {
-    messages = [data];
+    if (data && data.error) {
+      messages = [data.error];
+      delete data.error;
+    }
   };
 </script>
 
@@ -175,11 +185,9 @@
     <Collapsible {node} indented={false} icon="key" label={$_('credentials.title')}>
       <Credentials bind:node bind:data />
     </Collapsible>
-
-
   </TabContent>
   <TabContent tab="advanced">
-    <Advanced bind:node bind:data/>
+    <Advanced bind:node bind:data />
   </TabContent>
 </TabbedPane>
 
