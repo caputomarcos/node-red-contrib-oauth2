@@ -78,8 +78,8 @@
         icon: 'lock'
       },
       language: { value: 'pt-BR' },
-      keepAuth: { value: false, label: 'Keep authentification', icon: 'lock' },
-      devMode: { value: false, label: 'Development Mode', icon: 'at' },
+      keepAuth: { value: false, label: 'Keep authentification', icon: 'key' },
+      devMode: { value: false, label: 'Development Mode', icon: 'cubes' },
       showBanner: { value: true, label: 'Show Banner', icon: 'eye' },
       proxy: { type: 'http proxy', required: false, label: RED._('node-red:httpin.proxy-config') },
 

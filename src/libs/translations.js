@@ -27,6 +27,8 @@ export default {
     'credentials.Headers': 'Headers',
     'credentials.Headers.Parameters': 'Parameters',
 
+    'advanced.http.extra': 'Extra',
+
     'label.settings': 'Settings',
     'label.rejectUnauthorized': 'Reject Unauthorized',
     'label.clientCredentialsInBody': 'Embedded Credentials',
@@ -73,6 +75,8 @@ export default {
 
     'credentials.Headers': 'Cabeçalhos',
     'credentials.Headers.Parameters': 'Parâmetros',
+
+    'advanced.http.extra': 'Extra',
 
     'label.settings': 'Configurações',
     'label.rejectUnauthorized': 'Rejeitar Não Autorizado',

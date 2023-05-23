@@ -12,13 +12,14 @@
 {#if node.headers}
   <Collapsible indented={false} label={$_('credentials.Headers')} icon="list">
     <Group clazz="paddingBottom">
-      <EditableList id="headersList" sortable removable addButton label={$_('credentials.Headers.Parameters')} icon="database" bind:elements={node.headers} let:index on:add={addHeaders}>
+      <EditableList id="headersList" sortable removable addButton label={$_('credentials.Headers.Parameters')} icon="database" bind:elements={node.headers} let:index on:add={addHeaders} disabled={node.disableInput} >
         <Row>
-          <Input inline bind:value={node.headers[index].key} placeholder="key" />
+          <Input inline bind:value={node.headers[index].key} placeholder="key" disabled={node.disableInput} />
           <TypedInput
             inline
             value={node.headers[index].value}
             type={node.headers[index].type}
+            disabled={node.disableInput}
             types={['str', 'num', 'bool', 'json']}
             placeholder="value"
             on:change={(e) => {

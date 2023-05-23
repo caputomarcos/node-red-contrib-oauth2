@@ -7,7 +7,7 @@
 
   import Proxy from './Proxy.svelte';
   import Headers from './Headers.svelte';
-  import Request from './Request.svelte';
+  import Extra from './Extra.svelte';
 
   onMount(() => {
     locale.set(node.language);
@@ -29,7 +29,13 @@
     </svelte:fragment>
 
     <Collapsible label="Options" indented={false}>
-      <Input bind:node prop="devMode" labelBeforeCheckbox={true} />
+      <Input bind:node prop="keepAuth" labelBeforeCheckbox={true} disabled={node.disableInput} />
+      {#if node.keepAuth}
+        <Callout type="info" small>
+          Enabling <b>'Keep authentication'</b> preserves <b>msg.oauth2Request</b> payload for other flow nodes.
+        </Callout>
+      {/if}
+      <Input bind:node prop="devMode" labelBeforeCheckbox={true} disabled={node.disableInput} />
       {#if node.devMode}
         <Callout type="warning">
           <span slot="header">Warning!</span>
@@ -37,7 +43,7 @@
           <p>Allows to make otherwise rejected calls like when using self signed or expired certificates.</p>
         </Callout>
       {/if}
-      <Input bind:node prop="showBanner" labelBeforeCheckbox={true} />
+      <Input bind:node prop="showBanner" labelBeforeCheckbox={true} disabled={node.disableInput} />
       {#if node.showBanner}
         <Callout type="info" small>
           Display the <b>OAuth2 protocol</b> banner on the general tab.
@@ -51,9 +57,9 @@
   </Group>
 
   <Collapsible label="HTTP" icon="plus">
-    <Request bind:node />
     <Proxy bind:node bind:data />
     <Headers bind:node />
+    <Extra bind:node />
   </Collapsible>
 </Group>
 

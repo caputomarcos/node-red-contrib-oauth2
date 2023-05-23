@@ -58,7 +58,7 @@
 
 <Collapsible label={$_('general.title')} indented={false} icon="globe">
   <Group clazz="paddingBottom">
-    <Input bind:node prop="name" label={$_('general.name')} />
+    <Input bind:node prop="name" label={$_('general.name')} disabled={node.disableInput} />
     <TypedInput {node} prop="container" typeProp="containerOpts" bind:types={contentTypes} label={$_('general.container')} disabled={node.disableInput} bind:tooltip={node.container} />
     <TypedInput {node} prop="errorHandling" typeProp="errorHandlingOpts" bind:types={errorHandlingOpts} label={$_('general.errorHandling')} disabled={node.disableInput} bind:tooltip={node.errorHandling} />
   </Group>
