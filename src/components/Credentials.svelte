@@ -93,12 +93,12 @@
       <Input bind:node prop="clientId" maximize icon="id-card" label={$_('credentials.clientId')} disabled={node.disableInput} />
       <Row>
         <Input bind:node prop="clientSecret" maximize icon="key" inline label={$_('credentials.clientSecret')} type={show_client_secret ? 'text' : 'password'} disabled={node.disableInput} />
-        <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_client_secret = !show_client_secret)}>{show_client_secret ? 'Hide' : 'Show'}</Button>
+        <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_client_secret = !show_client_secret)} disabled={node.disableInput} >{show_client_secret ? 'Hide' : 'Show'}</Button>
       </Row>
       <Input bind:node prop="scope" maximize icon="code" label={$_('credentials.scope')} disabled={node.disableInput} />
       <Row>
         <Input bind:node prop="code" maximize icon="sign-in" inline label={$_('credentials.code')} type={show_code ? 'text' : 'password'} disabled={node.disableInput} />
-        <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_code = !show_code)}>{show_code ? 'Hide' : 'Show'}</Button>
+        <Button inline icon={show_code ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_code = !show_code)} disabled={node.disableInput} >{show_code ? 'Hide' : 'Show'}</Button>
         <Button inline icon="key" on:click={onClick} disabled={node.disableInput} />
       </Row>
     </Group>

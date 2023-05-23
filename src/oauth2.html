@@ -13478,7 +13478,7 @@ function create_if_block_2(ctx) {
 			if (dirty[0] & /*node*/ 1) group_changes.node = /*node*/ ctx[0];
 			if (dirty[0] & /*$_*/ 32) group_changes.tooltip = /*$_*/ ctx[5]('tooltip.settings');
 
-			if (dirty[0] & /*node, show_client_secret, show_code, $_*/ 45 | dirty[1] & /*$$scope*/ 2) {
+			if (dirty[0] & /*node, show_code, $_, show_client_secret*/ 45 | dirty[1] & /*$$scope*/ 2) {
 				group_changes.$$scope = { dirty, ctx };
 			}
 
@@ -13601,7 +13601,7 @@ function create_if_block$1(ctx) {
 	};
 }
 
-// (96:8) <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_client_secret = !show_client_secret)}>
+// (96:8) <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_client_secret = !show_client_secret)} disabled={node.disableInput} >
 function create_default_slot_13(ctx) {
 	let t_value = (/*show_client_secret*/ ctx[2] ? 'Hide' : 'Show') + "";
 	let t;
@@ -13656,6 +13656,7 @@ function create_default_slot_12(ctx) {
 				inline: true,
 				icon: /*show_client_secret*/ ctx[2] ? 'eye' : 'eye-slash',
 				type: "button",
+				disabled: /*node*/ ctx[0].disableInput,
 				$$slots: { default: [create_default_slot_13] },
 				$$scope: { ctx }
 			}
@@ -13690,6 +13691,7 @@ function create_default_slot_12(ctx) {
 			input.$set(input_changes);
 			const button_changes = {};
 			if (dirty[0] & /*show_client_secret*/ 4) button_changes.icon = /*show_client_secret*/ ctx[2] ? 'eye' : 'eye-slash';
+			if (dirty[0] & /*node*/ 1) button_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (dirty[0] & /*show_client_secret*/ 4 | dirty[1] & /*$$scope*/ 2) {
 				button_changes.$$scope = { dirty, ctx };
@@ -13716,7 +13718,7 @@ function create_default_slot_12(ctx) {
 	};
 }
 
-// (101:8) <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_code = !show_code)}>
+// (101:8) <Button inline icon={show_code ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_code = !show_code)} disabled={node.disableInput} >
 function create_default_slot_11(ctx) {
 	let t_value = (/*show_code*/ ctx[3] ? 'Hide' : 'Show') + "";
 	let t;
@@ -13771,8 +13773,9 @@ function create_default_slot_10(ctx) {
 	button0 = new Button({
 			props: {
 				inline: true,
-				icon: /*show_client_secret*/ ctx[2] ? 'eye' : 'eye-slash',
+				icon: /*show_code*/ ctx[3] ? 'eye' : 'eye-slash',
 				type: "button",
+				disabled: /*node*/ ctx[0].disableInput,
 				$$slots: { default: [create_default_slot_11] },
 				$$scope: { ctx }
 			}
@@ -13820,7 +13823,8 @@ function create_default_slot_10(ctx) {
 
 			input.$set(input_changes);
 			const button0_changes = {};
-			if (dirty[0] & /*show_client_secret*/ 4) button0_changes.icon = /*show_client_secret*/ ctx[2] ? 'eye' : 'eye-slash';
+			if (dirty[0] & /*show_code*/ 8) button0_changes.icon = /*show_code*/ ctx[3] ? 'eye' : 'eye-slash';
+			if (dirty[0] & /*node*/ 1) button0_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (dirty[0] & /*show_code*/ 8 | dirty[1] & /*$$scope*/ 2) {
 				button0_changes.$$scope = { dirty, ctx };
@@ -14027,7 +14031,7 @@ function create_default_slot_9(ctx) {
 			input2.$set(input2_changes);
 			const row0_changes = {};
 
-			if (dirty[0] & /*show_client_secret, $_, node*/ 37 | dirty[1] & /*$$scope*/ 2) {
+			if (dirty[0] & /*show_client_secret, node, $_*/ 37 | dirty[1] & /*$$scope*/ 2) {
 				row0_changes.$$scope = { dirty, ctx };
 			}
 
@@ -14045,7 +14049,7 @@ function create_default_slot_9(ctx) {
 			input3.$set(input3_changes);
 			const row1_changes = {};
 
-			if (dirty[0] & /*node, show_client_secret, show_code, $_*/ 45 | dirty[1] & /*$$scope*/ 2) {
+			if (dirty[0] & /*node, show_code, $_*/ 41 | dirty[1] & /*$$scope*/ 2) {
 				row1_changes.$$scope = { dirty, ctx };
 			}
 
