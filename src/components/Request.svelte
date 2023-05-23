@@ -1,7 +1,7 @@
 <script>
   export let node;
   import { Callout, Collapsible, Group, Input, Row } from 'svelte-integration-red/components';
-  import { _ } from 'node-red/node_modules/node-red-contrib-oauth2/src/libs/i18n';
+  import { _ } from '../libs/i18n';
 </script>
 
 <Collapsible indented={false} label={$_('credentials.proxy')} icon="list">

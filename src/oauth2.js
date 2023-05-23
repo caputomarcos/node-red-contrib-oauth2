@@ -1,4 +1,4 @@
-const { CreateBackwardCompatible } = require('./libs/utils.js');
+const { oauth2BackwardCompatible } = require('./libs/backwardCompatible.js');
 const { getAccessToken } = require('./libs/post.js');
 const StoreCredentials = require('./libs/adapter.js');
 const axios = require('axios');
@@ -66,7 +66,7 @@ module.exports = function (RED) {
         }
       };
 
-      CreateBackwardCompatible(config);
+      oauth2BackwardCompatible(config);
       // TODO: Review this code. maybe a better name.
       const payload = StoreCredentials(RED, config, msg);
       getAccessToken(payload)
@@ -179,19 +179,19 @@ module.exports = function (RED) {
 
     const node_id = req.query.id;
     const credentials = JSON.parse(JSON.stringify(req.query, getCircularReplacer()));
-    const proxy = RED.nodes.getNode(credentials.proxy);
+    const proxy = credentials?.proxy ? RED.nodes.getNode(credentials.proxy) : null;
 
     let proxyOptions;
     if (proxy) {
       const match = proxy.url.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
       if (match) {
-        const proxyURL = new URL(proxy.url);
+        const proxyURL = new URL(proxy?.url);
         proxyOptions = {
-          protocol: proxyURL.protocol,
-          hostname: proxyURL.hostname,
-          port: proxyURL.port,
-          username: proxy.credentials.username,
-          password: proxy.credentials.password
+          protocol: proxyURL?.protocol,
+          hostname: proxyURL?.hostname,
+          port: proxyURL?.port,
+          username: proxy?.credentials?.username,
+          password: proxy?.credentials?.password
         };
       }
     }

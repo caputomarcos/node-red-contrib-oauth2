@@ -147,12 +147,12 @@
   import Credentials from './components/Credentials.svelte';
   import Yell from './components/Yell.svelte';
 
-  import { createBackwardCompatible } from './libs/utils.js';
+  import { oauth2BackwardCompatible } from './libs/backwardCompatible';
   import Assembly from 'carbon-icons-svelte/lib/Assembly.svelte';
 
   import { _ } from './libs/i18n';
 
-  createBackwardCompatible(node);
+  oauth2BackwardCompatible(node);
 
   node.internalErrors.readUrl = false;
 

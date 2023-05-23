@@ -1,10 +1,10 @@
 /**
- * Creates a backward compatible object by assigning default values to properties if they are undefined.
+ * Creates a backward compatible object by assigning default values to properties if they are undefined. for node (client) and config (server)
  *
  * @param {object} obj - The object to make backward compatible.
  * @returns {void}
  */
-const CreateBackwardCompatible = (obj) => {
+const oauth2BackwardCompatible = (obj) => {
   if (typeof obj.name === 'undefined') obj.name = '';
   if (typeof obj.container === 'undefined') obj.container = '';
   if (typeof obj.containerOpts === 'undefined') obj.containerOpts = '';
@@ -35,5 +35,5 @@ const CreateBackwardCompatible = (obj) => {
 };
 
 module.exports = {
-  CreateBackwardCompatible
+  oauth2BackwardCompatible
 };
