@@ -234,6 +234,22 @@ async function getAccessToken(payload) {
   };
 }
 
+/**
+ * Function to handle get request using axios.
+ * @param {string} url - The URL to request.
+ * @param {object} options - The request options.
+ * @returns {Promise} - The axios request promise.
+ */
+async function handlerGetRequest(url, options) {
+  try {
+    const response = await axios.get(url, options);
+    return response;
+  } catch (error) {
+    throw new Error('Failed to refresh access token');
+  }
+}
+
 module.exports = {
-  getAccessToken
+  getAccessToken,
+  handlerGetRequest
 };

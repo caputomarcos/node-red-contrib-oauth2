@@ -42,11 +42,12 @@ const storeCredentials = (RED, config, msg) => {
     }
 
     const proxy = RED.nodes.getNode(config.proxy);
-    options.proxy.type = proxy?.type || null;
-    options.proxy.name = proxy?.name || null;
-    options.proxy.url = proxy?.url || null;
-    options.proxy.noproxy = proxy?.noproxy || null;
-    options.proxy.credentials = proxy?.credentials || null;
+
+    if (proxy && proxy?.type) options.proxy.type = proxy.type;
+    if (proxy && proxy?.name) options.proxy.name = proxy.name;
+    if (proxy && proxy?.url) options.proxy.url = proxy.url;
+    if (proxy && proxy?.noproxy) options.proxy.noproxy = proxy.noproxy;
+    if (proxy && proxy?.credentials) options.proxy.credentials = proxy.credentials;
   }
 
   if (config.headers) {

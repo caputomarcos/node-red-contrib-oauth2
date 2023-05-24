@@ -55,12 +55,11 @@
       {/if}
     </Collapsible>
   </Group>
-
-  <Collapsible label="HTTP" icon="plus">
+  <Group label="HTTP" icon="plus">
     <Proxy bind:node bind:data />
     <Headers bind:node />
     <Extra bind:node />
-  </Collapsible>
+  </Group>
 </Group>
 
 <style>

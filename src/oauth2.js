@@ -1,7 +1,6 @@
-const { oauth2BackwardCompatible } = require('./libs/backwardCompatible.js');
-const { getAccessToken } = require('./libs/post.js');
 const StoreCredentials = require('./libs/adapter.js');
-const axios = require('axios');
+const { oauth2BackwardCompatible } = require('./libs/backwardCompatible.js');
+const { getAccessToken, handlerGetRequest } = require('./libs/handlerRequest.js');
 const { URL } = require('url');
 const crypto = require('crypto');
 const https = require('https');
@@ -32,6 +31,11 @@ module.exports = function (RED) {
     RED.nodes.createNode(this, config);
 
     const node = this;
+
+    const credentials = RED.nodes.getCredentials(config.id);
+    credentials.rejectUnauthorized = credentials ? config.rejectUnauthorized : false;
+
+    RED.nodes.addCredentials(node.id, credentials);
 
     node.on('input', (msg, send, done) => {
       // If this is pre-1.0, 'send' will be undefined, so fallback to node.send
@@ -178,50 +182,50 @@ module.exports = function (RED) {
     }
 
     const node_id = req.query.id;
-    const credentials = JSON.parse(JSON.stringify(req.query, getCircularReplacer()));
-    const proxy = credentials?.proxy ? RED.nodes.getNode(credentials.proxy) : null;
 
-    let proxyOptions;
-    if (proxy) {
-      const match = proxy.url.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
-      if (match) {
-        const proxyURL = new URL(proxy?.url);
-        proxyOptions = {
-          protocol: proxyURL?.protocol,
-          hostname: proxyURL?.hostname,
-          port: proxyURL?.port,
-          username: proxy?.credentials?.username,
-          password: proxy?.credentials?.password
-        };
-      }
-    }
+    let credentials = RED.nodes.getCredentials(node_id);
+    credentials = { ...credentials, ...JSON.parse(JSON.stringify(req.query, getCircularReplacer())) };
 
-    const csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
-
-    credentials.csrfToken = csrfToken;
+    credentials.csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
+    res.cookie('csrf', credentials.csrfToken);
     RED.nodes.addCredentials(node_id, credentials);
-
-    res.cookie('csrf', csrfToken);
 
     const l = new URL(req.query.authorizationEndpoint);
     const redirectUrl = new URL(l);
-    redirectUrl.searchParams.set('client_id', credentials.clientId);
-    redirectUrl.searchParams.set('redirect_uri', credentials.redirectUri);
-    redirectUrl.searchParams.set('state', credentials.id + ':' + credentials.csrfToken);
-    redirectUrl.searchParams.set('scope', credentials.scope);
+    redirectUrl.searchParams.set('client_id', credentials?.clientId);
+    redirectUrl.searchParams.set('redirect_uri', credentials?.redirectUri);
+    redirectUrl.searchParams.set('state', credentials?.id + ':' + credentials?.csrfToken);
+    redirectUrl.searchParams.set('scope', credentials?.scope);
     redirectUrl.searchParams.set('response_type', 'code');
 
     try {
-      const agent = new https.Agent({
-        rejectUnauthorized: false
-      });
-      const response = await axios.get(redirectUrl.toString(), {
-        proxy: proxyOptions,
-        httpsAgent: agent
-      });
+      const options = {
+        httpsAgent: https.Agent({
+          rejectUnauthorized: credentials?.rejectUnauthorized || false
+        })
+      };
+
+      const proxy = credentials?.proxy ? RED.nodes.getNode(credentials.proxy) : null;
+      if (proxy) {
+        const match = proxy.url.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
+        if (match) {
+          const proxyURL = new URL(proxy?.url);
+          if (!proxy?.noproxy.includes(proxyURL?.hostname)) {
+            options.proxy = {
+              protocol: proxyURL?.protocol,
+              hostname: proxyURL?.hostname,
+              port: proxyURL?.port,
+              username: proxy?.credentials?.username,
+              password: proxy?.credentials?.password
+            };
+          }
+        }
+      }
+
+      const response = await handlerGetRequest(redirectUrl.toString(), options);
       res.redirect(response.request.res.responseUrl);
     } catch (error) {
-      const statusCode = error?.code ? 500 : error?.response?.status || 404;
+      const statusCode = error?.code ? 500 : error?.response?.status || 401;
       const statusText = error?.message ? error.message : error?.response || 'Not Found';
       const html = `<html>
         <head>
@@ -294,7 +298,8 @@ module.exports = function (RED) {
       refreshToken: { type: 'password' },
       expireTime: { type: 'password' },
       code: { type: 'password' },
-      proxy: { type: 'json' }
+      proxy: { type: 'text' },
+      rejectUnauthorized: { type: 'bool' }
     }
   });
 };
