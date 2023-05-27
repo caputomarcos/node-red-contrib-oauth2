@@ -82,7 +82,7 @@
       devMode: { value: false, label: 'Development Mode', icon: 'cubes' },
       showBanner: { value: true, label: 'Show Banner', icon: 'eye' },
       proxy: { type: 'http proxy', required: false, label: RED._('node-red:httpin.proxy-config') },
-
+      tslconfig: { type: 'tls-config', required: false, label: RED._('node-red:httpin.tls-config') },
       outputs: { value: 1 }
     },
 
@@ -181,7 +181,6 @@
 <TabbedPane bind:tabs>
   <TabContent tab="general">
     <General bind:node bind:data />
-
     <Collapsible {node} indented={false} icon="key" label={$_('credentials.title')}>
       <Credentials bind:node bind:data />
     </Collapsible>

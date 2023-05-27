@@ -1,0 +1,110 @@
+I0526 20:11:40.180587   89163 main.go:96] Starting HTTPS proxy...
+I0526 20:12:10.407256   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:36734' to 'localhost:8080'
+I0526 20:12:10.407302   89163 proxy.go:33] 'Content-Length': [0] 142
+I0526 20:12:10.407308   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:10.407312   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:12:10.407316   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:10.407320   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:10.407323   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:10.407341   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:10.407351   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:10.441767   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:36738' to 'localhost:8080'
+I0526 20:12:10.441798   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:10.441804   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:12:10.441808   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:10.441812   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:10.441817   89163 proxy.go:33] 'Content-Length': [0] 46
+I0526 20:12:10.441820   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:10.441824   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:10.441828   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:10.442064   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:36740' to 'localhost:8080'
+I0526 20:12:10.442079   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:10.442083   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:10.442087   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:10.442090   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:10.442094   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:10.442097   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:10.442101   89163 proxy.go:33] 'Content-Length': [0] 46
+I0526 20:12:10.442104   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:12:10.453791   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:36736' to 'localhost:8080'
+I0526 20:12:10.453985   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:10.454060   89163 proxy.go:33] 'Content-Length': [0] 46
+I0526 20:12:10.454101   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:10.454141   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:10.454181   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:10.454221   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:10.454260   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:10.454301   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:12:13.191533   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:36746' to 'localhost:8080'
+I0526 20:12:13.191567   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:13.191573   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:12:13.191577   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:13.191580   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:13.191585   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:13.191588   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:13.191591   89163 proxy.go:33] 'Content-Length': [0] 46
+I0526 20:12:13.191595   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:15.670004   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:36748' to 'localhost:8080'
+I0526 20:12:15.670044   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:15.670050   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:15.670055   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:15.670058   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:15.670062   89163 proxy.go:33] 'Content-Length': [0] 142
+I0526 20:12:15.670065   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:12:15.670069   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:15.670072   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:18.924830   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:51948' to 'localhost:8080'
+I0526 20:12:18.924866   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:18.924877   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:12:18.924881   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:18.924885   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:18.924889   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:18.924893   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:18.924896   89163 proxy.go:33] 'Content-Length': [0] 142
+I0526 20:12:18.924899   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:19.251304   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:51950' to 'localhost:8080'
+I0526 20:12:19.251340   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:19.251352   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:19.251356   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:19.251360   89163 proxy.go:33] 'Content-Length': [0] 142
+I0526 20:12:19.251363   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:19.251367   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:12:19.251370   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:19.251373   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:19.654702   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:51966' to 'localhost:8080'
+I0526 20:12:19.654737   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:19.654743   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:19.654747   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:19.654750   89163 proxy.go:33] 'Content-Length': [0] 142
+I0526 20:12:19.654754   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:19.654757   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:12:19.654760   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:19.654764   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:19.941934   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:51974' to 'localhost:8080'
+I0526 20:12:19.941966   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:19.941972   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:19.941976   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:19.941982   89163 proxy.go:33] 'Content-Length': [0] 142
+I0526 20:12:19.941987   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:12:19.941990   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:19.941993   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:19.941997   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:24.296524   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:51986' to 'localhost:8080'
+I0526 20:12:24.305633   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:24.305647   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:24.305651   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:12:24.305655   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:24.305658   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:24.305671   89163 proxy.go:33] 'Content-Length': [0] 46
+I0526 20:12:24.305680   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:24.305684   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:25.087918   89163 proxy.go:29] Serving 'POST' request from '127.0.0.1:51988' to 'localhost:8080'
+I0526 20:12:25.087956   89163 proxy.go:33] 'User-Agent': [0] axios/1.4.0
+I0526 20:12:25.087972   89163 proxy.go:33] 'Content-Length': [0] 46
+I0526 20:12:25.087977   89163 proxy.go:33] 'Connection': [0] close
+I0526 20:12:25.087981   89163 proxy.go:33] 'Accept': [0] application/json, text/plain, */*
+I0526 20:12:25.087984   89163 proxy.go:33] 'Content-Type': [0] application/x-www-form-urlencoded
+I0526 20:12:25.087988   89163 proxy.go:33] 'Authorization': [0] Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==
+I0526 20:12:25.087991   89163 proxy.go:33] 'Accept-Encoding': [0] gzip, compress, deflate, br
+I0526 20:12:25.087995   89163 proxy.go:33] 'Proxy-Authorization': [0] Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+I0526 20:15:25.361491   89443 main.go:96] Starting HTTPS proxy...

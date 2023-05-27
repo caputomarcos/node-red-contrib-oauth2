@@ -1,41 +1,15 @@
-const StoreCredentials = require('./libs/adapter.js');
-const { oauth2BackwardCompatible } = require('./libs/backwardCompatible.js');
-const { getAccessToken, handlerGetRequest } = require('./libs/handlerRequest.js');
-const { URL } = require('url');
-const crypto = require('crypto');
-const https = require('https');
-/**
- * This function replaces circular references in the provided object to allow
- * safe stringification.
- *
- * @param {object} obj - The object to check for circular references.
- * @returns {object} The object with circular references replaced.
- */
-const getCircularReplacer = () => {
-  const seen = new WeakSet();
-  return (_, value) => {
-    if (typeof value === 'object' && value !== null) {
-      if (seen.has(value)) {
-        return;
-      }
-
-      seen.add(value);
-    }
-
-    return value;
-  };
-};
-
 module.exports = function (RED) {
+  const createPayload = require('./libs/adapter.js');
+  const { oauth2BackwardCompatible } = require('./libs/backwardCompatible.js');
+  const { getAccessToken, handlerGetRequest, proxyNormalize } = require('./libs/handlerRequest.js');
+  const { URL } = require('url');
+  const crypto = require('crypto');
+  const https = require('https');
+  const http = require('http');
+
   function OAuth2(config) {
     RED.nodes.createNode(this, config);
-
     const node = this;
-
-    const credentials = RED.nodes.getCredentials(config.id);
-    credentials.rejectUnauthorized = credentials ? config.rejectUnauthorized : false;
-
-    RED.nodes.addCredentials(node.id, credentials);
 
     node.on('input', (msg, send, done) => {
       // If this is pre-1.0, 'send' will be undefined, so fallback to node.send
@@ -71,9 +45,27 @@ module.exports = function (RED) {
       };
 
       oauth2BackwardCompatible(config);
-      // TODO: Review this code. maybe a better name.
-      const payload = StoreCredentials(RED, config, msg);
-      getAccessToken(payload)
+      const tslconfig = RED.nodes.getNode(config.tslconfig);
+      const agentOpt = {
+        requestCert: true,
+        valid: true,
+        verifyservercert: true,
+        rejectUnauthorized: true,
+        cert: tslconfig.credentials.certdata,
+        key: tslconfig.credentials.keydata,
+        ca: tslconfig.credentials.cadata
+      };
+
+      const options = {
+        httpAgent: http.Agent(agentOpt),
+        httpsAgent: https.Agent(agentOpt)
+      };
+
+      const proxy = config?.proxy ? RED.nodes.getNode(config.proxy) : null;
+      proxyNormalize(proxy, options);
+
+      const payload = createPayload(RED, config, msg);
+      getAccessToken(payload, options)
         .then((data) => {
           setTimeout(() => {
             node.status({});
@@ -177,50 +169,46 @@ module.exports = function (RED) {
    * @param {object} res - The HTTP response object.
    */
   RED.httpAdmin.get('/oauth2/auth', async (req, res) => {
-    if (!req.query.clientId || !req.query.clientSecret || !req.query.id || !req.query.callback) {
-      return res.status(400).json({ error: 'Bad Request' });
-    }
+    const encryptionKey = 'sua_chave_de_criptografia';
+    const cipher = req.query.banana;
+    const decryptedURL = Buffer.from(cipher, 'base64').toString('utf-8');
+    const originalURL = decryptedURL.slice(0, decryptedURL.length - encryptionKey.length);
 
-    const node_id = req.query.id;
+    const urlParams = new URLSearchParams(originalURL);
+    const req_query = Object.fromEntries(urlParams);
 
-    let credentials = RED.nodes.getCredentials(node_id);
-    credentials = { ...credentials, ...JSON.parse(JSON.stringify(req.query, getCircularReplacer())) };
+    const { id: node_id, clientId, redirectUri, scope, authorizationEndpoint, tsl, rejectUnauthorized } = req_query;
+
+    let credentials = RED.nodes.getNode(node_id);
+    credentials = { ...credentials, ...req_query };
 
     credentials.csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
     res.cookie('csrf', credentials.csrfToken);
     RED.nodes.addCredentials(node_id, credentials);
 
-    const l = new URL(req.query.authorizationEndpoint);
-    const redirectUrl = new URL(l);
-    redirectUrl.searchParams.set('client_id', credentials?.clientId);
-    redirectUrl.searchParams.set('redirect_uri', credentials?.redirectUri);
-    redirectUrl.searchParams.set('state', credentials?.id + ':' + credentials?.csrfToken);
-    redirectUrl.searchParams.set('scope', credentials?.scope);
+    const redirectUrl = new URL(authorizationEndpoint);
+    redirectUrl.searchParams.set('client_id', clientId);
+    redirectUrl.searchParams.set('redirect_uri', redirectUri);
+    redirectUrl.searchParams.set('state', `${node_id}:${credentials.csrfToken}`);
+    redirectUrl.searchParams.set('scope', scope);
     redirectUrl.searchParams.set('response_type', 'code');
+
+    const tslNode = RED.nodes.getNode(tsl);
+    const agentOpt = {
+      requestCert: true,
+      valid: true,
+      verifyservercert: true,
+      rejectUnauthorized: rejectUnauthorized ? rejectUnauthorized : false,
+      cert: tslNode.credentials.certdata,
+      key: tslNode.credentials.keydata,
+      ca: tslNode.credentials.cadata
+    };
 
     try {
       const options = {
-        httpsAgent: https.Agent({
-          rejectUnauthorized: credentials?.rejectUnauthorized || false
-        })
+        httpAgent: http.Agent(agentOpt),
+        httpsAgent: https.Agent(agentOpt)
       };
-
-      const proxy = credentials?.proxy ? RED.nodes.getNode(credentials.proxy) : null;
-      if (proxy) {
-        const match = proxy.url.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
-        if (match) {
-          const proxyURL = new URL(proxy?.url);
-          if (!proxy?.noproxy.includes(proxyURL?.hostname)) {
-            options.proxy = {
-              protocol: proxyURL?.protocol,
-              hostname: proxyURL?.hostname,
-              port: proxyURL?.port,
-              username: proxy?.credentials?.username,
-              password: proxy?.credentials?.password
-            };
-          }
-        }
-      }
 
       const response = await handlerGetRequest(redirectUrl.toString(), options);
       res.redirect(response.request.res.responseUrl);
@@ -252,6 +240,7 @@ module.exports = function (RED) {
       return res.status(statusCode).send(html);
     }
   });
+
   /**
    * Endpoint to handle the OAuth2 authorization callback.
    * @param {object} req - The HTTP request object.
@@ -299,6 +288,7 @@ module.exports = function (RED) {
       expireTime: { type: 'password' },
       code: { type: 'password' },
       proxy: { type: 'text' },
+      tslconfig: { type: 'text' },
       rejectUnauthorized: { type: 'bool' }
     }
   });

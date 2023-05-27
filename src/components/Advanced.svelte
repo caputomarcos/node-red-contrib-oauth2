@@ -6,6 +6,7 @@
   import { _, locale, locales } from '../libs/i18n';
 
   import Proxy from './Proxy.svelte';
+  import TSLConfig from './TSLConfig.svelte';
   import Headers from './Headers.svelte';
   import Extra from './Extra.svelte';
 
@@ -57,6 +58,7 @@
   </Group>
   <Group label="HTTP" icon="plus">
     <Proxy bind:node bind:data />
+    <TSLConfig bind:node bind:data />
     <Headers bind:node />
     <Extra bind:node />
   </Group>

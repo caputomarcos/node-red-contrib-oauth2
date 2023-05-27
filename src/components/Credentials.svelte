@@ -3,6 +3,15 @@
   import { Button, Callout, Collapsible, Group, Row, Select, TypedInput, Input } from 'svelte-integration-red/components';
 
   import { _ } from '../libs/i18n';
+  import { onMount } from 'svelte';
+
+  const encryptURL = (url) => {
+    // Chave de criptografia (deve ser compartilhada com o servidor)
+    const encryptionKey = 'sua_chave_de_criptografia';
+
+    // Criptografar a URL
+    return window.btoa(url + encryptionKey);
+  };
 
   /*
    * Reactivity declarations / statements are a great way to create a dynamic editor. You'll find more on this here:
@@ -28,15 +37,16 @@
   let show_code = false;
 
   function onClick() {
+    const commonParams = `id=${encodeURIComponent(node.id)}&clientId=${encodeURIComponent(node.clientId)}&clientSecret=${encodeURIComponent(node.clientSecret)}&scope=${encodeURIComponent(node.scope)}&callback=${encodeURIComponent(
+      node.callback
+    )}&proxy=${encodeURIComponent(node.proxy)}&tsl=${encodeURIComponent(node.tslconfig)}`;
+    
     let url;
+    const auth = 'oauth2/auth?banana=';
     if (node.authorizationEndpoint) {
-      url = `oauth2/auth?id=${encodeURIComponent(node.id)}&clientId=${encodeURIComponent(node.clientId)}&clientSecret=${encodeURIComponent(node.clientSecret)}&scope=${encodeURIComponent(node.scope)}&callback=${encodeURIComponent(
-        node.callback
-      )}&authorizationEndpoint=${encodeURIComponent(node.authorizationEndpoint)}&redirectUri=${encodeURIComponent(node.redirectUri)}&proxy=${encodeURIComponent(node.proxy)}`;
+      url = auth + encryptURL(`${commonParams}&authorizationEndpoint=${encodeURIComponent(node.authorizationEndpoint)}&redirectUri=${encodeURIComponent(node.redirectUri)}`);
     } else {
-      url = `oauth2/auth?id=${encodeURIComponent(node.id)}&clientId=${encodeURIComponent(node.clientId)}&clientSecret=${encodeURIComponent(node.clientSecret)}&scope=${encodeURIComponent(node.scope)}&callback=${encodeURIComponent(
-        node.callback
-      )}&proxy=${encodeURIComponent(node.proxy)}`;
+      url = auth + encryptURL(commonParams);
     }
 
     Object.assign(document.createElement('a'), {

@@ -1,11 +1,11 @@
 /**
- * Store credentials based on configuration and message.
+ * Create payload based on configuration and message.
  * @param {object} RED - The Node-RED runtime object.
  * @param {object} config - The configuration object.
  * @param {object} msg - The message object.
  * @returns {object} - The options object containing stored credentials.
  */
-const storeCredentials = (RED, config, msg) => {
+const createPayload = (RED, config, msg) => {
   const options = {
     url: config.accessTokenUrl,
     grantType: config.grantType,
@@ -22,7 +22,7 @@ const storeCredentials = (RED, config, msg) => {
     const proxyEnv = process.env.http_proxy || process.env.HTTP_PROXY;
     const noProxyEnv = process.env.no_proxy || process.env.NO_PROXY;
 
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
     options.proxy = {
       type: '',
@@ -127,12 +127,12 @@ const storeCredentials = (RED, config, msg) => {
 };
 
 /**
- * Create options object by invoking storeCredentials function.
+ * Create options object by invoking createPayload function.
  * @param {object} RED - The Node-RED runtime object.
  * @param {object} config - The configuration object.
  * @param {object} msg - The message object.
  * @returns {object} - The options object containing stored credentials.
  */
 module.exports = (RED, config, msg) => {
-  return storeCredentials(RED, config, msg);
+  return createPayload(RED, config, msg);
 };

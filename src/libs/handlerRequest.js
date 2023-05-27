@@ -53,7 +53,7 @@ const jwt = require('jsonwebtoken');
  * @returns {Promise<TokenResponse>} The token response.
  * @throws {Error} If failed to obtain the access token.
  */
-async function clientCredentials(payload) {
+async function clientCredentials(payload, options) {
   try {
     const formData = new URLSearchParams();
     formData.append('grant_type', 'client_credentials');
@@ -64,7 +64,8 @@ async function clientCredentials(payload) {
       ...payload.headers
     };
 
-    const tokenResponse = await axios.post(payload.url, formData, {
+    const tokenResponse = await handlerPostRequest(payload.url, formData, {
+      ...options,
       headers,
       auth: {
         username: payload.form.clientId,
@@ -74,7 +75,7 @@ async function clientCredentials(payload) {
 
     return tokenResponse.data;
   } catch (error) {
-    throw new Error('Failed to obtain access token using client credentials');
+    throw new Error(`Failed to obtain access token using client credentials. ${error} `);
   }
 }
 
@@ -84,7 +85,7 @@ async function clientCredentials(payload) {
  * @returns {Promise<TokenResponse>} The token response.
  * @throws {Error} If failed to obtain the access token.
  */
-async function authorizationCode(payload) {
+async function authorizationCode(payload, options) {
   try {
     const formData = new URLSearchParams();
     formData.append('grant_type', 'authorization_code');
@@ -96,7 +97,8 @@ async function authorizationCode(payload) {
       ...payload.headers
     };
 
-    const tokenResponse = await axios.post(payload.url, formData, {
+    const tokenResponse = await handlerPostRequest(payload.url, formData, {
+      ...options,
       headers,
       auth: {
         username: payload.form.clientId,
@@ -116,7 +118,7 @@ async function authorizationCode(payload) {
  * @returns {Promise<TokenResponse>} The token response.
  * @throws {Error} If failed to obtain the access token.
  */
-async function password(payload) {
+async function password(payload, options) {
   try {
     const formData = new URLSearchParams();
     formData.append('grant_type', 'password');
@@ -129,7 +131,8 @@ async function password(payload) {
       ...payload.headers
     };
 
-    const tokenResponse = await axios.post(payload.url, formData, {
+    const tokenResponse = await handlerPostRequest(payload.url, formData, {
+      ...options,
       headers,
       auth: {
         username: payload.form.clientId,
@@ -149,7 +152,7 @@ async function password(payload) {
  * @returns {Promise<TokenResponse>} The token response.
  * @throws {Error} If failed to refresh the access token.
  */
-async function refreshToken(payload) {
+async function refreshToken(payload, options) {
   try {
     const formData = new URLSearchParams();
     formData.append('grant_type', 'refresh_token');
@@ -159,7 +162,8 @@ async function refreshToken(payload) {
       ...payload.headers
     };
 
-    const tokenResponse = await axios.post(payload.url, formData, {
+    const tokenResponse = await handlerPostRequest(payload.url, formData, {
+      ...options,
       headers,
       auth: {
         username: payload.form.clientId,
@@ -190,21 +194,21 @@ function generateJwtToken(clientSecret, tokenData, jwtConfig) {
  * @returns {Promise<object>} The access token response.
  * @throws {Error} If an unsupported grant type is provided.
  */
-async function getAccessToken(payload) {
+async function getAccessToken(payload, options) {
   let tokenResponse;
 
   switch (payload.grantType) {
     case 'clientCredentials':
-      tokenResponse = await clientCredentials(payload);
+      tokenResponse = await clientCredentials(payload, options);
       break;
     case 'authorizationCode':
-      tokenResponse = await authorizationCode(payload);
+      tokenResponse = await authorizationCode(payload, options);
       break;
     case 'password':
-      tokenResponse = await password(payload);
+      tokenResponse = await password(payload, options);
       break;
     case 'refreshToken':
-      tokenResponse = await refreshToken(payload);
+      tokenResponse = await refreshToken(payload, options);
       break;
     default:
       throw new Error(`Unsupported grant type: ${payload.grantType}`);
@@ -249,7 +253,42 @@ async function handlerGetRequest(url, options) {
   }
 }
 
+/**
+ * Function to handle pot request using axios.
+ * @param {string} url - The URL to request.
+ * @param {object} options - The request options.
+ * @returns {Promise} - The axios request promise.
+ */
+async function handlerPostRequest(url, formData, options) {
+  try {
+    const response = await axios.post(url, formData, options);
+    return response;
+  } catch (error) {
+    throw new Error('Failed to refresh access token');
+  }
+}
+
+function proxyNormalize(proxy, options) {
+  if (proxy) {
+    const match = proxy.url.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
+    if (match) {
+      const proxyURL = new URL(proxy?.url);
+      if (!proxy?.noproxy.includes(proxyURL?.hostname)) {
+        options.proxy = {
+          protocol: proxyURL?.protocol,
+          hostname: proxyURL?.hostname,
+          port: proxyURL?.port,
+          username: proxy?.credentials?.username,
+          password: proxy?.credentials?.password
+        };
+      }
+    }
+  }
+}
+
 module.exports = {
   getAccessToken,
-  handlerGetRequest
+  handlerGetRequest,
+  handlerPostRequest,
+  proxyNormalize
 };
