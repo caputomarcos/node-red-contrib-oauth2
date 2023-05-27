@@ -1,11 +1,12 @@
 module.exports = function (RED) {
+  const { URL } = require('url');
+  const http = require('http');
+  const https = require('https');
+  const crypto = require('crypto');
+
   const createPayload = require('./libs/adapter.js');
   const { oauth2BackwardCompatible } = require('./libs/backwardCompatible.js');
-  const { getAccessToken, handlerGetRequest, proxyNormalize } = require('./libs/handlerRequest.js');
-  const { URL } = require('url');
-  const crypto = require('crypto');
-  const https = require('https');
-  const http = require('http');
+  const { getAccessToken, handlerGetRequest } = require('./libs/handlerRequest.js');
 
   function OAuth2(config) {
     RED.nodes.createNode(this, config);
@@ -45,25 +46,40 @@ module.exports = function (RED) {
       };
 
       oauth2BackwardCompatible(config);
-      const tslconfig = RED.nodes.getNode(config.tslconfig);
-      const agentOpt = {
-        requestCert: true,
-        valid: true,
-        verifyservercert: true,
-        rejectUnauthorized: true,
-        cert: tslconfig.credentials.certdata,
-        key: tslconfig.credentials.keydata,
-        ca: tslconfig.credentials.cadata
-      };
+      let options;
+      if (config.tslconfig) {
+        const tslNode = RED.nodes.getNode(config.tslconfig);
+        // TODO:
+        const agentOpt = {
+          requestCert: true,
+          rejectUnauthorized: config.rejectUnauthorized,
+          cert: tslNode.credentials.certdata,
+          key: tslNode.credentials.keydata,
+          ca: tslNode.credentials.cadata
+        };
 
-      const options = {
-        httpAgent: http.Agent(agentOpt),
-        httpsAgent: https.Agent(agentOpt)
-      };
+        options = {
+          httpAgent: http.Agent(agentOpt),
+          httpsAgent: https.Agent(agentOpt)
+        };
 
-      const proxy = config?.proxy ? RED.nodes.getNode(config.proxy) : null;
-      proxyNormalize(proxy, options);
-
+        const proxy = config?.proxy ? RED.nodes.getNode(config.proxy) : null;
+        if (proxy) {
+          const match = proxy.url.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
+          if (match) {
+            const proxyURL = new URL(proxy?.url);
+            if (!proxy?.noproxy.includes(proxyURL?.hostname)) {
+              options.proxy = {
+                protocol: proxyURL?.protocol,
+                hostname: proxyURL?.hostname,
+                port: proxyURL?.port,
+                username: proxy?.credentials?.username,
+                password: proxy?.credentials?.password
+              };
+            }
+          }
+        }
+      }
       const payload = createPayload(RED, config, msg);
       getAccessToken(payload, options)
         .then((data) => {
@@ -271,25 +287,4 @@ module.exports = function (RED) {
   });
 
   RED.nodes.registerType('oauth2', OAuth2);
-
-  /**
-   * Registers an OAuth2Node node type with credentials object.
-   * @param {string} "oauth2-credentials" - The name of the node type to register.
-   * @param {OAuth2} OAuth2 - The constructor function for the node type.
-   * @param {object} {Credentials} - an object specifying the credentials properties and their types.
-   */
-  RED.nodes.registerType('oauth2-credentials', OAuth2, {
-    credentials: {
-      displayName: { type: 'text' },
-      clientId: { type: 'text' },
-      clientSecret: { type: 'password' },
-      accessToken: { type: 'password' },
-      refreshToken: { type: 'password' },
-      expireTime: { type: 'password' },
-      code: { type: 'password' },
-      proxy: { type: 'text' },
-      tslconfig: { type: 'text' },
-      rejectUnauthorized: { type: 'bool' }
-    }
-  });
 };

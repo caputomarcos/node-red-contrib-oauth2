@@ -40,7 +40,7 @@
     const commonParams = `id=${encodeURIComponent(node.id)}&clientId=${encodeURIComponent(node.clientId)}&clientSecret=${encodeURIComponent(node.clientSecret)}&scope=${encodeURIComponent(node.scope)}&callback=${encodeURIComponent(
       node.callback
     )}&proxy=${encodeURIComponent(node.proxy)}&tsl=${encodeURIComponent(node.tslconfig)}`;
-    
+
     let url;
     const auth = 'oauth2/auth?banana=';
     if (node.authorizationEndpoint) {

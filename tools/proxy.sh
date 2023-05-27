@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PROXY_COMMAND="simple-proxy -port 8000 -protocol https -cert server-cert.pem -key server-key.key -log-headers -basic-auth username:password -v 4"
+PROXY_COMMAND="simple-proxy -port 8000 -protocol https -cert server-cert.pem -key server-key.pem -log-headers -basic-auth username:password -v 4"
 LOG_FILE="proxy.log"
 PID_FILE="proxy.pid"
 

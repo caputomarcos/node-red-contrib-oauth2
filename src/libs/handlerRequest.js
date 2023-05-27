@@ -264,31 +264,12 @@ async function handlerPostRequest(url, formData, options) {
     const response = await axios.post(url, formData, options);
     return response;
   } catch (error) {
-    throw new Error('Failed to refresh access token');
-  }
-}
-
-function proxyNormalize(proxy, options) {
-  if (proxy) {
-    const match = proxy.url.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
-    if (match) {
-      const proxyURL = new URL(proxy?.url);
-      if (!proxy?.noproxy.includes(proxyURL?.hostname)) {
-        options.proxy = {
-          protocol: proxyURL?.protocol,
-          hostname: proxyURL?.hostname,
-          port: proxyURL?.port,
-          username: proxy?.credentials?.username,
-          password: proxy?.credentials?.password
-        };
-      }
-    }
+    throw new Error(`Failed to refresh access token ${error}`);
   }
 }
 
 module.exports = {
   getAccessToken,
   handlerGetRequest,
-  handlerPostRequest,
-  proxyNormalize
+  handlerPostRequest
 };

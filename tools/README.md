@@ -49,8 +49,8 @@ The `generate_certificates` script generates self-signed certificates using Open
 - `generate_client_certificate()`: Generate the client certificate.
 - `verify_certificates()`: Verify the generated certificates.
 
-
 ### Usage
+
 To generate the certificates and save them in the keys/directory, run the following command:
 
 ```bash
@@ -74,4 +74,3 @@ The `proxy.sh` script manages the proxy server using the `simple-proxy` command.
 - `PROXY_COMMAND`: The command to start the proxy server using `simple-proxy`. The command is defined with the desired options and parameters.
 - `LOG_FILE`: The log file of the proxy server.
 - `PID_FILE`: The file that stores the Process ID (PID) of the running proxy server.
-

@@ -2,3 +2,6 @@
 /node_modules
 /lib
 index.html
+*.pem
+*.pid
+*.log
