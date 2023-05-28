@@ -1,4 +1,6 @@
 module.exports = function (RED) {
+  "use strict";
+
   const { URL } = require('url');
   const http = require('http');
   const https = require('https');
@@ -211,7 +213,7 @@ module.exports = function (RED) {
     const urlParams = new URLSearchParams(originalURL);
     const req_query = Object.fromEntries(urlParams);
 
-    const { id: node_id, redirectUri, tsl, rejectUnauthorized } = req_query;
+    const { id: node_id, redirectUri, tsl, proxy } = req_query;
 
     const credentials = RED.nodes.getNode(node_id);
     const { id: clientId, authorizationEndpoint, scope } = credentials.credentials;
@@ -230,9 +232,7 @@ module.exports = function (RED) {
     const tslNode = RED.nodes.getNode(tsl);
     const agentOpt = {
       requestCert: true,
-      valid: true,
-      verifyservercert: true,
-      rejectUnauthorized: rejectUnauthorized ? rejectUnauthorized : false,
+      rejectUnauthorized: false,
       cert: tslNode.credentials.certdata,
       key: tslNode.credentials.keydata,
       ca: tslNode.credentials.cadata
@@ -243,6 +243,23 @@ module.exports = function (RED) {
         httpAgent: http.Agent(agentOpt),
         httpsAgent: https.Agent(agentOpt)
       };
+
+      const nodeProxy = RED.nodes.getNode(proxy);
+      if (nodeProxy) {
+        const match = nodeProxy.url.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
+        if (match) {
+          const proxyURL = new URL(nodeProxy?.url);
+          if (!nodeProxy?.noproxy.includes(proxyURL?.hostname)) {
+            options.proxy = {
+              protocol: proxyURL?.protocol,
+              hostname: proxyURL?.hostname,
+              port: proxyURL?.port,
+              username: nodeProxy?.credentials?.username,
+              password: nodeProxy?.credentials?.password
+            };
+          }
+        }
+      }
 
       const response = await handlerGetRequest(redirectUrl.toString(), options);
       res.redirect(response.request.res.responseUrl);

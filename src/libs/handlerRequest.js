@@ -47,7 +47,15 @@ const jwt = require('jsonwebtoken');
  * @property {string} refresh_token - The refresh token.
  */
 
+/**
+ * Custom error class for OAuth2-related errors.
+ */
 class Oauth2Error extends Error {
+  /**
+   * Constructs an instance of Oauth2Error.
+   * @param {string} message - The error message.
+   * @param {number} statusCode - The status code associated with the error.
+   */
   constructor(message, statusCode) {
     super(message);
     this.statusCode = statusCode;
