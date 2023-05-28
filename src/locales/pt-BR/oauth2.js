@@ -16,7 +16,7 @@ const oauth2DataPt = {
       clientSecret: 'Client Secret',
       authorizationEndpoint: 'Authorization Endpoint',
       password: 'Password',
-      userName: 'User Name',
+      username: 'User Name',
       clientId: 'Client Id',
       headers: 'Headers',
       proxy: 'OPA'
@@ -28,7 +28,7 @@ const oauth2DataPt = {
       clientId: 'Client Id',
       clientSecret: 'Client Secret',
       scope: 'Scope',
-      userName: 'User Name',
+      username: 'User Name',
       password: 'Password',
       authorizationEndpoint: 'Authorization Endpoint',
       code: 'Code'

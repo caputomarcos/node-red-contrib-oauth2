@@ -6,12 +6,11 @@ module.exports = function (RED) {
 
   const createPayload = require('./libs/adapter.js');
   const { oauth2BackwardCompatible } = require('./libs/backwardCompatible.js');
-  const { getAccessToken, handlerGetRequest } = require('./libs/handlerRequest.js');
+  const { getAccessToken, handlerGetRequest, encryptCredentials } = require('./libs/handlerRequest.js');
 
   function OAuth2(config) {
     RED.nodes.createNode(this, config);
     const node = this;
-
     node.on('input', (msg, send, done) => {
       // If this is pre-1.0, 'send' will be undefined, so fallback to node.send
       // Backwards compatibility - https://nodered.org/blog/2019/09/20/node-done
@@ -96,6 +95,25 @@ module.exports = function (RED) {
         });
     });
   }
+
+  /**
+   * GET handler for OAuth2 credentials retrieval based on a node id.
+   * @param {object} req - The HTTP request object.
+   * @param {object} res - The HTTP response object.
+   */
+  RED.httpAdmin.get('/oauth2/secrets/:id', (req, res) => {
+    const credentials = RED.nodes.getCredentials(req.params.id);
+    if (credentials && credentials.clientSecret) {
+      const { encryptedCredentials, iv, encryptionKey } = encryptCredentials(crypto, credentials);
+
+      // Return the encrypted credentials and the IV
+      return res.status(200).json({
+        encryptedCredentials,
+        iv: iv.toString('hex'),
+        encryptionKey: encryptionKey.toString('hex')
+      });
+    }
+  });
 
   /**
    * GET handler for OAuth2 credentials retrieval based on a token.
@@ -193,19 +211,19 @@ module.exports = function (RED) {
     const urlParams = new URLSearchParams(originalURL);
     const req_query = Object.fromEntries(urlParams);
 
-    const { id: node_id, clientId, redirectUri, scope, authorizationEndpoint, tsl, rejectUnauthorized } = req_query;
+    const { id: node_id, redirectUri, tsl, rejectUnauthorized } = req_query;
 
-    let credentials = RED.nodes.getNode(node_id);
-    credentials = { ...credentials, ...req_query };
-
-    credentials.csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
-    res.cookie('csrf', credentials.csrfToken);
+    const credentials = RED.nodes.getNode(node_id);
+    const { id: clientId, authorizationEndpoint, scope } = credentials.credentials;
+    const csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
+    res.cookie('csrf', csrfToken);
+    credentials.csrfToken = csrfToken;
     RED.nodes.addCredentials(node_id, credentials);
 
     const redirectUrl = new URL(authorizationEndpoint);
     redirectUrl.searchParams.set('client_id', clientId);
     redirectUrl.searchParams.set('redirect_uri', redirectUri);
-    redirectUrl.searchParams.set('state', `${node_id}:${credentials.csrfToken}`);
+    redirectUrl.searchParams.set('state', `${node_id}:${csrfToken}`);
     redirectUrl.searchParams.set('scope', scope);
     redirectUrl.searchParams.set('response_type', 'code');
 
@@ -229,8 +247,6 @@ module.exports = function (RED) {
       const response = await handlerGetRequest(redirectUrl.toString(), options);
       res.redirect(response.request.res.responseUrl);
     } catch (error) {
-      const statusCode = error?.code ? 500 : error?.response?.status || 401;
-      const statusText = error?.message ? error.message : error?.response || 'Not Found';
       const html = `<html>
         <head>
           <script language="javascript" type="text/javascript">
@@ -247,13 +263,13 @@ module.exports = function (RED) {
           <div style="text-align: center;">
             <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
               <circle cx="100" cy="100" r="90" fill="#ff0000" />
-              <text x="50%" y="50%" text-anchor="middle" fill="#ffffff" font-size="24px" font-weight="bold" dy=".3em">Error ${statusCode}</text>
+              <text x="50%" y="50%" text-anchor="middle" fill="#ffffff" font-size="24px" font-weight="bold" dy=".3em">HTTP:${error.statusCode}</text>
             </svg>
-            <p>${statusText}</p>
+            <p>${error.message}</p>
           </div>
         </body>
       </html>`;
-      return res.status(statusCode).send(html);
+      return res.status(error.statusCode).send(html);
     }
   });
 
@@ -286,5 +302,16 @@ module.exports = function (RED) {
     }
   });
 
-  RED.nodes.registerType('oauth2', OAuth2);
+  RED.nodes.registerType('oauth2', OAuth2, {
+    credentials: {
+      accessTokenUrl: { type: 'password' },
+      authorizationEndpoint: { type: 'password' },
+      clientId: { type: 'password' },
+      clientSecret: { type: 'password' },
+      username: { type: 'password' },
+      password: { type: 'password' },
+      scope: { type: 'password' },
+      code: { type: 'password' }
+    }
+  });
 };

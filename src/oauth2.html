@@ -10656,7 +10656,7 @@ var translations = {
     'credentials.title': 'Credentials',
     'credentials.clientId': 'Client Id',
     'credentials.clientSecret': 'Client Secret',
-    'credentials.userName': 'User Name',
+    'credentials.username': 'User Name',
     'credentials.password': 'Password',
     'credentials.scope': 'Scope',
     'credentials.code': 'Code',
@@ -10681,7 +10681,7 @@ var translations = {
     'placeholder.clientId': 'Client Id',
     'placeholder.clientSecret': 'Client Secret',
     'placeholder.scope': 'Scope',
-    'placeholder.userName': 'User Name',
+    'placeholder.username': 'User Name',
     'placeholder.password': 'Password',
     'placeholder.authorizationEndpoint': 'Authorization Endpoint',
     'placeholder.code': 'Code',
@@ -10704,7 +10704,7 @@ var translations = {
     'credentials.title': 'Credenciais',
     'credentials.clientId': 'ID do Cliente',
     'credentials.clientSecret': 'Segredo do Cliente',
-    'credentials.userName': 'Nome de Usuário',
+    'credentials.username': 'Nome de Usuário',
     'credentials.password': 'Senha',
     'credentials.scope': 'Escopo',
     'credentials.code': 'Código',
@@ -10731,7 +10731,7 @@ var translations = {
     'placeholder.clientId': 'ID do Cliente',
     'placeholder.clientSecret': 'Segredo do Cliente',
     'placeholder.scope': 'Escopo',
-    'placeholder.userName': 'Nome de Usuário',
+    'placeholder.username': 'Nome de Usuário',
     'placeholder.password': 'Senha',
     'placeholder.authorizationEndpoint': 'Ponto de Autorização',
     'placeholder.code': 'Código',
@@ -13675,7 +13675,7 @@ function create_if_block_2(ctx) {
 				node: /*node*/ ctx[0],
 				label: "label.settings",
 				icon: "minus",
-				tooltip: /*$_*/ ctx[5]('tooltip.settings'),
+				tooltip: /*$_*/ ctx[13]('tooltip.settings'),
 				$$slots: { default: [create_default_slot_9] },
 				$$scope: { ctx }
 			}
@@ -13692,9 +13692,9 @@ function create_if_block_2(ctx) {
 		p(ctx, dirty) {
 			const group_changes = {};
 			if (dirty[0] & /*node*/ 1) group_changes.node = /*node*/ ctx[0];
-			if (dirty[0] & /*$_*/ 32) group_changes.tooltip = /*$_*/ ctx[5]('tooltip.settings');
+			if (dirty[0] & /*$_*/ 8192) group_changes.tooltip = /*$_*/ ctx[13]('tooltip.settings');
 
-			if (dirty[0] & /*node, show_code, $_, show_client_secret*/ 45 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*node, show_code, $_, code, scope, show_client_secret, clientSecret, clientId, authorizationEndpoint, accessTokenUrl*/ 11901 | dirty[1] & /*$$scope*/ 536870912) {
 				group_changes.$$scope = { dirty, ctx };
 			}
 
@@ -13715,7 +13715,7 @@ function create_if_block_2(ctx) {
 	};
 }
 
-// (84:42) 
+// (168:42) 
 function create_if_block_1(ctx) {
 	let group;
 	let current;
@@ -13726,7 +13726,7 @@ function create_if_block_1(ctx) {
 				node: /*node*/ ctx[0],
 				label: "label.settings",
 				icon: "minus",
-				tooltip: /*$_*/ ctx[5]('tooltip.settings'),
+				tooltip: /*$_*/ ctx[13]('tooltip.settings'),
 				$$slots: { default: [create_default_slot_4] },
 				$$scope: { ctx }
 			}
@@ -13743,9 +13743,9 @@ function create_if_block_1(ctx) {
 		p(ctx, dirty) {
 			const group_changes = {};
 			if (dirty[0] & /*node*/ 1) group_changes.node = /*node*/ ctx[0];
-			if (dirty[0] & /*$_*/ 32) group_changes.tooltip = /*$_*/ ctx[5]('tooltip.settings');
+			if (dirty[0] & /*$_*/ 8192) group_changes.tooltip = /*$_*/ ctx[13]('tooltip.settings');
 
-			if (dirty[0] & /*$_, node, show_client_secret, show_password*/ 39 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*$_, node, scope, show_client_secret, clientSecret, clientId, show_password, password, username, accessTokenUrl*/ 9207 | dirty[1] & /*$$scope*/ 536870912) {
 				group_changes.$$scope = { dirty, ctx };
 			}
 
@@ -13766,7 +13766,7 @@ function create_if_block_1(ctx) {
 	};
 }
 
-// (74:2) {#if node.grantType === 'clientCredentials'}
+// (147:2) {#if node.grantType === 'clientCredentials'}
 function create_if_block$1(ctx) {
 	let group;
 	let current;
@@ -13777,7 +13777,7 @@ function create_if_block$1(ctx) {
 				node: /*node*/ ctx[0],
 				label: "label.settings",
 				icon: "minus",
-				tooltip: /*$_*/ ctx[5]('credentials.tooltip.clientCredentials'),
+				tooltip: /*$_*/ ctx[13]('credentials.tooltip.clientCredentials'),
 				$$slots: { default: [create_default_slot_1$1] },
 				$$scope: { ctx }
 			}
@@ -13794,9 +13794,9 @@ function create_if_block$1(ctx) {
 		p(ctx, dirty) {
 			const group_changes = {};
 			if (dirty[0] & /*node*/ 1) group_changes.node = /*node*/ ctx[0];
-			if (dirty[0] & /*$_*/ 32) group_changes.tooltip = /*$_*/ ctx[5]('credentials.tooltip.clientCredentials');
+			if (dirty[0] & /*$_*/ 8192) group_changes.tooltip = /*$_*/ ctx[13]('credentials.tooltip.clientCredentials');
 
-			if (dirty[0] & /*$_, node, show_client_secret*/ 37 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*$_, node, scope, show_client_secret, clientSecret, clientId, accessTokenUrl*/ 8821 | dirty[1] & /*$$scope*/ 536870912) {
 				group_changes.$$scope = { dirty, ctx };
 			}
 
@@ -13817,7 +13817,7 @@ function create_if_block$1(ctx) {
 	};
 }
 
-// (106:8) <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_client_secret = !show_client_secret)} disabled={node.disableInput}>
+// (212:8) <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_client_secret = !show_client_secret)} disabled={node.disableInput}>
 function create_default_slot_13(ctx) {
 	let t_value = (/*show_client_secret*/ ctx[2] ? 'Hide' : 'Show') + "";
 	let t;
@@ -13838,16 +13838,21 @@ function create_default_slot_13(ctx) {
 	};
 }
 
-// (104:6) <Row>
+// (199:6) <Row>
 function create_default_slot_12(ctx) {
 	let input;
 	let updating_node;
+	let updating_value;
 	let t;
 	let button;
 	let current;
 
 	function input_node_binding_3(value) {
-		/*input_node_binding_3*/ ctx[27](value);
+		/*input_node_binding_3*/ ctx[48](value);
+	}
+
+	function input_value_binding_3(value) {
+		/*input_value_binding_3*/ ctx[49](value);
 	}
 
 	let input_props = {
@@ -13855,7 +13860,8 @@ function create_default_slot_12(ctx) {
 		maximize: true,
 		icon: "key",
 		inline: true,
-		label: /*$_*/ ctx[5]('credentials.clientSecret'),
+		label: /*$_*/ ctx[13]('credentials.clientSecret'),
+		placeholder: /*$_*/ ctx[13]('credentials.clientSecret'),
 		type: /*show_client_secret*/ ctx[2] ? 'text' : 'password',
 		disabled: /*node*/ ctx[0].disableInput
 	};
@@ -13864,8 +13870,13 @@ function create_default_slot_12(ctx) {
 		input_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*clientSecret*/ ctx[6] !== void 0) {
+		input_props.value = /*clientSecret*/ ctx[6];
+	}
+
 	input = new Input({ props: input_props });
 	binding_callbacks.push(() => bind(input, 'node', input_node_binding_3));
+	binding_callbacks.push(() => bind(input, 'value', input_value_binding_3));
 
 	button = new Button({
 			props: {
@@ -13878,7 +13889,7 @@ function create_default_slot_12(ctx) {
 			}
 		});
 
-	button.$on("click", /*click_handler_3*/ ctx[28]);
+	button.$on("click", /*click_handler_3*/ ctx[50]);
 
 	return {
 		c() {
@@ -13894,7 +13905,8 @@ function create_default_slot_12(ctx) {
 		},
 		p(ctx, dirty) {
 			const input_changes = {};
-			if (dirty[0] & /*$_*/ 32) input_changes.label = /*$_*/ ctx[5]('credentials.clientSecret');
+			if (dirty[0] & /*$_*/ 8192) input_changes.label = /*$_*/ ctx[13]('credentials.clientSecret');
+			if (dirty[0] & /*$_*/ 8192) input_changes.placeholder = /*$_*/ ctx[13]('credentials.clientSecret');
 			if (dirty[0] & /*show_client_secret*/ 4) input_changes.type = /*show_client_secret*/ ctx[2] ? 'text' : 'password';
 			if (dirty[0] & /*node*/ 1) input_changes.disabled = /*node*/ ctx[0].disableInput;
 
@@ -13904,12 +13916,18 @@ function create_default_slot_12(ctx) {
 				add_flush_callback(() => updating_node = false);
 			}
 
+			if (!updating_value && dirty[0] & /*clientSecret*/ 64) {
+				updating_value = true;
+				input_changes.value = /*clientSecret*/ ctx[6];
+				add_flush_callback(() => updating_value = false);
+			}
+
 			input.$set(input_changes);
 			const button_changes = {};
 			if (dirty[0] & /*show_client_secret*/ 4) button_changes.icon = /*show_client_secret*/ ctx[2] ? 'eye' : 'eye-slash';
 			if (dirty[0] & /*node*/ 1) button_changes.disabled = /*node*/ ctx[0].disableInput;
 
-			if (dirty[0] & /*show_client_secret*/ 4 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*show_client_secret*/ 4 | dirty[1] & /*$$scope*/ 536870912) {
 				button_changes.$$scope = { dirty, ctx };
 			}
 
@@ -13934,7 +13952,7 @@ function create_default_slot_12(ctx) {
 	};
 }
 
-// (111:8) <Button inline icon={show_code ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_code = !show_code)} disabled={node.disableInput}>
+// (217:8) <Button inline icon={show_code ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_code = !show_code)} disabled={node.disableInput}>
 function create_default_slot_11(ctx) {
 	let t_value = (/*show_code*/ ctx[3] ? 'Hide' : 'Show') + "";
 	let t;
@@ -13955,10 +13973,11 @@ function create_default_slot_11(ctx) {
 	};
 }
 
-// (109:6) <Row>
+// (215:6) <Row>
 function create_default_slot_10(ctx) {
 	let input;
 	let updating_node;
+	let updating_value;
 	let t0;
 	let button0;
 	let t1;
@@ -13966,7 +13985,11 @@ function create_default_slot_10(ctx) {
 	let current;
 
 	function input_node_binding_4(value) {
-		/*input_node_binding_4*/ ctx[30](value);
+		/*input_node_binding_4*/ ctx[53](value);
+	}
+
+	function input_value_binding_4(value) {
+		/*input_value_binding_4*/ ctx[54](value);
 	}
 
 	let input_props = {
@@ -13974,7 +13997,8 @@ function create_default_slot_10(ctx) {
 		maximize: true,
 		icon: "sign-in",
 		inline: true,
-		label: /*$_*/ ctx[5]('credentials.code'),
+		label: /*$_*/ ctx[13]('credentials.code'),
+		placeholder: /*$_*/ ctx[13]('credentials.code'),
 		type: /*show_code*/ ctx[3] ? 'text' : 'password',
 		disabled: /*node*/ ctx[0].disableInput
 	};
@@ -13983,8 +14007,13 @@ function create_default_slot_10(ctx) {
 		input_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*code*/ ctx[11] !== void 0) {
+		input_props.value = /*code*/ ctx[11];
+	}
+
 	input = new Input({ props: input_props });
 	binding_callbacks.push(() => bind(input, 'node', input_node_binding_4));
+	binding_callbacks.push(() => bind(input, 'value', input_value_binding_4));
 
 	button0 = new Button({
 			props: {
@@ -13997,7 +14026,7 @@ function create_default_slot_10(ctx) {
 			}
 		});
 
-	button0.$on("click", /*click_handler_4*/ ctx[31]);
+	button0.$on("click", /*click_handler_4*/ ctx[55]);
 
 	button1 = new Button({
 			props: {
@@ -14007,7 +14036,7 @@ function create_default_slot_10(ctx) {
 			}
 		});
 
-	button1.$on("click", /*onClick*/ ctx[6]);
+	button1.$on("click", /*onClick*/ ctx[14]);
 
 	return {
 		c() {
@@ -14027,7 +14056,8 @@ function create_default_slot_10(ctx) {
 		},
 		p(ctx, dirty) {
 			const input_changes = {};
-			if (dirty[0] & /*$_*/ 32) input_changes.label = /*$_*/ ctx[5]('credentials.code');
+			if (dirty[0] & /*$_*/ 8192) input_changes.label = /*$_*/ ctx[13]('credentials.code');
+			if (dirty[0] & /*$_*/ 8192) input_changes.placeholder = /*$_*/ ctx[13]('credentials.code');
 			if (dirty[0] & /*show_code*/ 8) input_changes.type = /*show_code*/ ctx[3] ? 'text' : 'password';
 			if (dirty[0] & /*node*/ 1) input_changes.disabled = /*node*/ ctx[0].disableInput;
 
@@ -14037,12 +14067,18 @@ function create_default_slot_10(ctx) {
 				add_flush_callback(() => updating_node = false);
 			}
 
+			if (!updating_value && dirty[0] & /*code*/ 2048) {
+				updating_value = true;
+				input_changes.value = /*code*/ ctx[11];
+				add_flush_callback(() => updating_value = false);
+			}
+
 			input.$set(input_changes);
 			const button0_changes = {};
 			if (dirty[0] & /*show_code*/ 8) button0_changes.icon = /*show_code*/ ctx[3] ? 'eye' : 'eye-slash';
 			if (dirty[0] & /*node*/ 1) button0_changes.disabled = /*node*/ ctx[0].disableInput;
 
-			if (dirty[0] & /*show_code*/ 8 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*show_code*/ 8 | dirty[1] & /*$$scope*/ 536870912) {
 				button0_changes.$$scope = { dirty, ctx };
 			}
 
@@ -14074,34 +14110,43 @@ function create_default_slot_10(ctx) {
 	};
 }
 
-// (100:4) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip={$_('tooltip.settings')}>
+// (195:4) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip={$_('tooltip.settings')}>
 function create_default_slot_9(ctx) {
 	let input0;
 	let updating_node;
+	let updating_value;
 	let t0;
 	let input1;
 	let updating_node_1;
+	let updating_value_1;
 	let t1;
 	let input2;
 	let updating_node_2;
+	let updating_value_2;
 	let t2;
 	let row0;
 	let t3;
 	let input3;
 	let updating_node_3;
+	let updating_value_3;
 	let t4;
 	let row1;
 	let current;
 
 	function input0_node_binding_2(value) {
-		/*input0_node_binding_2*/ ctx[24](value);
+		/*input0_node_binding_2*/ ctx[42](value);
+	}
+
+	function input0_value_binding_2(value) {
+		/*input0_value_binding_2*/ ctx[43](value);
 	}
 
 	let input0_props = {
 		prop: "accessTokenUrl",
 		maximize: true,
 		icon: "link",
-		label: /*$_*/ ctx[5]('credentials.accessTokenUrl'),
+		label: /*$_*/ ctx[13]('credentials.accessTokenUrl'),
+		placeholder: /*$_*/ ctx[13]('credentials.accessTokenUrl'),
 		disabled: /*node*/ ctx[0].disableInput
 	};
 
@@ -14109,18 +14154,28 @@ function create_default_slot_9(ctx) {
 		input0_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*accessTokenUrl*/ ctx[4] !== void 0) {
+		input0_props.value = /*accessTokenUrl*/ ctx[4];
+	}
+
 	input0 = new Input({ props: input0_props });
 	binding_callbacks.push(() => bind(input0, 'node', input0_node_binding_2));
+	binding_callbacks.push(() => bind(input0, 'value', input0_value_binding_2));
 
 	function input1_node_binding_2(value) {
-		/*input1_node_binding_2*/ ctx[25](value);
+		/*input1_node_binding_2*/ ctx[44](value);
+	}
+
+	function input1_value_binding_2(value) {
+		/*input1_value_binding_2*/ ctx[45](value);
 	}
 
 	let input1_props = {
 		prop: "authorizationEndpoint",
 		maximize: true,
 		icon: "link",
-		label: /*$_*/ ctx[5]('credentials.authorizationEndpoint'),
+		label: /*$_*/ ctx[13]('credentials.authorizationEndpoint'),
+		placeholder: /*$_*/ ctx[13]('credentials.authorizationEndpoint'),
 		disabled: /*node*/ ctx[0].disableInput
 	};
 
@@ -14128,18 +14183,28 @@ function create_default_slot_9(ctx) {
 		input1_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*authorizationEndpoint*/ ctx[10] !== void 0) {
+		input1_props.value = /*authorizationEndpoint*/ ctx[10];
+	}
+
 	input1 = new Input({ props: input1_props });
 	binding_callbacks.push(() => bind(input1, 'node', input1_node_binding_2));
+	binding_callbacks.push(() => bind(input1, 'value', input1_value_binding_2));
 
 	function input2_node_binding_2(value) {
-		/*input2_node_binding_2*/ ctx[26](value);
+		/*input2_node_binding_2*/ ctx[46](value);
+	}
+
+	function input2_value_binding_2(value) {
+		/*input2_value_binding_2*/ ctx[47](value);
 	}
 
 	let input2_props = {
 		prop: "clientId",
 		maximize: true,
 		icon: "id-card",
-		label: /*$_*/ ctx[5]('credentials.clientId'),
+		label: /*$_*/ ctx[13]('credentials.clientId'),
+		placeholder: /*$_*/ ctx[13]('credentials.clientId'),
 		disabled: /*node*/ ctx[0].disableInput
 	};
 
@@ -14147,8 +14212,13 @@ function create_default_slot_9(ctx) {
 		input2_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*clientId*/ ctx[5] !== void 0) {
+		input2_props.value = /*clientId*/ ctx[5];
+	}
+
 	input2 = new Input({ props: input2_props });
 	binding_callbacks.push(() => bind(input2, 'node', input2_node_binding_2));
+	binding_callbacks.push(() => bind(input2, 'value', input2_value_binding_2));
 
 	row0 = new Row({
 			props: {
@@ -14158,14 +14228,19 @@ function create_default_slot_9(ctx) {
 		});
 
 	function input3_node_binding_1(value) {
-		/*input3_node_binding_1*/ ctx[29](value);
+		/*input3_node_binding_1*/ ctx[51](value);
+	}
+
+	function input3_value_binding_1(value) {
+		/*input3_value_binding_1*/ ctx[52](value);
 	}
 
 	let input3_props = {
 		prop: "scope",
 		maximize: true,
 		icon: "code",
-		label: /*$_*/ ctx[5]('credentials.scope'),
+		label: /*$_*/ ctx[13]('credentials.scope'),
+		placeholder: /*$_*/ ctx[13]('credentials.scope'),
 		disabled: /*node*/ ctx[0].disableInput
 	};
 
@@ -14173,8 +14248,13 @@ function create_default_slot_9(ctx) {
 		input3_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*scope*/ ctx[9] !== void 0) {
+		input3_props.value = /*scope*/ ctx[9];
+	}
+
 	input3 = new Input({ props: input3_props });
 	binding_callbacks.push(() => bind(input3, 'node', input3_node_binding_1));
+	binding_callbacks.push(() => bind(input3, 'value', input3_value_binding_1));
 
 	row1 = new Row({
 			props: {
@@ -14213,7 +14293,8 @@ function create_default_slot_9(ctx) {
 		},
 		p(ctx, dirty) {
 			const input0_changes = {};
-			if (dirty[0] & /*$_*/ 32) input0_changes.label = /*$_*/ ctx[5]('credentials.accessTokenUrl');
+			if (dirty[0] & /*$_*/ 8192) input0_changes.label = /*$_*/ ctx[13]('credentials.accessTokenUrl');
+			if (dirty[0] & /*$_*/ 8192) input0_changes.placeholder = /*$_*/ ctx[13]('credentials.accessTokenUrl');
 			if (dirty[0] & /*node*/ 1) input0_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node && dirty[0] & /*node*/ 1) {
@@ -14222,9 +14303,16 @@ function create_default_slot_9(ctx) {
 				add_flush_callback(() => updating_node = false);
 			}
 
+			if (!updating_value && dirty[0] & /*accessTokenUrl*/ 16) {
+				updating_value = true;
+				input0_changes.value = /*accessTokenUrl*/ ctx[4];
+				add_flush_callback(() => updating_value = false);
+			}
+
 			input0.$set(input0_changes);
 			const input1_changes = {};
-			if (dirty[0] & /*$_*/ 32) input1_changes.label = /*$_*/ ctx[5]('credentials.authorizationEndpoint');
+			if (dirty[0] & /*$_*/ 8192) input1_changes.label = /*$_*/ ctx[13]('credentials.authorizationEndpoint');
+			if (dirty[0] & /*$_*/ 8192) input1_changes.placeholder = /*$_*/ ctx[13]('credentials.authorizationEndpoint');
 			if (dirty[0] & /*node*/ 1) input1_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node_1 && dirty[0] & /*node*/ 1) {
@@ -14233,9 +14321,16 @@ function create_default_slot_9(ctx) {
 				add_flush_callback(() => updating_node_1 = false);
 			}
 
+			if (!updating_value_1 && dirty[0] & /*authorizationEndpoint*/ 1024) {
+				updating_value_1 = true;
+				input1_changes.value = /*authorizationEndpoint*/ ctx[10];
+				add_flush_callback(() => updating_value_1 = false);
+			}
+
 			input1.$set(input1_changes);
 			const input2_changes = {};
-			if (dirty[0] & /*$_*/ 32) input2_changes.label = /*$_*/ ctx[5]('credentials.clientId');
+			if (dirty[0] & /*$_*/ 8192) input2_changes.label = /*$_*/ ctx[13]('credentials.clientId');
+			if (dirty[0] & /*$_*/ 8192) input2_changes.placeholder = /*$_*/ ctx[13]('credentials.clientId');
 			if (dirty[0] & /*node*/ 1) input2_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node_2 && dirty[0] & /*node*/ 1) {
@@ -14244,16 +14339,23 @@ function create_default_slot_9(ctx) {
 				add_flush_callback(() => updating_node_2 = false);
 			}
 
+			if (!updating_value_2 && dirty[0] & /*clientId*/ 32) {
+				updating_value_2 = true;
+				input2_changes.value = /*clientId*/ ctx[5];
+				add_flush_callback(() => updating_value_2 = false);
+			}
+
 			input2.$set(input2_changes);
 			const row0_changes = {};
 
-			if (dirty[0] & /*show_client_secret, node, $_*/ 37 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*show_client_secret, node, $_, clientSecret*/ 8261 | dirty[1] & /*$$scope*/ 536870912) {
 				row0_changes.$$scope = { dirty, ctx };
 			}
 
 			row0.$set(row0_changes);
 			const input3_changes = {};
-			if (dirty[0] & /*$_*/ 32) input3_changes.label = /*$_*/ ctx[5]('credentials.scope');
+			if (dirty[0] & /*$_*/ 8192) input3_changes.label = /*$_*/ ctx[13]('credentials.scope');
+			if (dirty[0] & /*$_*/ 8192) input3_changes.placeholder = /*$_*/ ctx[13]('credentials.scope');
 			if (dirty[0] & /*node*/ 1) input3_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node_3 && dirty[0] & /*node*/ 1) {
@@ -14262,10 +14364,16 @@ function create_default_slot_9(ctx) {
 				add_flush_callback(() => updating_node_3 = false);
 			}
 
+			if (!updating_value_3 && dirty[0] & /*scope*/ 512) {
+				updating_value_3 = true;
+				input3_changes.value = /*scope*/ ctx[9];
+				add_flush_callback(() => updating_value_3 = false);
+			}
+
 			input3.$set(input3_changes);
 			const row1_changes = {};
 
-			if (dirty[0] & /*node, show_code, $_*/ 41 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*node, show_code, $_, code*/ 10249 | dirty[1] & /*$$scope*/ 536870912) {
 				row1_changes.$$scope = { dirty, ctx };
 			}
 
@@ -14306,7 +14414,7 @@ function create_default_slot_9(ctx) {
 	};
 }
 
-// (90:8) <Button inline icon={show_password ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_password = !show_password)}>
+// (174:8) <Button inline icon={show_password ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_password = !show_password)}>
 function create_default_slot_8(ctx) {
 	let t_value = (/*show_password*/ ctx[1] ? 'Hide' : 'Show') + "";
 	let t;
@@ -14327,16 +14435,21 @@ function create_default_slot_8(ctx) {
 	};
 }
 
-// (88:6) <Row>
+// (172:6) <Row>
 function create_default_slot_7(ctx) {
 	let input;
 	let updating_node;
+	let updating_value;
 	let t;
 	let button;
 	let current;
 
 	function input_node_binding_1(value) {
-		/*input_node_binding_1*/ ctx[18](value);
+		/*input_node_binding_1*/ ctx[32](value);
+	}
+
+	function input_value_binding_1(value) {
+		/*input_value_binding_1*/ ctx[33](value);
 	}
 
 	let input_props = {
@@ -14344,7 +14457,8 @@ function create_default_slot_7(ctx) {
 		maximize: true,
 		inline: true,
 		icon: "key",
-		label: /*$_*/ ctx[5]('credentials.password'),
+		label: /*$_*/ ctx[13]('credentials.password'),
+		placeholder: /*$_*/ ctx[13]('credentials.password'),
 		type: /*show_password*/ ctx[1] ? 'text' : 'password',
 		disabled: /*node*/ ctx[0].disableInput
 	};
@@ -14353,8 +14467,13 @@ function create_default_slot_7(ctx) {
 		input_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*password*/ ctx[8] !== void 0) {
+		input_props.value = /*password*/ ctx[8];
+	}
+
 	input = new Input({ props: input_props });
 	binding_callbacks.push(() => bind(input, 'node', input_node_binding_1));
+	binding_callbacks.push(() => bind(input, 'value', input_value_binding_1));
 
 	button = new Button({
 			props: {
@@ -14366,7 +14485,7 @@ function create_default_slot_7(ctx) {
 			}
 		});
 
-	button.$on("click", /*click_handler_1*/ ctx[19]);
+	button.$on("click", /*click_handler_1*/ ctx[34]);
 
 	return {
 		c() {
@@ -14382,7 +14501,8 @@ function create_default_slot_7(ctx) {
 		},
 		p(ctx, dirty) {
 			const input_changes = {};
-			if (dirty[0] & /*$_*/ 32) input_changes.label = /*$_*/ ctx[5]('credentials.password');
+			if (dirty[0] & /*$_*/ 8192) input_changes.label = /*$_*/ ctx[13]('credentials.password');
+			if (dirty[0] & /*$_*/ 8192) input_changes.placeholder = /*$_*/ ctx[13]('credentials.password');
 			if (dirty[0] & /*show_password*/ 2) input_changes.type = /*show_password*/ ctx[1] ? 'text' : 'password';
 			if (dirty[0] & /*node*/ 1) input_changes.disabled = /*node*/ ctx[0].disableInput;
 
@@ -14392,11 +14512,17 @@ function create_default_slot_7(ctx) {
 				add_flush_callback(() => updating_node = false);
 			}
 
+			if (!updating_value && dirty[0] & /*password*/ 256) {
+				updating_value = true;
+				input_changes.value = /*password*/ ctx[8];
+				add_flush_callback(() => updating_value = false);
+			}
+
 			input.$set(input_changes);
 			const button_changes = {};
 			if (dirty[0] & /*show_password*/ 2) button_changes.icon = /*show_password*/ ctx[1] ? 'eye' : 'eye-slash';
 
-			if (dirty[0] & /*show_password*/ 2 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*show_password*/ 2 | dirty[1] & /*$$scope*/ 536870912) {
 				button_changes.$$scope = { dirty, ctx };
 			}
 
@@ -14421,7 +14547,7 @@ function create_default_slot_7(ctx) {
 	};
 }
 
-// (95:8) <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_client_secret = !show_client_secret)}>
+// (190:8) <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_client_secret = !show_client_secret)}>
 function create_default_slot_6(ctx) {
 	let t_value = (/*show_client_secret*/ ctx[2] ? 'Hide' : 'Show') + "";
 	let t;
@@ -14442,16 +14568,21 @@ function create_default_slot_6(ctx) {
 	};
 }
 
-// (93:6) <Row>
+// (177:6) <Row>
 function create_default_slot_5(ctx) {
 	let input;
 	let updating_node;
+	let updating_value;
 	let t;
 	let button;
 	let current;
 
 	function input_node_binding_2(value) {
-		/*input_node_binding_2*/ ctx[21](value);
+		/*input_node_binding_2*/ ctx[37](value);
+	}
+
+	function input_value_binding_2(value) {
+		/*input_value_binding_2*/ ctx[38](value);
 	}
 
 	let input_props = {
@@ -14459,7 +14590,8 @@ function create_default_slot_5(ctx) {
 		maximize: true,
 		icon: "key",
 		inline: true,
-		label: /*$_*/ ctx[5]('credentials.clientSecret'),
+		label: /*$_*/ ctx[13]('credentials.clientSecret'),
+		placeholder: /*$_*/ ctx[13]('credentials.clientSecret'),
 		type: /*show_client_secret*/ ctx[2] ? 'text' : 'password',
 		disabled: /*node*/ ctx[0].disableInput
 	};
@@ -14468,8 +14600,13 @@ function create_default_slot_5(ctx) {
 		input_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*clientSecret*/ ctx[6] !== void 0) {
+		input_props.value = /*clientSecret*/ ctx[6];
+	}
+
 	input = new Input({ props: input_props });
 	binding_callbacks.push(() => bind(input, 'node', input_node_binding_2));
+	binding_callbacks.push(() => bind(input, 'value', input_value_binding_2));
 
 	button = new Button({
 			props: {
@@ -14481,7 +14618,7 @@ function create_default_slot_5(ctx) {
 			}
 		});
 
-	button.$on("click", /*click_handler_2*/ ctx[22]);
+	button.$on("click", /*click_handler_2*/ ctx[39]);
 
 	return {
 		c() {
@@ -14497,7 +14634,8 @@ function create_default_slot_5(ctx) {
 		},
 		p(ctx, dirty) {
 			const input_changes = {};
-			if (dirty[0] & /*$_*/ 32) input_changes.label = /*$_*/ ctx[5]('credentials.clientSecret');
+			if (dirty[0] & /*$_*/ 8192) input_changes.label = /*$_*/ ctx[13]('credentials.clientSecret');
+			if (dirty[0] & /*$_*/ 8192) input_changes.placeholder = /*$_*/ ctx[13]('credentials.clientSecret');
 			if (dirty[0] & /*show_client_secret*/ 4) input_changes.type = /*show_client_secret*/ ctx[2] ? 'text' : 'password';
 			if (dirty[0] & /*node*/ 1) input_changes.disabled = /*node*/ ctx[0].disableInput;
 
@@ -14507,11 +14645,17 @@ function create_default_slot_5(ctx) {
 				add_flush_callback(() => updating_node = false);
 			}
 
+			if (!updating_value && dirty[0] & /*clientSecret*/ 64) {
+				updating_value = true;
+				input_changes.value = /*clientSecret*/ ctx[6];
+				add_flush_callback(() => updating_value = false);
+			}
+
 			input.$set(input_changes);
 			const button_changes = {};
 			if (dirty[0] & /*show_client_secret*/ 4) button_changes.icon = /*show_client_secret*/ ctx[2] ? 'eye' : 'eye-slash';
 
-			if (dirty[0] & /*show_client_secret*/ 4 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*show_client_secret*/ 4 | dirty[1] & /*$$scope*/ 536870912) {
 				button_changes.$$scope = { dirty, ctx };
 			}
 
@@ -14536,34 +14680,43 @@ function create_default_slot_5(ctx) {
 	};
 }
 
-// (85:4) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip={$_('tooltip.settings')}>
+// (169:4) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip={$_('tooltip.settings')}>
 function create_default_slot_4(ctx) {
 	let input0;
 	let updating_node;
+	let updating_value;
 	let t0;
 	let input1;
 	let updating_node_1;
+	let updating_value_1;
 	let t1;
 	let row0;
 	let t2;
 	let input2;
 	let updating_node_2;
+	let updating_value_2;
 	let t3;
 	let row1;
 	let t4;
 	let input3;
 	let updating_node_3;
+	let updating_value_3;
 	let current;
 
 	function input0_node_binding_1(value) {
-		/*input0_node_binding_1*/ ctx[16](value);
+		/*input0_node_binding_1*/ ctx[28](value);
+	}
+
+	function input0_value_binding_1(value) {
+		/*input0_value_binding_1*/ ctx[29](value);
 	}
 
 	let input0_props = {
 		prop: "accessTokenUrl",
 		maximize: true,
 		icon: "link",
-		label: /*$_*/ ctx[5]('credentials.accessTokenUrl'),
+		label: /*$_*/ ctx[13]('credentials.accessTokenUrl'),
+		placeholder: /*$_*/ ctx[13]('credentials.accessTokenUrl'),
 		disabled: /*node*/ ctx[0].disableInput
 	};
 
@@ -14571,18 +14724,28 @@ function create_default_slot_4(ctx) {
 		input0_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*accessTokenUrl*/ ctx[4] !== void 0) {
+		input0_props.value = /*accessTokenUrl*/ ctx[4];
+	}
+
 	input0 = new Input({ props: input0_props });
 	binding_callbacks.push(() => bind(input0, 'node', input0_node_binding_1));
+	binding_callbacks.push(() => bind(input0, 'value', input0_value_binding_1));
 
 	function input1_node_binding_1(value) {
-		/*input1_node_binding_1*/ ctx[17](value);
+		/*input1_node_binding_1*/ ctx[30](value);
+	}
+
+	function input1_value_binding_1(value) {
+		/*input1_value_binding_1*/ ctx[31](value);
 	}
 
 	let input1_props = {
-		prop: "userName",
+		prop: "username",
 		maximize: true,
 		icon: "user",
-		label: /*$_*/ ctx[5]('credentials.userName'),
+		label: /*$_*/ ctx[13]('credentials.username'),
+		placeholder: /*$_*/ ctx[13]('credentials.username'),
 		disabled: /*node*/ ctx[0].disableInput
 	};
 
@@ -14590,8 +14753,13 @@ function create_default_slot_4(ctx) {
 		input1_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*username*/ ctx[7] !== void 0) {
+		input1_props.value = /*username*/ ctx[7];
+	}
+
 	input1 = new Input({ props: input1_props });
 	binding_callbacks.push(() => bind(input1, 'node', input1_node_binding_1));
+	binding_callbacks.push(() => bind(input1, 'value', input1_value_binding_1));
 
 	row0 = new Row({
 			props: {
@@ -14601,14 +14769,19 @@ function create_default_slot_4(ctx) {
 		});
 
 	function input2_node_binding_1(value) {
-		/*input2_node_binding_1*/ ctx[20](value);
+		/*input2_node_binding_1*/ ctx[35](value);
+	}
+
+	function input2_value_binding_1(value) {
+		/*input2_value_binding_1*/ ctx[36](value);
 	}
 
 	let input2_props = {
 		prop: "clientId",
 		maximize: true,
 		icon: "id-card",
-		label: /*$_*/ ctx[5]('credentials.clientId'),
+		label: /*$_*/ ctx[13]('credentials.clientId'),
+		placeholder: /*$_*/ ctx[13]('credentials.clientId'),
 		disabled: /*node*/ ctx[0].disableInput
 	};
 
@@ -14616,8 +14789,13 @@ function create_default_slot_4(ctx) {
 		input2_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*clientId*/ ctx[5] !== void 0) {
+		input2_props.value = /*clientId*/ ctx[5];
+	}
+
 	input2 = new Input({ props: input2_props });
 	binding_callbacks.push(() => bind(input2, 'node', input2_node_binding_1));
+	binding_callbacks.push(() => bind(input2, 'value', input2_value_binding_1));
 
 	row1 = new Row({
 			props: {
@@ -14627,14 +14805,19 @@ function create_default_slot_4(ctx) {
 		});
 
 	function input3_node_binding(value) {
-		/*input3_node_binding*/ ctx[23](value);
+		/*input3_node_binding*/ ctx[40](value);
+	}
+
+	function input3_value_binding(value) {
+		/*input3_value_binding*/ ctx[41](value);
 	}
 
 	let input3_props = {
 		prop: "scope",
 		maximize: true,
 		icon: "code",
-		label: /*$_*/ ctx[5]('credentials.scope'),
+		label: /*$_*/ ctx[13]('credentials.scope'),
+		placeholder: /*$_*/ ctx[13]('credentials.scope'),
 		disabled: /*node*/ ctx[0].disableInput
 	};
 
@@ -14642,8 +14825,13 @@ function create_default_slot_4(ctx) {
 		input3_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*scope*/ ctx[9] !== void 0) {
+		input3_props.value = /*scope*/ ctx[9];
+	}
+
 	input3 = new Input({ props: input3_props });
 	binding_callbacks.push(() => bind(input3, 'node', input3_node_binding));
+	binding_callbacks.push(() => bind(input3, 'value', input3_value_binding));
 
 	return {
 		c() {
@@ -14675,7 +14863,8 @@ function create_default_slot_4(ctx) {
 		},
 		p(ctx, dirty) {
 			const input0_changes = {};
-			if (dirty[0] & /*$_*/ 32) input0_changes.label = /*$_*/ ctx[5]('credentials.accessTokenUrl');
+			if (dirty[0] & /*$_*/ 8192) input0_changes.label = /*$_*/ ctx[13]('credentials.accessTokenUrl');
+			if (dirty[0] & /*$_*/ 8192) input0_changes.placeholder = /*$_*/ ctx[13]('credentials.accessTokenUrl');
 			if (dirty[0] & /*node*/ 1) input0_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node && dirty[0] & /*node*/ 1) {
@@ -14684,9 +14873,16 @@ function create_default_slot_4(ctx) {
 				add_flush_callback(() => updating_node = false);
 			}
 
+			if (!updating_value && dirty[0] & /*accessTokenUrl*/ 16) {
+				updating_value = true;
+				input0_changes.value = /*accessTokenUrl*/ ctx[4];
+				add_flush_callback(() => updating_value = false);
+			}
+
 			input0.$set(input0_changes);
 			const input1_changes = {};
-			if (dirty[0] & /*$_*/ 32) input1_changes.label = /*$_*/ ctx[5]('credentials.userName');
+			if (dirty[0] & /*$_*/ 8192) input1_changes.label = /*$_*/ ctx[13]('credentials.username');
+			if (dirty[0] & /*$_*/ 8192) input1_changes.placeholder = /*$_*/ ctx[13]('credentials.username');
 			if (dirty[0] & /*node*/ 1) input1_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node_1 && dirty[0] & /*node*/ 1) {
@@ -14695,16 +14891,23 @@ function create_default_slot_4(ctx) {
 				add_flush_callback(() => updating_node_1 = false);
 			}
 
+			if (!updating_value_1 && dirty[0] & /*username*/ 128) {
+				updating_value_1 = true;
+				input1_changes.value = /*username*/ ctx[7];
+				add_flush_callback(() => updating_value_1 = false);
+			}
+
 			input1.$set(input1_changes);
 			const row0_changes = {};
 
-			if (dirty[0] & /*show_password, $_, node*/ 35 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*show_password, $_, node, password*/ 8451 | dirty[1] & /*$$scope*/ 536870912) {
 				row0_changes.$$scope = { dirty, ctx };
 			}
 
 			row0.$set(row0_changes);
 			const input2_changes = {};
-			if (dirty[0] & /*$_*/ 32) input2_changes.label = /*$_*/ ctx[5]('credentials.clientId');
+			if (dirty[0] & /*$_*/ 8192) input2_changes.label = /*$_*/ ctx[13]('credentials.clientId');
+			if (dirty[0] & /*$_*/ 8192) input2_changes.placeholder = /*$_*/ ctx[13]('credentials.clientId');
 			if (dirty[0] & /*node*/ 1) input2_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node_2 && dirty[0] & /*node*/ 1) {
@@ -14713,22 +14916,35 @@ function create_default_slot_4(ctx) {
 				add_flush_callback(() => updating_node_2 = false);
 			}
 
+			if (!updating_value_2 && dirty[0] & /*clientId*/ 32) {
+				updating_value_2 = true;
+				input2_changes.value = /*clientId*/ ctx[5];
+				add_flush_callback(() => updating_value_2 = false);
+			}
+
 			input2.$set(input2_changes);
 			const row1_changes = {};
 
-			if (dirty[0] & /*show_client_secret, $_, node*/ 37 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*show_client_secret, $_, node, clientSecret*/ 8261 | dirty[1] & /*$$scope*/ 536870912) {
 				row1_changes.$$scope = { dirty, ctx };
 			}
 
 			row1.$set(row1_changes);
 			const input3_changes = {};
-			if (dirty[0] & /*$_*/ 32) input3_changes.label = /*$_*/ ctx[5]('credentials.scope');
+			if (dirty[0] & /*$_*/ 8192) input3_changes.label = /*$_*/ ctx[13]('credentials.scope');
+			if (dirty[0] & /*$_*/ 8192) input3_changes.placeholder = /*$_*/ ctx[13]('credentials.scope');
 			if (dirty[0] & /*node*/ 1) input3_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node_3 && dirty[0] & /*node*/ 1) {
 				updating_node_3 = true;
 				input3_changes.node = /*node*/ ctx[0];
 				add_flush_callback(() => updating_node_3 = false);
+			}
+
+			if (!updating_value_3 && dirty[0] & /*scope*/ 512) {
+				updating_value_3 = true;
+				input3_changes.value = /*scope*/ ctx[9];
+				add_flush_callback(() => updating_value_3 = false);
 			}
 
 			input3.$set(input3_changes);
@@ -14768,7 +14984,7 @@ function create_default_slot_4(ctx) {
 	};
 }
 
-// (80:8) <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_client_secret = !show_client_secret)}>
+// (164:8) <Button inline icon={show_client_secret ? 'eye' : 'eye-slash'} type="button" on:click={() => (show_client_secret = !show_client_secret)}>
 function create_default_slot_3$1(ctx) {
 	let t_value = (/*show_client_secret*/ ctx[2] ? 'Hide' : 'Show') + "";
 	let t;
@@ -14789,16 +15005,21 @@ function create_default_slot_3$1(ctx) {
 	};
 }
 
-// (78:6) <Row>
+// (151:6) <Row>
 function create_default_slot_2$1(ctx) {
 	let input;
 	let updating_node;
+	let updating_value;
 	let t;
 	let button;
 	let current;
 
 	function input_node_binding(value) {
-		/*input_node_binding*/ ctx[13](value);
+		/*input_node_binding*/ ctx[23](value);
+	}
+
+	function input_value_binding(value) {
+		/*input_value_binding*/ ctx[24](value);
 	}
 
 	let input_props = {
@@ -14806,7 +15027,8 @@ function create_default_slot_2$1(ctx) {
 		maximize: true,
 		icon: "key",
 		inline: true,
-		label: /*$_*/ ctx[5]('credentials.clientSecret'),
+		label: /*$_*/ ctx[13]('credentials.clientSecret'),
+		placeholder: /*$_*/ ctx[13]('credentials.clientSecret'),
 		type: /*show_client_secret*/ ctx[2] ? 'text' : 'password',
 		disabled: /*node*/ ctx[0].disableInput
 	};
@@ -14815,8 +15037,13 @@ function create_default_slot_2$1(ctx) {
 		input_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*clientSecret*/ ctx[6] !== void 0) {
+		input_props.value = /*clientSecret*/ ctx[6];
+	}
+
 	input = new Input({ props: input_props });
 	binding_callbacks.push(() => bind(input, 'node', input_node_binding));
+	binding_callbacks.push(() => bind(input, 'value', input_value_binding));
 
 	button = new Button({
 			props: {
@@ -14828,7 +15055,7 @@ function create_default_slot_2$1(ctx) {
 			}
 		});
 
-	button.$on("click", /*click_handler*/ ctx[14]);
+	button.$on("click", /*click_handler*/ ctx[25]);
 
 	return {
 		c() {
@@ -14844,7 +15071,8 @@ function create_default_slot_2$1(ctx) {
 		},
 		p(ctx, dirty) {
 			const input_changes = {};
-			if (dirty[0] & /*$_*/ 32) input_changes.label = /*$_*/ ctx[5]('credentials.clientSecret');
+			if (dirty[0] & /*$_*/ 8192) input_changes.label = /*$_*/ ctx[13]('credentials.clientSecret');
+			if (dirty[0] & /*$_*/ 8192) input_changes.placeholder = /*$_*/ ctx[13]('credentials.clientSecret');
 			if (dirty[0] & /*show_client_secret*/ 4) input_changes.type = /*show_client_secret*/ ctx[2] ? 'text' : 'password';
 			if (dirty[0] & /*node*/ 1) input_changes.disabled = /*node*/ ctx[0].disableInput;
 
@@ -14854,11 +15082,17 @@ function create_default_slot_2$1(ctx) {
 				add_flush_callback(() => updating_node = false);
 			}
 
+			if (!updating_value && dirty[0] & /*clientSecret*/ 64) {
+				updating_value = true;
+				input_changes.value = /*clientSecret*/ ctx[6];
+				add_flush_callback(() => updating_value = false);
+			}
+
 			input.$set(input_changes);
 			const button_changes = {};
 			if (dirty[0] & /*show_client_secret*/ 4) button_changes.icon = /*show_client_secret*/ ctx[2] ? 'eye' : 'eye-slash';
 
-			if (dirty[0] & /*show_client_secret*/ 4 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*show_client_secret*/ 4 | dirty[1] & /*$$scope*/ 536870912) {
 				button_changes.$$scope = { dirty, ctx };
 			}
 
@@ -14883,29 +15117,37 @@ function create_default_slot_2$1(ctx) {
 	};
 }
 
-// (75:4) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip={$_('credentials.tooltip.clientCredentials')}>
+// (148:4) <Group clazz="paddingBottom" {node} label="label.settings" icon="minus" tooltip={$_('credentials.tooltip.clientCredentials')}>
 function create_default_slot_1$1(ctx) {
 	let input0;
 	let updating_node;
+	let updating_value;
 	let t0;
 	let input1;
 	let updating_node_1;
+	let updating_value_1;
 	let t1;
 	let row;
 	let t2;
 	let input2;
 	let updating_node_2;
+	let updating_value_2;
 	let current;
 
 	function input0_node_binding(value) {
-		/*input0_node_binding*/ ctx[11](value);
+		/*input0_node_binding*/ ctx[19](value);
+	}
+
+	function input0_value_binding(value) {
+		/*input0_value_binding*/ ctx[20](value);
 	}
 
 	let input0_props = {
 		prop: "accessTokenUrl",
 		maximize: true,
 		icon: "link",
-		label: /*$_*/ ctx[5]('credentials.accessTokenUrl'),
+		label: /*$_*/ ctx[13]('credentials.accessTokenUrl'),
+		placeholder: /*$_*/ ctx[13]('credentials.accessTokenUrl'),
 		disabled: /*node*/ ctx[0].disableInput
 	};
 
@@ -14913,18 +15155,28 @@ function create_default_slot_1$1(ctx) {
 		input0_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*accessTokenUrl*/ ctx[4] !== void 0) {
+		input0_props.value = /*accessTokenUrl*/ ctx[4];
+	}
+
 	input0 = new Input({ props: input0_props });
 	binding_callbacks.push(() => bind(input0, 'node', input0_node_binding));
+	binding_callbacks.push(() => bind(input0, 'value', input0_value_binding));
 
 	function input1_node_binding(value) {
-		/*input1_node_binding*/ ctx[12](value);
+		/*input1_node_binding*/ ctx[21](value);
+	}
+
+	function input1_value_binding(value) {
+		/*input1_value_binding*/ ctx[22](value);
 	}
 
 	let input1_props = {
 		prop: "clientId",
 		maximize: true,
 		icon: "id-card",
-		label: /*$_*/ ctx[5]('credentials.clientId'),
+		label: /*$_*/ ctx[13]('credentials.clientId'),
+		placeholder: /*$_*/ ctx[13]('credentials.clientId'),
 		disabled: /*node*/ ctx[0].disableInput
 	};
 
@@ -14932,8 +15184,13 @@ function create_default_slot_1$1(ctx) {
 		input1_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*clientId*/ ctx[5] !== void 0) {
+		input1_props.value = /*clientId*/ ctx[5];
+	}
+
 	input1 = new Input({ props: input1_props });
 	binding_callbacks.push(() => bind(input1, 'node', input1_node_binding));
+	binding_callbacks.push(() => bind(input1, 'value', input1_value_binding));
 
 	row = new Row({
 			props: {
@@ -14943,14 +15200,19 @@ function create_default_slot_1$1(ctx) {
 		});
 
 	function input2_node_binding(value) {
-		/*input2_node_binding*/ ctx[15](value);
+		/*input2_node_binding*/ ctx[26](value);
+	}
+
+	function input2_value_binding(value) {
+		/*input2_value_binding*/ ctx[27](value);
 	}
 
 	let input2_props = {
 		prop: "scope",
 		maximize: true,
 		icon: "code",
-		label: /*$_*/ ctx[5]('credentials.scope'),
+		label: /*$_*/ ctx[13]('credentials.scope'),
+		placeholder: /*$_*/ ctx[13]('credentials.scope'),
 		disabled: /*node*/ ctx[0].disableInput
 	};
 
@@ -14958,8 +15220,13 @@ function create_default_slot_1$1(ctx) {
 		input2_props.node = /*node*/ ctx[0];
 	}
 
+	if (/*scope*/ ctx[9] !== void 0) {
+		input2_props.value = /*scope*/ ctx[9];
+	}
+
 	input2 = new Input({ props: input2_props });
 	binding_callbacks.push(() => bind(input2, 'node', input2_node_binding));
+	binding_callbacks.push(() => bind(input2, 'value', input2_value_binding));
 
 	return {
 		c() {
@@ -14983,7 +15250,8 @@ function create_default_slot_1$1(ctx) {
 		},
 		p(ctx, dirty) {
 			const input0_changes = {};
-			if (dirty[0] & /*$_*/ 32) input0_changes.label = /*$_*/ ctx[5]('credentials.accessTokenUrl');
+			if (dirty[0] & /*$_*/ 8192) input0_changes.label = /*$_*/ ctx[13]('credentials.accessTokenUrl');
+			if (dirty[0] & /*$_*/ 8192) input0_changes.placeholder = /*$_*/ ctx[13]('credentials.accessTokenUrl');
 			if (dirty[0] & /*node*/ 1) input0_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node && dirty[0] & /*node*/ 1) {
@@ -14992,9 +15260,16 @@ function create_default_slot_1$1(ctx) {
 				add_flush_callback(() => updating_node = false);
 			}
 
+			if (!updating_value && dirty[0] & /*accessTokenUrl*/ 16) {
+				updating_value = true;
+				input0_changes.value = /*accessTokenUrl*/ ctx[4];
+				add_flush_callback(() => updating_value = false);
+			}
+
 			input0.$set(input0_changes);
 			const input1_changes = {};
-			if (dirty[0] & /*$_*/ 32) input1_changes.label = /*$_*/ ctx[5]('credentials.clientId');
+			if (dirty[0] & /*$_*/ 8192) input1_changes.label = /*$_*/ ctx[13]('credentials.clientId');
+			if (dirty[0] & /*$_*/ 8192) input1_changes.placeholder = /*$_*/ ctx[13]('credentials.clientId');
 			if (dirty[0] & /*node*/ 1) input1_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node_1 && dirty[0] & /*node*/ 1) {
@@ -15003,22 +15278,35 @@ function create_default_slot_1$1(ctx) {
 				add_flush_callback(() => updating_node_1 = false);
 			}
 
+			if (!updating_value_1 && dirty[0] & /*clientId*/ 32) {
+				updating_value_1 = true;
+				input1_changes.value = /*clientId*/ ctx[5];
+				add_flush_callback(() => updating_value_1 = false);
+			}
+
 			input1.$set(input1_changes);
 			const row_changes = {};
 
-			if (dirty[0] & /*show_client_secret, $_, node*/ 37 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*show_client_secret, $_, node, clientSecret*/ 8261 | dirty[1] & /*$$scope*/ 536870912) {
 				row_changes.$$scope = { dirty, ctx };
 			}
 
 			row.$set(row_changes);
 			const input2_changes = {};
-			if (dirty[0] & /*$_*/ 32) input2_changes.label = /*$_*/ ctx[5]('credentials.scope');
+			if (dirty[0] & /*$_*/ 8192) input2_changes.label = /*$_*/ ctx[13]('credentials.scope');
+			if (dirty[0] & /*$_*/ 8192) input2_changes.placeholder = /*$_*/ ctx[13]('credentials.scope');
 			if (dirty[0] & /*node*/ 1) input2_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node_2 && dirty[0] & /*node*/ 1) {
 				updating_node_2 = true;
 				input2_changes.node = /*node*/ ctx[0];
 				add_flush_callback(() => updating_node_2 = false);
+			}
+
+			if (!updating_value_2 && dirty[0] & /*scope*/ 512) {
+				updating_value_2 = true;
+				input2_changes.value = /*scope*/ ctx[9];
+				add_flush_callback(() => updating_value_2 = false);
 			}
 
 			input2.$set(input2_changes);
@@ -15050,7 +15338,7 @@ function create_default_slot_1$1(ctx) {
 	};
 }
 
-// (72:0) <Group clazz="paddingBottom">
+// (145:0) <Group clazz="paddingBottom">
 function create_default_slot$2(ctx) {
 	let typedinput;
 	let updating_node;
@@ -15063,21 +15351,21 @@ function create_default_slot$2(ctx) {
 	let current;
 
 	function typedinput_node_binding(value) {
-		/*typedinput_node_binding*/ ctx[8](value);
+		/*typedinput_node_binding*/ ctx[16](value);
 	}
 
 	function typedinput_types_binding(value) {
-		/*typedinput_types_binding*/ ctx[9](value);
+		/*typedinput_types_binding*/ ctx[17](value);
 	}
 
 	function typedinput_tooltip_binding(value) {
-		/*typedinput_tooltip_binding*/ ctx[10](value);
+		/*typedinput_tooltip_binding*/ ctx[18](value);
 	}
 
 	let typedinput_props = {
 		inline: true,
 		prop: "grantType",
-		label: /*$_*/ ctx[5]('credentials.grantType'),
+		label: /*$_*/ ctx[13]('credentials.grantType'),
 		typeProp: "grantOpts",
 		disabled: /*node*/ ctx[0].disableInput
 	};
@@ -15086,8 +15374,8 @@ function create_default_slot$2(ctx) {
 		typedinput_props.node = /*node*/ ctx[0];
 	}
 
-	if (/*grantOpts*/ ctx[4] !== void 0) {
-		typedinput_props.types = /*grantOpts*/ ctx[4];
+	if (/*grantOpts*/ ctx[12] !== void 0) {
+		typedinput_props.types = /*grantOpts*/ ctx[12];
 	}
 
 	if (/*node*/ ctx[0].grantType !== void 0) {
@@ -15132,7 +15420,7 @@ function create_default_slot$2(ctx) {
 		},
 		p(ctx, dirty) {
 			const typedinput_changes = {};
-			if (dirty[0] & /*$_*/ 32) typedinput_changes.label = /*$_*/ ctx[5]('credentials.grantType');
+			if (dirty[0] & /*$_*/ 8192) typedinput_changes.label = /*$_*/ ctx[13]('credentials.grantType');
 			if (dirty[0] & /*node*/ 1) typedinput_changes.disabled = /*node*/ ctx[0].disableInput;
 
 			if (!updating_node && dirty[0] & /*node*/ 1) {
@@ -15141,9 +15429,9 @@ function create_default_slot$2(ctx) {
 				add_flush_callback(() => updating_node = false);
 			}
 
-			if (!updating_types && dirty[0] & /*grantOpts*/ 16) {
+			if (!updating_types && dirty[0] & /*grantOpts*/ 4096) {
 				updating_types = true;
-				typedinput_changes.types = /*grantOpts*/ ctx[4];
+				typedinput_changes.types = /*grantOpts*/ ctx[12];
 				add_flush_callback(() => updating_types = false);
 			}
 
@@ -15236,7 +15524,7 @@ function create_fragment$3(ctx) {
 		p(ctx, dirty) {
 			const group_changes = {};
 
-			if (dirty[0] & /*node, $_, show_client_secret, show_password, show_code, grantOpts*/ 63 | dirty[1] & /*$$scope*/ 4) {
+			if (dirty[0] & /*node, $_, scope, show_client_secret, clientSecret, clientId, accessTokenUrl, show_password, password, username, show_code, code, authorizationEndpoint, grantOpts*/ 16383 | dirty[1] & /*$$scope*/ 536870912) {
 				group_changes.$$scope = { dirty, ctx };
 			}
 
@@ -15260,7 +15548,7 @@ function create_fragment$3(ctx) {
 function instance$3($$self, $$props, $$invalidate) {
 	let grantOpts;
 	let $_;
-	component_subscribe($$self, _, $$value => $$invalidate(5, $_ = $$value));
+	component_subscribe($$self, _, $$value => $$invalidate(13, $_ = $$value));
 	let { node, data } = $$props;
 
 	const encryptURL = url => {
@@ -15276,15 +15564,9 @@ function instance$3($$self, $$props, $$invalidate) {
 	let show_code = false;
 
 	function onClick() {
-		const commonParams = `id=${encodeURIComponent(node.id)}&clientId=${encodeURIComponent(node.clientId)}&clientSecret=${encodeURIComponent(node.clientSecret)}&scope=${encodeURIComponent(node.scope)}&callback=${encodeURIComponent(node.callback)}&proxy=${encodeURIComponent(node.proxy)}&tsl=${encodeURIComponent(node.tslconfig)}`;
-		let url;
-		const auth = 'oauth2/auth?banana=';
-
-		if (node.authorizationEndpoint) {
-			url = auth + encryptURL(`${commonParams}&authorizationEndpoint=${encodeURIComponent(node.authorizationEndpoint)}&redirectUri=${encodeURIComponent(node.redirectUri)}`);
-		} else {
-			url = auth + encryptURL(commonParams);
-		}
+		const commonParams = `id=${encodeURIComponent(node.id)}&callback=${encodeURIComponent(node.callback)}&proxy=${encodeURIComponent(node.proxy)}&tsl=${encodeURIComponent(node.tslconfig)}`;
+		let url = `oauth2/auth?banana=${encryptURL(`${commonParams}&redirectUri=${encodeURIComponent(node.redirectUri)}`)}`;
+		console.log(url);
 
 		Object.assign(document.createElement('a'), {
 			target: '_blank',
@@ -15294,10 +15576,10 @@ function instance$3($$self, $$props, $$invalidate) {
 
 		const getCode = async function () {
 			const res = await fetch(`oauth2/credentials/${node.id}`);
-			$$invalidate(7, data = await res.json());
+			$$invalidate(15, data = await res.json());
 
 			if (res.ok) {
-				$$invalidate(7, data);
+				$$invalidate(15, data);
 				$$invalidate(0, node.code = data.code, node);
 			} else {
 				throw new Error(data);
@@ -15307,6 +15589,89 @@ function instance$3($$self, $$props, $$invalidate) {
 		window.configNodeIntervalId = window.setTimeout(getCode, 5000);
 	}
 
+	// Função para decriptografar os dados
+	const decryptData = async (encryptedData, encryptionKey, iv) => {
+		const keyBuffer = hexStringToBuffer(encryptionKey);
+		const ivBuffer = hexStringToBuffer(iv);
+
+		try {
+			// Importar a chave usando o algoritmo AES-CBC
+			const key = await crypto.subtle.importKey('raw', keyBuffer, 'AES-CBC', false, ['decrypt']);
+
+			// Descriptografar os dados usando a chave importada e o IV
+			const decryptedBuffer = await crypto.subtle.decrypt({ name: 'AES-CBC', iv: ivBuffer }, key, hexStringToBuffer(encryptedData));
+
+			// Converter o resultado descriptografado para uma string UTF-8
+			const decryptedData = new TextDecoder().decode(decryptedBuffer);
+
+			// Converter a string para JSON
+			const decryptedJSON = JSON.parse(decryptedData);
+
+			return decryptedJSON;
+		} catch(error) {
+			throw new Error('Erro ao descriptografar: ' + error.message);
+		}
+	};
+
+	// Função auxiliar para converter uma string hexadecimal em um ArrayBuffer
+	const hexStringToBuffer = hexString => {
+		const hexWithoutSpaces = hexString.replace(/\s/g, '');
+		const bytes = new Uint8Array(hexWithoutSpaces.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+		return bytes.buffer;
+	};
+
+	let accessTokenUrl,
+		clientId,
+		clientSecret,
+		username,
+		password,
+		scope,
+		authorizationEndpoint,
+		code;
+
+	onMount(async () => {
+		const res = await fetch(`oauth2/secrets/${node.id}`);
+		$$invalidate(15, data = await res.json());
+
+		if (res.ok) {
+			console.log(data);
+
+			decryptData(data.encryptedCredentials, data.encryptionKey, data.iv).then(decryptedData => {
+				$$invalidate(4, accessTokenUrl = (decryptedData?.accessTokenUrl)
+				? decryptedData.accessTokenUrl
+				: undefined);
+
+				$$invalidate(5, clientId = (decryptedData?.clientId)
+				? decryptedData.clientId
+				: undefined);
+
+				$$invalidate(6, clientSecret = (decryptedData?.clientSecret)
+				? decryptedData.clientSecret
+				: undefined);
+
+				$$invalidate(7, username = (decryptedData?.username)
+				? decryptedData.username
+				: undefined);
+
+				$$invalidate(8, password = (decryptedData?.password)
+				? decryptedData.password
+				: undefined);
+
+				$$invalidate(9, scope = (decryptedData?.scope) ? decryptedData.scope : undefined);
+
+				$$invalidate(10, authorizationEndpoint = (decryptedData?.authorizationEndpoint)
+				? decryptedData.authorizationEndpoint
+				: undefined);
+
+				$$invalidate(11, code = (decryptedData?.code) ? decryptedData.code : undefined);
+			}).catch(error => {
+				console.error('Erro ao descriptografar:', error);
+			});
+		} else {
+			throw new Error(data);
+		}
+	});
+
 	function typedinput_node_binding(value) {
 		node = value;
 		$$invalidate(0, node);
@@ -15314,7 +15679,7 @@ function instance$3($$self, $$props, $$invalidate) {
 
 	function typedinput_types_binding(value) {
 		grantOpts = value;
-		$$invalidate(4, grantOpts);
+		$$invalidate(12, grantOpts);
 	}
 
 	function typedinput_tooltip_binding(value) {
@@ -15329,14 +15694,29 @@ function instance$3($$self, $$props, $$invalidate) {
 		$$invalidate(0, node);
 	}
 
+	function input0_value_binding(value) {
+		accessTokenUrl = value;
+		$$invalidate(4, accessTokenUrl);
+	}
+
 	function input1_node_binding(value) {
 		node = value;
 		$$invalidate(0, node);
 	}
 
+	function input1_value_binding(value) {
+		clientId = value;
+		$$invalidate(5, clientId);
+	}
+
 	function input_node_binding(value) {
 		node = value;
 		$$invalidate(0, node);
+	}
+
+	function input_value_binding(value) {
+		clientSecret = value;
+		$$invalidate(6, clientSecret);
 	}
 
 	const click_handler = () => $$invalidate(2, show_client_secret = !show_client_secret);
@@ -15346,9 +15726,19 @@ function instance$3($$self, $$props, $$invalidate) {
 		$$invalidate(0, node);
 	}
 
+	function input2_value_binding(value) {
+		scope = value;
+		$$invalidate(9, scope);
+	}
+
 	function input0_node_binding_1(value) {
 		node = value;
 		$$invalidate(0, node);
+	}
+
+	function input0_value_binding_1(value) {
+		accessTokenUrl = value;
+		$$invalidate(4, accessTokenUrl);
 	}
 
 	function input1_node_binding_1(value) {
@@ -15356,9 +15746,19 @@ function instance$3($$self, $$props, $$invalidate) {
 		$$invalidate(0, node);
 	}
 
+	function input1_value_binding_1(value) {
+		username = value;
+		$$invalidate(7, username);
+	}
+
 	function input_node_binding_1(value) {
 		node = value;
 		$$invalidate(0, node);
+	}
+
+	function input_value_binding_1(value) {
+		password = value;
+		$$invalidate(8, password);
 	}
 
 	const click_handler_1 = () => $$invalidate(1, show_password = !show_password);
@@ -15368,9 +15768,19 @@ function instance$3($$self, $$props, $$invalidate) {
 		$$invalidate(0, node);
 	}
 
+	function input2_value_binding_1(value) {
+		clientId = value;
+		$$invalidate(5, clientId);
+	}
+
 	function input_node_binding_2(value) {
 		node = value;
 		$$invalidate(0, node);
+	}
+
+	function input_value_binding_2(value) {
+		clientSecret = value;
+		$$invalidate(6, clientSecret);
 	}
 
 	const click_handler_2 = () => $$invalidate(2, show_client_secret = !show_client_secret);
@@ -15380,9 +15790,19 @@ function instance$3($$self, $$props, $$invalidate) {
 		$$invalidate(0, node);
 	}
 
+	function input3_value_binding(value) {
+		scope = value;
+		$$invalidate(9, scope);
+	}
+
 	function input0_node_binding_2(value) {
 		node = value;
 		$$invalidate(0, node);
+	}
+
+	function input0_value_binding_2(value) {
+		accessTokenUrl = value;
+		$$invalidate(4, accessTokenUrl);
 	}
 
 	function input1_node_binding_2(value) {
@@ -15390,14 +15810,29 @@ function instance$3($$self, $$props, $$invalidate) {
 		$$invalidate(0, node);
 	}
 
+	function input1_value_binding_2(value) {
+		authorizationEndpoint = value;
+		$$invalidate(10, authorizationEndpoint);
+	}
+
 	function input2_node_binding_2(value) {
 		node = value;
 		$$invalidate(0, node);
 	}
 
+	function input2_value_binding_2(value) {
+		clientId = value;
+		$$invalidate(5, clientId);
+	}
+
 	function input_node_binding_3(value) {
 		node = value;
 		$$invalidate(0, node);
+	}
+
+	function input_value_binding_3(value) {
+		clientSecret = value;
+		$$invalidate(6, clientSecret);
 	}
 
 	const click_handler_3 = () => $$invalidate(2, show_client_secret = !show_client_secret);
@@ -15407,19 +15842,29 @@ function instance$3($$self, $$props, $$invalidate) {
 		$$invalidate(0, node);
 	}
 
+	function input3_value_binding_1(value) {
+		scope = value;
+		$$invalidate(9, scope);
+	}
+
 	function input_node_binding_4(value) {
 		node = value;
 		$$invalidate(0, node);
+	}
+
+	function input_value_binding_4(value) {
+		code = value;
+		$$invalidate(11, code);
 	}
 
 	const click_handler_4 = () => $$invalidate(3, show_code = !show_code);
 
 	$$self.$$set = $$props => {
 		if ('node' in $$props) $$invalidate(0, node = $$props.node);
-		if ('data' in $$props) $$invalidate(7, data = $$props.data);
+		if ('data' in $$props) $$invalidate(15, data = $$props.data);
 	};
 
-	$$invalidate(4, grantOpts = [
+	$$invalidate(12, grantOpts = [
 		{
 			value: 'oauth2Request',
 			label: 'grant type',
@@ -15447,6 +15892,14 @@ function instance$3($$self, $$props, $$invalidate) {
 		show_password,
 		show_client_secret,
 		show_code,
+		accessTokenUrl,
+		clientId,
+		clientSecret,
+		username,
+		password,
+		scope,
+		authorizationEndpoint,
+		code,
 		grantOpts,
 		$_,
 		onClick,
@@ -15455,25 +15908,41 @@ function instance$3($$self, $$props, $$invalidate) {
 		typedinput_types_binding,
 		typedinput_tooltip_binding,
 		input0_node_binding,
+		input0_value_binding,
 		input1_node_binding,
+		input1_value_binding,
 		input_node_binding,
+		input_value_binding,
 		click_handler,
 		input2_node_binding,
+		input2_value_binding,
 		input0_node_binding_1,
+		input0_value_binding_1,
 		input1_node_binding_1,
+		input1_value_binding_1,
 		input_node_binding_1,
+		input_value_binding_1,
 		click_handler_1,
 		input2_node_binding_1,
+		input2_value_binding_1,
 		input_node_binding_2,
+		input_value_binding_2,
 		click_handler_2,
 		input3_node_binding,
+		input3_value_binding,
 		input0_node_binding_2,
+		input0_value_binding_2,
 		input1_node_binding_2,
+		input1_value_binding_2,
 		input2_node_binding_2,
+		input2_value_binding_2,
 		input_node_binding_3,
+		input_value_binding_3,
 		click_handler_3,
 		input3_node_binding_1,
+		input3_value_binding_1,
 		input_node_binding_4,
+		input_value_binding_4,
 		click_handler_4
 	];
 }
@@ -15481,7 +15950,7 @@ function instance$3($$self, $$props, $$invalidate) {
 class Credentials extends SvelteComponent {
 	constructor(options) {
 		super();
-		init(this, options, instance$3, create_fragment$3, safe_not_equal, { node: 0, data: 7 }, null, [-1, -1]);
+		init(this, options, instance$3, create_fragment$3, safe_not_equal, { node: 0, data: 15 }, null, [-1, -1]);
 	}
 }
 
@@ -15626,7 +16095,7 @@ const oauth2BackwardCompatible = (obj) => {
   if (typeof obj.clientSecret === 'undefined') obj.clientSecret = '';
   if (typeof obj.clientId === 'undefined') obj.clientId = '';
   if (typeof obj.scope === 'undefined') obj.scope = '';
-  if (typeof obj.userName === 'undefined') obj.userName = '';
+  if (typeof obj.username === 'undefined') obj.username = '';
   if (typeof obj.password === 'undefined') obj.password = '';
   if (typeof obj.authorizationEndpoint === 'undefined') obj.authorizationEndpoint = '';
   if (typeof obj.code === 'undefined') obj.code = '';
@@ -15794,7 +16263,7 @@ function get_each_context(ctx, list, i) {
 	return child_ctx;
 }
 
-// (181:0) {#each messages as message}
+// (179:0) {#each messages as message}
 function create_each_block(ctx) {
 	let yell;
 	let current;
@@ -15829,7 +16298,7 @@ function create_each_block(ctx) {
 	};
 }
 
-// (189:4) <Collapsible {node} indented={false} icon="key" label={$_('credentials.title')}>
+// (187:4) <Collapsible {node} indented={false} icon="key" label={$_('credentials.title')}>
 function create_default_slot_3(ctx) {
 	let credentials;
 	let updating_node;
@@ -15898,7 +16367,7 @@ function create_default_slot_3(ctx) {
 	};
 }
 
-// (187:2) <TabContent tab="general">
+// (185:2) <TabContent tab="general">
 function create_default_slot_2(ctx) {
 	let general;
 	let updating_node;
@@ -15997,7 +16466,7 @@ function create_default_slot_2(ctx) {
 	};
 }
 
-// (193:2) <TabContent tab="advanced">
+// (191:2) <TabContent tab="advanced">
 function create_default_slot_1(ctx) {
 	let advanced;
 	let updating_node;
@@ -16066,7 +16535,7 @@ function create_default_slot_1(ctx) {
 	};
 }
 
-// (186:0) <TabbedPane bind:tabs>
+// (184:0) <TabbedPane bind:tabs>
 function create_default_slot(ctx) {
 	let tabcontent0;
 	let t;
@@ -16322,39 +16791,6 @@ RED.nodes.registerType('oauth2', {
 			validate: RED.validators.typedInput('grantOpts')
 		},
 		grantOpts: { value: 'oauth2Request' },
-		accessTokenUrl: {
-			value: '',
-			label: 'label.accessTokenUrl',
-			placeholder: 'placeholder.accessTokenUrl'
-		},
-		clientId: {
-			value: '',
-			placeholder: 'placeholder.clientId'
-		},
-		clientSecret: {
-			value: '',
-			placeholder: 'placeholder.clientSecret'
-		},
-		scope: {
-			value: '',
-			placeholder: 'placeholder.scope'
-		},
-		userName: {
-			value: '',
-			placeholder: 'placeholder.userName'
-		},
-		password: {
-			value: '',
-			placeholder: 'placeholder.password'
-		},
-		authorizationEndpoint: {
-			value: '',
-			placeholder: 'placeholder.authorizationEndpoint'
-		},
-		code: {
-			value: '',
-			placeholder: 'placeholder.code'
-		},
 		internalErrors: { value: {} },
 		rejectUnauthorized: {
 			value: false,
@@ -16406,7 +16842,19 @@ RED.nodes.registerType('oauth2', {
 			required: false,
 			label: RED._('node-red:httpin.tls-config')
 		},
+		callback: { value: '' },
+		redirectUri: { value: '' },
 		outputs: { value: 1 }
+	},
+	credentials: {
+		accessTokenUrl: { type: 'password' },
+		authorizationEndpoint: { type: 'password' },
+		clientId: { type: 'password' },
+		clientSecret: { type: 'password' },
+		username: { type: 'password' },
+		password: { type: 'password' },
+		scope: { type: 'password' },
+		code: { type: 'password' }
 	},
 	inputs: 1,
 	outputs: 1,
@@ -16438,7 +16886,9 @@ RED.nodes.registerType('oauth2', {
 			this.callback = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/auth/callback`;
 		}
 
+		this.redirectUri = '';
 		this.redirectUri = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/redirect`;
+		console.log(this.redirectUri);
 		console.log(this.language);
 		console.log(this.callback);
 		render(this, { minWidth: '600px' });

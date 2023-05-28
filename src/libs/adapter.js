@@ -6,6 +6,12 @@
  * @returns {object} - The options object containing stored credentials.
  */
 const createPayload = (RED, config, msg) => {
+  const credentials = RED.nodes.getCredentials(config.id);
+  if (msg.oauth2Request) {
+    config = { ...config, ...msg.oauth2Request, ...msg.oauth2Request?.credentials };
+  } else {
+    config = { ...config, ...credentials };
+  }
   const options = {
     url: config.accessTokenUrl,
     grantType: config.grantType,
@@ -75,7 +81,7 @@ const createPayload = (RED, config, msg) => {
     });
   }
 
-  if (config.grantType === 'oauth2Request' && msg.oauth2Request) {
+  if (msg.oauth2Request) {
     options.url = msg.oauth2Request.accessTokenUrl || null;
     if (msg.oauth2Request.headers) {
       options.headers = { ...(options.headers || {}) };
@@ -89,24 +95,26 @@ const createPayload = (RED, config, msg) => {
     const credentials = msg.oauth2Request.credentials;
     if (credentials) {
       options.grantType = credentials.grantType || options.grantType;
-      options.form.username = credentials.username || options.form.username;
-      options.form.password = credentials.password || options.form.password;
+      options.form.clientId = credentials.clientId || options.form.clientId;
+      options.form.clientSecret = credentials.clientSecret || options.form.clientSecret;
+      if (credentials.grantType === 'password') {
+        options.form.username = credentials.username || options.form.username;
+        options.form.password = credentials.password || options.form.password;  
+      }
       options.form.refreshToken = credentials.refreshToken || options.form.refreshToken;
       options.form.scope = credentials.scope || options.form.scope;
       options.rejectUnauthorized = credentials.rejectUnauthorized || options.rejectUnauthorized;
-      options.form.clientId = credentials.clientId || options.form.clientId;
-      options.form.clientSecret = credentials.clientSecret || options.form.clientSecret;
     }
 
     delete msg.oauth2Request;
   }
 
-  if (config.grantType === 'password') {
-    options.form.username = config.userName;
+  if (!msg.oauth2Request && config.grantType === 'password') {
+    options.form.username = config.username;
     options.form.password = config.password;
   }
 
-  if (config.grantType === 'authorizationCode') {
+  if (!msg.oauth2Request && config.grantType === 'authorizationCode') {
     if (config.clientCredentialsInBody) {
       options.form.clientId = config.clientId;
       options.form.clientSecret = config.clientSecret;
@@ -119,7 +127,7 @@ const createPayload = (RED, config, msg) => {
     }
   }
 
-  if (config.grantType === 'refreshToken') {
+  if (!msg.oauth2Request && config.grantType === 'refreshToken') {
     options.form.refreshToken = config.refreshToken;
   }
 

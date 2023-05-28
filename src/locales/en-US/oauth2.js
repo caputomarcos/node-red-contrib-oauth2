@@ -16,7 +16,7 @@ const oauth2DataEn = {
       clientSecret: 'Client Secret',
       authorizationEndpoint: 'Authorization Endpoint',
       password: 'Password',
-      userName: 'User Name',
+      username: 'User Name',
       clientId: 'Client Id',
       headers: 'Headers',
       proxy: 'Proxy'
@@ -28,7 +28,7 @@ const oauth2DataEn = {
       clientId: 'Client Id',
       clientSecret: 'Client Secret',
       scope: 'Scope',
-      userName: 'User Name',
+      username: 'User Name',
       password: 'Password',
       authorizationEndpoint: 'Authorization Endpoint',
       code: 'Code'

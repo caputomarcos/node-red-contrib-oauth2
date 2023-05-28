@@ -47,6 +47,14 @@ const jwt = require('jsonwebtoken');
  * @property {string} refresh_token - The refresh token.
  */
 
+class Oauth2Error extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = this.constructor.name;
+  }
+}
+
 /**
  * Function to obtain an access token using the client credentials grant.
  * @param {GrantTypePayload} payload - The payload for the request.
@@ -249,7 +257,7 @@ async function handlerGetRequest(url, options) {
     const response = await axios.get(url, options);
     return response;
   } catch (error) {
-    throw new Error('Failed to refresh access token');
+    throw new Oauth2Error(error.response.statusText, error.response.status);
   }
 }
 
@@ -264,12 +272,40 @@ async function handlerPostRequest(url, formData, options) {
     const response = await axios.post(url, formData, options);
     return response;
   } catch (error) {
-    throw new Error(`Failed to refresh access token ${error}`);
+    throw new Oauth2Error(error.message, error.code);
   }
+}
+
+/**
+ * Encrypts the provided credentials using AES-256-CBC encryption.
+ * @param {Object} crypto - The Node.js 'crypto' module.
+ * @param {Object} credentials - The credentials to encrypt.
+ * @returns {Object} - An object containing the encrypted credentials, IV, and encryption key.
+ */
+function encryptCredentials(crypto, credentials) {
+  // Generate a random encryption key with 32 bytes (256 bits)
+  const encryptionKey = crypto.randomBytes(32);
+
+  // Convert the credentials to JSON
+  const credentialsJSON = JSON.stringify(credentials);
+
+  // Generate a random initialization vector (IV)
+  const iv = crypto.randomBytes(16);
+
+  // Create a cipher using the encryption key and IV
+  const cipher = crypto.createCipheriv('aes-256-cbc', encryptionKey, iv);
+
+  // Encrypt the credentials
+  let encryptedCredentials = cipher.update(credentialsJSON, 'utf8', 'hex');
+  encryptedCredentials += cipher.final('hex');
+
+  // Return the encrypted credentials, IV, and encryption key
+  return { encryptedCredentials, iv, encryptionKey };
 }
 
 module.exports = {
   getAccessToken,
   handlerGetRequest,
-  handlerPostRequest
+  handlerPostRequest,
+  encryptCredentials
 };

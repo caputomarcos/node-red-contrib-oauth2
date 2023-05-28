@@ -37,22 +37,6 @@
       },
       grantOpts: { value: 'oauth2Request' },
 
-      accessTokenUrl: {
-        value: '',
-        label: 'label.accessTokenUrl',
-        placeholder: 'placeholder.accessTokenUrl'
-      },
-      clientId: { value: '', placeholder: 'placeholder.clientId' },
-      clientSecret: { value: '', placeholder: 'placeholder.clientSecret' },
-      scope: { value: '', placeholder: 'placeholder.scope' },
-      userName: { value: '', placeholder: 'placeholder.userName' },
-      password: { value: '', placeholder: 'placeholder.password' },
-      authorizationEndpoint: {
-        value: '',
-        placeholder: 'placeholder.authorizationEndpoint'
-      },
-      code: { value: '', placeholder: 'placeholder.code' },
-
       internalErrors: { value: {} },
       rejectUnauthorized: {
         value: false,
@@ -83,7 +67,19 @@
       showBanner: { value: true, label: 'Show Banner', icon: 'eye' },
       proxy: { type: 'http proxy', required: false, label: RED._('node-red:httpin.proxy-config') },
       tslconfig: { type: 'tls-config', required: false, label: RED._('node-red:httpin.tls-config') },
+      callback: { value: '' },
+      redirectUri: { value: '' },
       outputs: { value: 1 }
+    },
+    credentials: {
+      accessTokenUrl: { type: 'password' },
+      authorizationEndpoint: { type: 'password' },
+      clientId: { type: 'password' },
+      clientSecret: { type: 'password' },
+      username: { type: 'password' },
+      password: { type: 'password' },
+      scope: { type: 'password' },
+      code: { type: 'password' }
     },
 
     inputs: 1,
@@ -117,7 +113,9 @@
       } else {
         this.callback = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/auth/callback`;
       }
+      this.redirectUri = '';
       this.redirectUri = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/redirect`;
+      console.log(this.redirectUri);
 
       console.log(this.language);
       console.log(this.callback);

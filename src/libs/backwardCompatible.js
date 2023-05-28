@@ -16,7 +16,7 @@ const oauth2BackwardCompatible = (obj) => {
   if (typeof obj.clientSecret === 'undefined') obj.clientSecret = '';
   if (typeof obj.clientId === 'undefined') obj.clientId = '';
   if (typeof obj.scope === 'undefined') obj.scope = '';
-  if (typeof obj.userName === 'undefined') obj.userName = '';
+  if (typeof obj.username === 'undefined') obj.username = '';
   if (typeof obj.password === 'undefined') obj.password = '';
   if (typeof obj.authorizationEndpoint === 'undefined') obj.authorizationEndpoint = '';
   if (typeof obj.code === 'undefined') obj.code = '';
