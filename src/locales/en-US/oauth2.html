@@ -83,13 +83,13 @@ SOFTWARE.
 
   ```js
   msg.oauth2Request = {
-    access_token_url: "http://localhost:8080/v1/oauth/tokens",
+    access_token_url: 'http://localhost:8080/v1/oauth/tokens',
     credentials: {
-      grant_type: "client_credentials",
-      client_id: "test_client_1",
-      client_secret: "test_secret",
-      scope: "read_write",
-    },
+      grant_type: 'client_credentials',
+      client_id: 'test_client_1',
+      client_secret: 'test_secret',
+      scope: 'read_write'
+    }
   };
   return msg;
   ```
@@ -109,15 +109,15 @@ SOFTWARE.
 
   ```js
   msg.oauth2Request = {
-    access_token_url: "http://localhost:8080/v1/oauth/tokens",
+    access_token_url: 'http://localhost:8080/v1/oauth/tokens',
     credentials: {
-      grant_type: "password",
-      client_id: "test_client_1",
-      client_secret: "test_secret",
-      scope: "read_write",
-      username: "test@user",
-      password: "test_password",
-    },
+      grant_type: 'password',
+      client_id: 'test_client_1',
+      client_secret: 'test_secret',
+      scope: 'read_write',
+      username: 'test@user',
+      password: 'test_password'
+    }
   };
   return msg;
   ```
@@ -135,17 +135,17 @@ SOFTWARE.
   Here's an example:
 
   ```js
-  let refreshToken = global.get("refreshToken");
+  let refreshToken = global.get('refreshToken');
 
   msg.oauth2Request = {
-    access_token_url: "http://localhost:8080/v1/oauth/tokens",
+    access_token_url: 'http://localhost:8080/v1/oauth/tokens',
     credentials: {
-      grant_type: "refresh_token",
-      client_id: "test_client_1",
-      client_secret: "test_secret",
-      scope: "read_write",
-      refresh_token: refreshToken,
-    },
+      grant_type: 'refresh_token',
+      client_id: 'test_client_1',
+      client_secret: 'test_secret',
+      scope: 'read_write',
+      refresh_token: refreshToken
+    }
   };
   return msg;
   ```

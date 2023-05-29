@@ -10,7 +10,7 @@ overrides:
       - "*.js"
     rules:
       # Exemplo de regras personalizadas para arquivos JavaScript
-      semi: error # Verificar se há ponto e vírgula ausente
+      semi: [2, 'always'] # Verificar se há ponto e vírgula ausente
       indent: [error, 2] # Verificar se a indentação está com 2 espaços
       quotes: [error, "single"] # Verificar se as aspas estão usando 'single' (simples)
       no-unused-vars: error # Verificar se há variáveis não utilizadas
@@ -18,3 +18,5 @@ overrides:
 ignorePatterns:
   - "*.json"
   - "*.md"
+  - "*.yml"
+

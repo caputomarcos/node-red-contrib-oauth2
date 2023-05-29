@@ -48,8 +48,8 @@
     "extends": "./.eslintrc.yml"
   },
   "scripts": {
-    "fix": "npx eslint src/. && npx eslint --fix",
-    "lint": "npx prettier --plugin-search-dir src/. --check . && npx eslint .",
-    "format": "npx prettier --plugin-search-dir src/. --write ."
+    "fix": "npx eslint ./src/. && npx eslint ./src/. --fix",
+    "lint": "prettier --plugin-search-dir . --check ./src/. && npx eslint ./src/.",
+    "format": "prettier --plugin-search-dir . --write ./src/."
   }
 }
