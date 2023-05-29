@@ -29,13 +29,6 @@
     <label for="node-input-authorization_endpoint"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.authorization_endpoint"></span></label>
     <input type="text" id="node-input-authorization_endpoint" data-i18n="[placeholder]oauth2.placeholder.authorization_endpoint" style="width:70%;" />
   </div>
-  <!-- node-redirect_uri -->
-  <!-- <div class="form-row" id="node-redirect_uri">
-  <label for="node-input-redirect_uri"><i class="fa fa-link fa-fw"></i> <span
-      data-i18n="oauth2.label.redirect_uri"></span></label>
-  <input type="text" id="node-input-redirect_uri" data-i18n="[placeholder]oauth2.placeholder.redirect_uri"
-    style="width:70%;">
-</div> -->
   <!-- node-password_credentials -->
   <div class="form-row" id="node-password_credentials">
     <!--node-input-username -->
@@ -68,7 +61,7 @@
   <div class="form-row" id="node-open_authentication">
     <label for="node-input-open_authentication"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.open_authentication"></span></label>
     <a class="red-ui-button fa fa-key" id="authorizeButton" href="#" target="_blank"></a>
-    <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication" style="width:61%;margin-top: -4px;" disabled />
+    <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication" style="width:62%;margin-top: -2px;" disabled />
   </div>
 
   <div class="form-row">
@@ -81,27 +74,27 @@
 
   <div class="form-row">
     <input type="checkbox" id="node-input-senderr" style="display: inline-block; width: auto; vertical-align: top;" />
-    <label for="node-input-senderr" style="width: auto" data-i18n="oauth2.label.senderr"></label>
+    <label for="node-input-senderr" style="width: auto;" data-i18n="oauth2.label.senderr"></label>
   </div>
 
   <!-- node-client_credentials_in_body -->
   <div class="form-row" id="node-client_credentials_in_body">
+    <input type="checkbox" id="node-input-client_credentials_in_body" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
+    <label for="node-input-client_credentials_in_body" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.client_credentials_in_body_label"></span></label>
     <div abria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
       <i class="fa fa-exclamation-circle fa-fw"></i><b>Embedded Credentials</b> -
       <span data-i18n="oauth2.label.client_credentials_in_body"></span>
     </div>
-    <label for="node-input-client_credentials_in_body" style="width:30%;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.client_credentials_in_body_label"></span></label>
-    <input type="checkbox" id="node-input-client_credentials_in_body" autocomplete="on" style="width: 5%;" checked />
   </div>
 
   <!-- node-rejectUnauthorized -->
-  <div class="form-row" id="node-rejectUnauthorized" style="margin-bottom:0;">
+  <div class="form-row" id="node-rejectUnauthorized">
+    <input type="checkbox" id="node-input-rejectUnauthorized" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
+    <label for="node-input-rejectUnauthorized" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.rejectUnauthorized_label"></span></label>
     <div aria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
       <i class="fa fa-exclamation-circle fa-fw"></i><b>Reject Unauthorized</b> -
       <span data-i18n="oauth2.label.rejectUnauthorized"></span>
     </div>
-    <label for="node-input-rejectUnauthorized" style="width:30%;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.rejectUnauthorized_label"></span></label>
-    <input type="checkbox" id="node-input-rejectUnauthorized" autocomplete="on" style="width: 5%;" checked />
   </div>
 
   <!-- node-input-headers-container -->
