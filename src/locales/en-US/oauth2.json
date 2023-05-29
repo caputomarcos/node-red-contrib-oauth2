@@ -1,0 +1,47 @@
+{
+  "oauth2": {
+    "oauth2": "oauth2",
+    "label": {
+      "grant_type": "Grant Type",
+      "name": "Name",
+      "container": "Container",
+      "access_token_url": "Access Token URL",
+      "authorization_endpoint": "Authorization Endpoint",
+      "redirect_uri": "Redirect URI",
+      "open_authentication": "Code",
+      "username": "Username",
+      "password": "Password",
+      "client_id": "Client ID",
+      "client_secret": "Client Secret",
+      "scope": "Scope",
+      "rejectUnauthorized": "The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.",
+      "rejectUnauthorized_label": "Reject Unauthorized",
+      "client_credentials_in_body": "Ensure that the client credentials are included in the token request body for authentication purposes.",
+      "client_credentials_in_body_label": "Embedded Credentials",
+      "proxy-config": "Proxy Configuration",
+      "use-proxy": "Use proxy",
+      "senderr": "Only send non-2xx responses to Catch node"
+    },
+    "placeholder": {
+      "name": "oauth2",
+      "container": "oauth2Response",
+      "access_token_url": "https://github.com/login/oauth/access_token",
+      "authorization_endpoint": "https://github.com/login/oauth/authorize",
+      "redirect_uri": "/oauth2/redirect",
+      "open_authentication": "1b897416-3de3-4631-a0e9-7f7431e1a959",
+      "username": "admin",
+      "password": "admin",
+      "client_id": "012493af6282be51660dbc8e21a8462e",
+      "client_secret": "5621bd4b5a8b09ed31817efb8d54fda2c72bfc1c6968cd4563d83f7cc26f68f6",
+      "scope": "scope",
+      "rejectUnauthorized": "rejectUnauthorized",
+      "headers": "headers"
+    },
+    "opts": {
+      "client_credentials": "Client Credentials",
+      "password_credentials": "Password",
+      "authorization_code": "Authorization Code",
+      "set_by_credentials": "- Set by msg.oauth2Request -"
+    }
+  }
+}

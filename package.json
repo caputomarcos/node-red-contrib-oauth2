@@ -24,7 +24,7 @@
   "node-red": {
     "version": ">=3.0.0",
     "nodes": {
-      "oauth2": "oauth2.js"
+      "oauth2": "src/oauth2.js"
     }
   },
   "dependencies": {
@@ -32,6 +32,24 @@
     "json-schema": ">=0.4.0"
   },
   "devDependencies": {
-    "json-schema": ">=0.4.0"
+    "@babel/eslint-parser": "^7.21.8",
+    "eslint": "^8.41.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsdoc": "^44.2.4",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "json-schema": ">=0.4.0",
+    "prettier": "^2.8.0"
+  },
+  "eslintConfig": {
+    "extends": "./.eslintrc.yml"
+  },
+  "scripts": {
+    "fix": "npx eslint src/. && npx eslint --fix",
+    "lint": "npx prettier --plugin-search-dir src/. --check . && npx eslint .",
+    "format": "npx prettier --plugin-search-dir src/. --write ."
   }
 }

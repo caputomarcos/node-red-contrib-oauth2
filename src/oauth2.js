@@ -1,28 +1,3 @@
-/**
- * MIT License
- *
- * Copyright (c) 2019 Marcos Caputo <caputo.marcos@gmail.com>
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
- **/
-
 module.exports = function (RED) {
   "use strict";
 
@@ -30,6 +5,7 @@ module.exports = function (RED) {
   const axios = require("axios");
   const url = require("url");
   const crypto = require("crypto");
+  const http = require("http");
   const https = require("https");
 
   /**
@@ -106,6 +82,7 @@ module.exports = function (RED) {
         proxyConfig = RED.nodes.getNode(oauth2Node.proxy);
         this.prox = proxyConfig.url;
         this.noprox = proxyConfig.noproxy;
+        this.proxyCredentials = proxyConfig.credentials;
       }
 
       // copy "this" object in case we need it in context of callbacks of other functions.
@@ -189,20 +166,16 @@ module.exports = function (RED) {
         // add any custom headers, if we haven't already set them above
         if (oauth2Node.headers) {
           for (let h in oauth2Node.headers) {
-            if (oauth2Node.headers[h] && !options.headers.hasOwnProperty(h)) {
+            if (
+              oauth2Node.headers[h] &&
+              !Object.prototype.hasOwnProperty.call(options.headers, h)
+            ) {
               options.headers[h] = oauth2Node.headers[h];
             }
           }
         }
 
-        if (node.noprox) {
-          for (let i = 0; i < node.noprox.length; i += 1) {
-            if (url.indexOf(node.noprox[i]) !== -1) {
-              node.noproxy = true;
-            }
-          }
-        }
-        if (node.prox && !node.noproxy) {
+        if (node.prox) {
           let match = node.prox.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
           if (match) {
             // let proxyAgent;
@@ -216,10 +189,6 @@ module.exports = function (RED) {
                 username: null,
                 password: null,
               },
-              maxFreeSockets: 256,
-              maxSockets: 256,
-              //getCert: for reliably retrieving the peer certificate, we must use agents with keepAlive=false
-              keepAlive: false,
             };
             if (proxyConfig && proxyConfig.credentials) {
               let proxyUsername = proxyConfig.credentials.username || "";
@@ -235,7 +204,7 @@ module.exports = function (RED) {
             node.proxy = proxyOptions.proxy;
             RED.nodes.addCredentials(node.id, proxyOptions.proxy);
           } else {
-            node.warn("Bad proxy url: " + prox);
+            node.warn("Bad proxy url");
           }
         }
         delete msg.oauth2Request;
@@ -244,6 +213,9 @@ module.exports = function (RED) {
           const response = axios.post(options.url, options.form, {
             headers: options.headers,
             proxy: node.proxy,
+            httpAgent: new http.Agent({
+              rejectUnauthorized: node.rejectUnauthorized,
+            }),
             httpsAgent: new https.Agent({
               rejectUnauthorized: node.rejectUnauthorized,
             }),
@@ -337,21 +309,21 @@ module.exports = function (RED) {
         credentials.code = req.query.code;
         RED.nodes.addCredentials(node_id, credentials);
         const html = `<HTML>
-      <HEAD>
-          <script language=\"javascript\" type=\"text/javascript\">
-            function closeWindow() {
-                window.open('','_parent','');
-                window.close();
-            }
-            function delay() {\n
-                setTimeout(\"closeWindow()\", 1000);\n
-            }\n
-          </script>
-      </HEAD>
-      <BODY onload=\"javascript:delay();\">
-              <p>Success! This page can be closed if it doesn't do so automatically.</p>
-      </BODY>
-      </HTML>`;
+        <HEAD>
+            <script language="javascript" type="text/javascript">
+              function closeWindow() {
+                  window.open('','_parent','');
+                  window.close();
+              }
+              function delay() {
+                  setTimeout("closeWindow()", 1000);
+              }
+            </script>
+        </HEAD>
+        <BODY onload="javascript:delay();">
+                <p>Success! This page can be closed if it doesn't do so automatically.</p>
+        </BODY>
+        </HTML>`;
         res.send(html);
       }
     } else {
@@ -392,8 +364,8 @@ module.exports = function (RED) {
           protocol: proxyURL.protocol,
           hostname: proxyURL.hostname,
           port: proxyURL.port,
-          username: proxyURL.username,
-          password: proxyURL.password,
+          username: proxy.credentials.username,
+          password: proxy.credentials.password,
         };
       }
     }
@@ -412,22 +384,17 @@ module.exports = function (RED) {
     res.cookie("csrf", csrfToken);
 
     const l = url.parse(req.query.authorizationEndpoint, true);
-    const redirectUrl = url.format({
-      protocol: l.protocol.replace(":", ""),
-      hostname: l.hostname,
-      port: l.port,
-      pathname: l.pathname,
-      query: {
-        client_id: credentials.clientId,
-        redirect_uri: redirectUri,
-        state: node_id + ":" + csrfToken,
-        scope: scope,
-        response_type: "code",
-      },
-    });
-
+    const redirectUrl = new URL(l.href);
+    redirectUrl.searchParams.set("client_id", credentials.clientId);
+    redirectUrl.searchParams.set("redirect_uri", redirectUri);
+    redirectUrl.searchParams.set("state", node_id + ":" + csrfToken);
+    redirectUrl.searchParams.set("scope", scope);
+    redirectUrl.searchParams.set("response_type", "code");
+    const newUrl = redirectUrl.toString();
     try {
-      const response = await axios.get(redirectUrl, {
+      const response = await axios.get(newUrl, {
+        httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+        httpAgent: new http.Agent({ rejectUnauthorized: false }),
         proxy: proxyOptions,
       });
       res.redirect(response.request.res.responseUrl);
