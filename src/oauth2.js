@@ -56,6 +56,7 @@ module.exports = function (RED) {
       this.client_id = oauth2Node.client_id || '';
       this.client_secret = oauth2Node.client_secret || '';
       this.scope = oauth2Node.scope || '';
+      this.resource = oauth2Node.resource || '';
       this.rejectUnauthorized = oauth2Node.rejectUnauthorized || false;
       this.client_credentials_in_body = oauth2Node.client_credentials_in_body || false;
       this.headers = oauth2Node.headers || {};
@@ -109,7 +110,8 @@ module.exports = function (RED) {
             rejectUnauthorized: node.rejectUnauthorized,
             form: {
               grant_type: msg.oauth2Request.credentials.grant_type,
-              scope: msg.oauth2Request.credentials.scope
+              scope: msg.oauth2Request.credentials.scope,
+              resource: msg.oauth2Request.credentials.resource
             }
           };
           if (msg.oauth2Request.credentials.grant_type === 'password') {
@@ -131,7 +133,8 @@ module.exports = function (RED) {
             rejectUnauthorized: node.rejectUnauthorized,
             form: {
               grant_type: node.grant_type,
-              scope: node.scope
+              scope: node.scope,
+              resource: node.resource
             }
           };
           if (node.grant_type === 'password') {
@@ -363,6 +366,7 @@ module.exports = function (RED) {
     redirectUrl.searchParams.set('redirect_uri', redirectUri);
     redirectUrl.searchParams.set('state', node_id + ':' + csrfToken);
     redirectUrl.searchParams.set('scope', scope);
+    redirectUrl.searchParams.set('resource', resource);
     redirectUrl.searchParams.set('response_type', 'code');
     const newUrl = redirectUrl.toString();
     try {

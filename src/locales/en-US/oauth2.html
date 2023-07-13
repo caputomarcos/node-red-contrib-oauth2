@@ -42,6 +42,7 @@ SOFTWARE.
     : code (string) : This is the authorization code. _read only_
 
   : scope (string) : This specifies the scope of the access request.
+  : resource (string) : This specifies the resource of the access request.
 
   : use proxy (boolean) : This specifies whether to use a proxy or not.
 
@@ -64,6 +65,7 @@ SOFTWARE.
   : expires_in (number) : This is the duration of time, in seconds, until the access token expires.
   : token_type (string) : This is the type of the token. For example, "Bearer".
   : scope (string) : This specifies the scope of the access granted by the token obtained.
+  : resource (string) : This specifies the resource of the access granted by the token obtained.
   : refresh_token (string) : This is the refresh token that can be used to obtain a new access token before the current one expires.
 
   ### Details
@@ -78,6 +80,7 @@ SOFTWARE.
   - `client_id` (string): This is the client ID of the OAuth2 client.
   - `client_secret` (string): This is the client secret of the OAuth2 client.
   - `scope` (string): This specifies the scope of the access requested.
+  - `resource` (string): This specifies the resource of the access requested.
 
   Here's an example:
 
@@ -88,7 +91,8 @@ SOFTWARE.
       grant_type: 'client_credentials',
       client_id: 'test_client_1',
       client_secret: 'test_secret',
-      scope: 'read_write'
+      scope: 'read_write',
+      resource: 'http://localhost:8080'
     }
   };
   return msg;
@@ -102,6 +106,7 @@ SOFTWARE.
   - `client_id` (string): This is the client ID of the OAuth2 client.
   - `client_secret` (string): This is the client secret of the OAuth2 client.
   - `scope` (string): This specifies the scope of the access requested.
+  - `resource` (string): This specifies the resource of the access requested.
   - `username` (string): This is the username of the user.
   - `password` (string): This is the password of the user.
 
@@ -115,6 +120,7 @@ SOFTWARE.
       client_id: 'test_client_1',
       client_secret: 'test_secret',
       scope: 'read_write',
+      resource: 'http://localhost:8080',
       username: 'test@user',
       password: 'test_password'
     }
@@ -130,6 +136,7 @@ SOFTWARE.
   - `client_id` (string): This is the client ID of the OAuth2 client.
   - `client_secret` (string): This is the client secret of the OAuth2 client.
   - `scope` (string): This specifies the scope of the access requested.
+  - `resource` (string): This specifies the resource of the access requested.
   - `refresh_token` (string): This is the refresh token obtained from a previous authentication.
 
   Here's an example:
@@ -144,6 +151,7 @@ SOFTWARE.
       client_id: 'test_client_1',
       client_secret: 'test_secret',
       scope: 'read_write',
+      resource: 'http://localhost:8080',
       refresh_token: refreshToken
     }
   };
