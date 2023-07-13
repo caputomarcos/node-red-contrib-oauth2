@@ -68,6 +68,7 @@ This sample used the [go-oauth2-server](https://github.com/RichardKnop/go-oauth2
 | authorization endpoint                    | string  | This is the URL of the authorization endpoint. **Grant Type:** `authorization code`                                                                                                                     |
 | code (read only)                          | string  | This is the authorization code. **Grant Type:** `authorization code`                                                                                                                                    |
 | scope                                     | string  | This specifies the scope of the access request.                                                                                                                                                         |
+| resource                                  | string  | This specifies the resource of the access request.                                                                                                                                                         |
 | use proxy                                 | boolean | This specifies whether to use a proxy or not.                                                                                                                                                           |
 | Proxy Configuration                       | object  | This specifies the configuration for the proxy. **User Proxy:** `true`                                                                                                                                  |
 | only send non-2xx responses to catch node | boolean | This specifies whether to only catch non-2xx responses.                                                                                                                                                 |
@@ -102,6 +103,7 @@ The client credentials can be sent as part of the message payload to the node. T
 - `client_id` (string): This is the client ID of the OAuth2 client.
 - `client_secret` (string): This is the client secret of the OAuth2 client.
 - `scope` (string): This specifies the scope of the access requested.
+- `resource` (string): This specifies the resoure of the access requested.
 
 Here's an example:
 
@@ -126,6 +128,7 @@ The username and password can be sent as part of the message payload to the node
 - `client_id` (string): This is the client ID of the OAuth2 client.
 - `client_secret` (string): This is the client secret of the OAuth2 client.
 - `scope` (string): This specifies the scope of the access requested.
+- `resource` (string): This specifies the resource of the access requested.
 - `username` (string): This is the username of the user.
 - `password` (string): This is the password of the user.
 
@@ -154,6 +157,7 @@ A refresh token can be used to obtain a new access token without requiring the u
 - `client_id` (string): This is the client ID of the OAuth2 client.
 - `client_secret` (string): This is the client secret of the OAuth2 client.
 - `scope` (string): This specifies the scope of the access requested.
+- `resource` (string): This specifies the resource of the access requested.
 - `refresh_token` (string): This is the refresh token obtained from a previous authentication.
 
 Here's an example:
