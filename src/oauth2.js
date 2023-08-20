@@ -142,18 +142,18 @@ module.exports = function (RED) {
             options.form.password = node.password;
           }
           if (node.grant_type === 'authorization_code') {
-            // Some services accept these via Authorization while other require it in the POST body
-            if (node.client_credentials_in_body) {
-              options.form.client_id = node.client_id;
-              options.form.client_secret = node.client_secret;
-            }
-
             const credentials = RED.nodes.getCredentials(node.id);
             if (credentials) {
               options.form.code = credentials.code;
               options.form.redirect_uri = credentials.redirectUri;
             }
           }
+        }
+
+        // Some services accept these via Authorization while other require it in the POST body
+        if (node.client_credentials_in_body) {
+          options.form.client_id = node.client_id;
+          options.form.client_secret = node.client_secret;
         }
 
         // add any custom headers, if we haven't already set them above
@@ -366,7 +366,7 @@ module.exports = function (RED) {
     redirectUrl.searchParams.set('redirect_uri', redirectUri);
     redirectUrl.searchParams.set('state', node_id + ':' + csrfToken);
     redirectUrl.searchParams.set('scope', scope);
-    redirectUrl.searchParams.set('resource', resource);
+    redirectUrl.searchParams.set('resource', req.query.resource);
     redirectUrl.searchParams.set('response_type', 'code');
     const newUrl = redirectUrl.toString();
     try {
