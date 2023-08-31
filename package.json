@@ -1,9 +1,15 @@
 {
   "name": "node-red-contrib-oauth2",
-  "version": "5.0.4",
+  "version": "5.0.5",
   "description": "The node-red-contrib-oauth2 is a Node-RED node that provides an OAuth2 authentication flow. This node uses the OAuth2 protocol to obtain an access token, which can be used to make authenticated API requests.",
   "author": "Marcos Caputo <caputo.marcos@gmail.com>",
-  "contributors": ["Michael Sommer <github@neuronetix.de>"],
+  "contributors": [
+    "Nariyuki Saito <toshincompos@gmail.com>",
+    "Michael Sommer <github@neuronetix.de>",
+    "Emanuel Miron",
+    "serotonie",
+    "deosrc"
+  ],
   "license": "MIT License",
   "homepage": "https://github.com/caputomarcos/node-red-contrib-oauth2#readme",
   "repository": {

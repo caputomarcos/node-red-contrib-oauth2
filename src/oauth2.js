@@ -57,6 +57,7 @@ module.exports = function (RED) {
       this.client_secret = oauth2Node.client_secret || '';
       this.scope = oauth2Node.scope || '';
       this.resource = oauth2Node.resource || '';
+      this.state = oauth2Node.state || '';
       this.rejectUnauthorized = oauth2Node.rejectUnauthorized || false;
       this.client_credentials_in_body = oauth2Node.client_credentials_in_body || false;
       this.headers = oauth2Node.headers || {};
@@ -111,7 +112,8 @@ module.exports = function (RED) {
             form: {
               grant_type: msg.oauth2Request.credentials.grant_type,
               scope: msg.oauth2Request.credentials.scope,
-              resource: msg.oauth2Request.credentials.resource
+              resource: msg.oauth2Request.credentials.resource,
+              state: msg.oauth2Request.credentials.state
             }
           };
           if (msg.oauth2Request.credentials.grant_type === 'password') {
@@ -134,7 +136,8 @@ module.exports = function (RED) {
             form: {
               grant_type: node.grant_type,
               scope: node.scope,
-              resource: node.resource
+              resource: node.resource,
+              state: node.state
             }
           };
           if (node.grant_type === 'password') {
@@ -142,18 +145,18 @@ module.exports = function (RED) {
             options.form.password = node.password;
           }
           if (node.grant_type === 'authorization_code') {
+            // Some services accept these via Authorization while other require it in the POST body
+            if (node.client_credentials_in_body) {
+              options.form.client_id = node.client_id;
+              options.form.client_secret = node.client_secret;
+            }
+
             const credentials = RED.nodes.getCredentials(node.id);
             if (credentials) {
               options.form.code = credentials.code;
               options.form.redirect_uri = credentials.redirectUri;
             }
           }
-        }
-
-        // Some services accept these via Authorization while other require it in the POST body
-        if (node.client_credentials_in_body) {
-          options.form.client_id = node.client_id;
-          options.form.client_secret = node.client_secret;
         }
 
         // add any custom headers, if we haven't already set them above

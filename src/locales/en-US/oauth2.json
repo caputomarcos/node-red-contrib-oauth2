@@ -15,6 +15,7 @@
       "client_secret": "Client Secret",
       "scope": "Scope",
       "resource": "Resource",
+      "state": "State",
       "rejectUnauthorized": "The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.",
       "rejectUnauthorized_label": "Reject Unauthorized",
       "client_credentials_in_body": "Ensure that the client credentials are included in the token request body for authentication purposes.",
@@ -36,6 +37,7 @@
       "client_secret": "5621bd4b5a8b09ed31817efb8d54fda2c72bfc1c6968cd4563d83f7cc26f68f6",
       "scope": "scope",
       "resource": "resource",
+      "state": "state",
       "rejectUnauthorized": "rejectUnauthorized",
       "headers": "headers"
     },
