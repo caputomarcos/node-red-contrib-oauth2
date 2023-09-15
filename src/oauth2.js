@@ -57,7 +57,6 @@ module.exports = function (RED) {
       this.client_secret = oauth2Node.client_secret || '';
       this.scope = oauth2Node.scope || '';
       this.resource = oauth2Node.resource || '';
-      this.state = oauth2Node.state || '';
       this.rejectUnauthorized = oauth2Node.rejectUnauthorized || false;
       this.client_credentials_in_body = oauth2Node.client_credentials_in_body || false;
       this.headers = oauth2Node.headers || {};
@@ -112,8 +111,7 @@ module.exports = function (RED) {
             form: {
               grant_type: msg.oauth2Request.credentials.grant_type,
               scope: msg.oauth2Request.credentials.scope,
-              resource: msg.oauth2Request.credentials.resource,
-              state: msg.oauth2Request.credentials.state
+              resource: msg.oauth2Request.credentials.resource
             }
           };
           if (msg.oauth2Request.credentials.grant_type === 'password') {
@@ -123,6 +121,13 @@ module.exports = function (RED) {
           if (msg.oauth2Request.credentials.grant_type === 'refresh_token') {
             options.form.refresh_token = msg.oauth2Request.credentials.refresh_token;
           }
+          if (node.client_credentials_in_body) {
+            options.form.client_id = msg.oauth2Request.credentials.client_id;
+            options.form.client_secret = msg.oauth2Request.credentials.client_secret;
+            options.headers = Object.fromEntries(
+              Object.entries(options.headers).filter(([key,]) => key !== 'Authorization')
+            );
+          }          
         } else {
           options = {
             method: 'POST',
@@ -136,8 +141,7 @@ module.exports = function (RED) {
             form: {
               grant_type: node.grant_type,
               scope: node.scope,
-              resource: node.resource,
-              state: node.state
+              resource: node.resource
             }
           };
           if (node.grant_type === 'password') {
@@ -149,6 +153,9 @@ module.exports = function (RED) {
             if (node.client_credentials_in_body) {
               options.form.client_id = node.client_id;
               options.form.client_secret = node.client_secret;
+              options.headers = Object.fromEntries(
+                Object.entries(options.headers).filter(([key,]) => key !== 'Authorization')
+              );
             }
 
             const credentials = RED.nodes.getCredentials(node.id);
@@ -201,6 +208,8 @@ module.exports = function (RED) {
           }
         }
         delete msg.oauth2Request;
+
+        options.form = Object.fromEntries(Object.entries(options.form).filter(([, value]) => value !== undefined));
         // make a post request
         const Post = () => {
           const response = axios.post(options.url, options.form, {
