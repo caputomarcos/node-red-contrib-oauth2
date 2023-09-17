@@ -124,8 +124,8 @@ module.exports = function (RED) {
           const { response, code, message } = error;
 
           msg[node.container] = response || {};
-          const errorStatus = response?.status || code;
-          const errorMessage = response?.statusText || message;
+          const errorStatus = response && response.status ? response.status : code;
+          const errorMessage = response && response.statusText ? response.statusText : message;          
           const statusText = `HTTP ${errorStatus}, ${errorMessage}`;
 
           setStatus(node, 'red', statusText);
