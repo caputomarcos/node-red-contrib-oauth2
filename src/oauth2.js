@@ -96,91 +96,124 @@ module.exports = function (RED) {
        * @param {function} Done - The callback function to end the node's processing.
        */
       this.on('input', async function (msg, Send, Done) {
-        // generate the options for the request
-        let options = {};
+        let options = generateOptions(node, msg);
+        configureProxy(node);
+
+        delete msg.oauth2Request;
+        options.form = Object.fromEntries(Object.entries(options.form).filter(([, value]) => value !== undefined &&  value !== ''));
+
+        const setStatus = (node, status, text) => {
+          node.status({
+            fill: status,
+            shape: 'dot',
+            text: text
+          });
+        };
+
+        try {
+          const response = await makePostRequest(options, node);
+          const { status, data } = response;
+
+          msg[node.container] = data || {};
+          const statusColor = status === 200 ? 'green' : 'yellow';
+          const statusText = `HTTP ${status}, ${status === 200 ? 'ok' : 'nok'}`;
+
+          setStatus(node, statusColor, statusText);
+          Send(msg);
+        } catch (error) {
+          const { response, code, message } = error;
+
+          msg[node.container] = response || {};
+          const errorStatus = response?.status || code;
+          const errorMessage = response?.statusText || message;
+          const statusText = `HTTP ${errorStatus}, ${errorMessage}`;
+
+          setStatus(node, 'red', statusText);
+
+          if (node.sendErrorsToCatch) {
+            Send(msg);
+          }
+        }
+        Done();
+      });
+
+      function generateOptions(node, msg) {
+        let baseOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Accept: 'application/json'
+          },
+          rejectUnauthorized: node.rejectUnauthorized,
+          form: {}
+        };
+
         if (node.grant_type === 'set_by_credentials') {
-          options = {
-            method: 'POST',
-            url: msg.oauth2Request.access_token_url,
-            headers: {
-              Authorization: 'Basic ' + Buffer.from(`${msg.oauth2Request.credentials.client_id}:${msg.oauth2Request.credentials.client_secret}`).toString('base64'),
-              'Content-Type': 'application/x-www-form-urlencoded',
-              Accept: 'application/json'
-            },
-            rejectUnauthorized: node.rejectUnauthorized,
-            form: {
-              grant_type: msg.oauth2Request.credentials.grant_type,
-              scope: msg.oauth2Request.credentials.scope,
-              resource: msg.oauth2Request.credentials.resource
-            }
-          };
+          baseOptions.url = msg.oauth2Request.access_token_url;
+          baseOptions.headers.Authorization = 'Basic ' + Buffer.from(`${msg.oauth2Request.credentials.client_id}:${msg.oauth2Request.credentials.client_secret}`).toString('base64');
+          baseOptions.form.grant_type = msg.oauth2Request.credentials.grant_type;
+          baseOptions.form.scope = msg.oauth2Request.credentials.scope;
+          baseOptions.form.resource = msg.oauth2Request.credentials.resource;
+
+          // Additional configurations based on grant type
           if (msg.oauth2Request.credentials.grant_type === 'password') {
-            options.form.username = msg.oauth2Request.credentials.username;
-            options.form.password = msg.oauth2Request.credentials.password;
+            baseOptions.form.username = msg.oauth2Request.credentials.username;
+            baseOptions.form.password = msg.oauth2Request.credentials.password;
+          } else if (msg.oauth2Request.credentials.grant_type === 'refresh_token') {
+            baseOptions.form.refresh_token = msg.oauth2Request.credentials.refresh_token;
           }
-          if (msg.oauth2Request.credentials.grant_type === 'refresh_token') {
-            options.form.refresh_token = msg.oauth2Request.credentials.refresh_token;
-          }
+
           if (node.client_credentials_in_body) {
-            options.form.client_id = msg.oauth2Request.credentials.client_id;
-            options.form.client_secret = msg.oauth2Request.credentials.client_secret;
-            options.headers = Object.fromEntries(
-              Object.entries(options.headers).filter(([key,]) => key !== 'Authorization')
+            baseOptions.form.client_id = msg.oauth2Request.credentials.client_id;
+            baseOptions.form.client_secret = msg.oauth2Request.credentials.client_secret;
+            baseOptions.headers = Object.fromEntries(
+              Object.entries(baseOptions.headers).filter(([key,]) => key !== 'Authorization')
             );
-          }          
-        } else {
-          options = {
-            method: 'POST',
-            url: node.access_token_url,
-            headers: {
-              Authorization: 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64'),
-              'Content-Type': 'application/x-www-form-urlencoded',
-              Accept: 'application/json'
-            },
-            rejectUnauthorized: node.rejectUnauthorized,
-            form: {
-              grant_type: node.grant_type,
-              scope: node.scope,
-              resource: node.resource
-            }
-          };
-          if (node.grant_type === 'password') {
-            options.form.username = node.username;
-            options.form.password = node.password;
           }
-          if (node.grant_type === 'authorization_code') {
-            // Some services accept these via Authorization while other require it in the POST body
+        } else {
+          baseOptions.url = node.access_token_url;
+          baseOptions.headers.Authorization = 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64');
+          baseOptions.form.grant_type = node.grant_type;
+          baseOptions.form.scope = node.scope;
+          baseOptions.form.resource = node.resource;
+
+          // Additional configurations based on grant type
+          if (node.grant_type === 'password') {
+            baseOptions.form.username = node.username;
+            baseOptions.form.password = node.password;
+          } else if (node.grant_type === 'authorization_code') {
             if (node.client_credentials_in_body) {
-              options.form.client_id = node.client_id;
-              options.form.client_secret = node.client_secret;
-              options.headers = Object.fromEntries(
-                Object.entries(options.headers).filter(([key,]) => key !== 'Authorization')
+              baseOptions.form.client_id = node.client_id;
+              baseOptions.form.client_secret = node.client_secret;
+              baseOptions.headers = Object.fromEntries(
+                Object.entries(baseOptions.headers).filter(([key,]) => key !== 'Authorization')
               );
             }
 
             const credentials = RED.nodes.getCredentials(node.id);
             if (credentials) {
-              options.form.code = credentials.code;
-              options.form.redirect_uri = credentials.redirectUri;
+              baseOptions.form.code = credentials.code;
+              baseOptions.form.redirect_uri = credentials.redirectUri;
             }
           }
         }
 
-        // add any custom headers, if we haven't already set them above
         if (oauth2Node.headers) {
           for (let h in oauth2Node.headers) {
-            if (oauth2Node.headers[h] && !Object.prototype.hasOwnProperty.call(options.headers, h)) {
-              options.headers[h] = oauth2Node.headers[h];
+            if (oauth2Node.headers[h] && !Object.prototype.hasOwnProperty.call(baseOptions.headers, h)) {
+              baseOptions.headers[h] = oauth2Node.headers[h];
             }
           }
         }
 
+        return baseOptions;
+      }
+
+      function configureProxy(node) {
         if (node.prox) {
           let match = node.prox.match(/^(https?:\/\/)?(.+)?:([0-9]+)?/i);
           if (match) {
-            // let proxyAgent;
             let proxyURL = new URL(node.prox);
-            //set username/password to null to stop empty creds header
             let proxyOptions = {
               proxy: {
                 protocol: proxyURL.protocol,
@@ -190,6 +223,7 @@ module.exports = function (RED) {
                 password: null
               }
             };
+
             if (proxyConfig && proxyConfig.credentials) {
               let proxyUsername = proxyConfig.credentials.username || '';
               let proxyPassword = proxyConfig.credentials.password || '';
@@ -201,61 +235,28 @@ module.exports = function (RED) {
               proxyOptions.proxy.username = proxyURL.username;
               proxyOptions.proxy.password = proxyURL.password;
             }
+
             node.proxy = proxyOptions.proxy;
             RED.nodes.addCredentials(node.id, proxyOptions.proxy);
           } else {
             node.warn('Bad proxy url');
           }
         }
-        delete msg.oauth2Request;
+      }
 
-        options.form = Object.fromEntries(Object.entries(options.form).filter(([, value]) => value !== undefined));
-        // make a post request
-        const Post = () => {
-          const response = axios.post(options.url, options.form, {
-            headers: options.headers,
-            proxy: node.proxy,
-            httpAgent: new http.Agent({
-              rejectUnauthorized: node.rejectUnauthorized
-            }),
-            httpsAgent: new https.Agent({
-              rejectUnauthorized: node.rejectUnauthorized
-            })
-          });
-          return response;
-        };
-        Post()
-          .then((response) => {
-            msg[node.container] = response.data || {};
-            if (response.status === 200) {
-              node.status({
-                fill: 'green',
-                shape: 'dot',
-                text: `HTTP ${response.status}, ok`
-              });
-            } else {
-              node.status({
-                fill: 'yellow',
-                shape: 'dot',
-                text: `HTTP ${response.status}, nok`
-              });
-            }
-            Send(msg);
-            Done();
+      async function makePostRequest(options, node) {
+        return axios.post(options.url, options.form, {
+          headers: options.headers,
+          proxy: node.proxy,
+          httpAgent: new http.Agent({
+            rejectUnauthorized: node.rejectUnauthorized
+          }),
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: node.rejectUnauthorized
           })
-          .catch((error) => {
-            msg[node.container] = error.response ? error.response.data || {} : {};
-            node.status({
-              fill: 'red',
-              shape: 'dot',
-              text: `ERR ${error.code}`
-            });
-            if (!node.sendErrorsToCatch) {
-              Send(msg);
-            }
-            Done();
-          });
-      });
+        });
+      }
+
     }
   }
 
