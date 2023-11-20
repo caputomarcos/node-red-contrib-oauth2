@@ -57,6 +57,7 @@ module.exports = function (RED) {
       this.client_secret = oauth2Node.client_secret || '';
       this.scope = oauth2Node.scope || '';
       this.resource = oauth2Node.resource || '';
+      this.state = oauth2Node.state || '';
       this.rejectUnauthorized = oauth2Node.rejectUnauthorized || false;
       this.client_credentials_in_body = oauth2Node.client_credentials_in_body || false;
       this.headers = oauth2Node.headers || {};
@@ -98,9 +99,8 @@ module.exports = function (RED) {
       this.on('input', async function (msg, Send, Done) {
         let options = generateOptions(node, msg);
         configureProxy(node);
-
         delete msg.oauth2Request;
-        options.form = Object.fromEntries(Object.entries(options.form).filter(([, value]) => value !== undefined &&  value !== ''));
+        options.form = Object.fromEntries(Object.entries(options.form).filter(([, value]) => value !== undefined && value !== ''));
 
         const setStatus = (node, status, text) => {
           node.status({
@@ -125,7 +125,7 @@ module.exports = function (RED) {
 
           msg[node.container] = response || {};
           const errorStatus = response && response.status ? response.status : code;
-          const errorMessage = response && response.statusText ? response.statusText : message;          
+          const errorMessage = response && response.statusText ? response.statusText : message;
           const statusText = `HTTP ${errorStatus}, ${errorMessage}`;
 
           setStatus(node, 'red', statusText);
@@ -154,6 +154,7 @@ module.exports = function (RED) {
           baseOptions.form.grant_type = msg.oauth2Request.credentials.grant_type;
           baseOptions.form.scope = msg.oauth2Request.credentials.scope;
           baseOptions.form.resource = msg.oauth2Request.credentials.resource;
+          baseOptions.form.state = msg.oauth2Request.credentials.state;
 
           // Additional configurations based on grant type
           if (msg.oauth2Request.credentials.grant_type === 'password') {
@@ -166,9 +167,7 @@ module.exports = function (RED) {
           if (node.client_credentials_in_body) {
             baseOptions.form.client_id = msg.oauth2Request.credentials.client_id;
             baseOptions.form.client_secret = msg.oauth2Request.credentials.client_secret;
-            baseOptions.headers = Object.fromEntries(
-              Object.entries(baseOptions.headers).filter(([key,]) => key !== 'Authorization')
-            );
+            baseOptions.headers = Object.fromEntries(Object.entries(baseOptions.headers).filter(([key]) => key !== 'Authorization'));
           }
         } else {
           baseOptions.url = node.access_token_url;
@@ -176,6 +175,7 @@ module.exports = function (RED) {
           baseOptions.form.grant_type = node.grant_type;
           baseOptions.form.scope = node.scope;
           baseOptions.form.resource = node.resource;
+          baseOptions.form.state = node.state;
 
           // Additional configurations based on grant type
           if (node.grant_type === 'password') {
@@ -185,9 +185,7 @@ module.exports = function (RED) {
             if (node.client_credentials_in_body) {
               baseOptions.form.client_id = node.client_id;
               baseOptions.form.client_secret = node.client_secret;
-              baseOptions.headers = Object.fromEntries(
-                Object.entries(baseOptions.headers).filter(([key,]) => key !== 'Authorization')
-              );
+              baseOptions.headers = Object.fromEntries(Object.entries(baseOptions.headers).filter(([key]) => key !== 'Authorization'));
             }
 
             const credentials = RED.nodes.getCredentials(node.id);
@@ -256,7 +254,6 @@ module.exports = function (RED) {
           })
         });
       }
-
     }
   }
 

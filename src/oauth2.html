@@ -62,6 +62,11 @@
       <label for="node-input-resource"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.resource"></span></label>
       <input type="text" id="node-input-resource" data-i18n="[placeholder]oauth2.placeholder.resource" style="width:70%;" />
     </div>
+   <!-- node-state -->
+   <div class="form-row" id="node-state">
+    <label for="node-input-state"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.state"></span></label>
+    <input type="text" id="node-input-state" data-i18n="[placeholder]oauth2.placeholder.state" style="width:70%;" />
+  </div>     
   <!-- node-open_authentication -->
   <div class="form-row" id="node-open_authentication">
     <label for="node-input-open_authentication"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.open_authentication"></span></label>
@@ -158,6 +163,7 @@
         client_secret: { value: '' },
         scope: { value: '' },
         resource: { value: ''},
+        state: { value: '' },
         proxy: {
           type: 'http proxy',
           required: false,
@@ -219,6 +225,7 @@
             $('#node-client_secret').hide();
             $('#node-scope').hide();
             $('#node-resource').hide();
+            $('#node-state').hide();
             $('#node-rejectUnauthorized').show();
             $('#node-client_credentials_in_body').show();
           } else if ($('#node-input-grant_type').val() === 'client_credentials') {
@@ -231,6 +238,7 @@
             $('#node-client_secret').show();
             $('#node-scope').show();
             $('#node-resource').show();
+            $('#node-state').show();
             $('#node-rejectUnauthorized').show();
             $('#node-client_credentials_in_body').show();
           } else if ($('#node-input-grant_type').val() === 'password') {
@@ -243,6 +251,7 @@
             $('#node-client_secret').show();
             $('#node-scope').show();
             $('#node-resource').show();
+            $('#node-state').show();
             $('#node-rejectUnauthorized').show();
             $('#node-client_credentials_in_body').show();
           } else if ($('#node-input-grant_type').val() === 'authorization_code') {
@@ -255,6 +264,7 @@
             $('#node-client_secret').show();
             $('#node-scope').show();
             $('#node-resource').show();
+            $('#node-state').show();
             $('#node-rejectUnauthorized').show();
             $('#node-client_credentials_in_body').show();
           }
@@ -279,23 +289,21 @@
           const proxy = $('#node-input-proxy').val();
           var scope = $('#node-input-scope').val();
           scope = scope.replace(/\n/g, '%20');
-
           var resource = $('#node-input-resource').val();
           resource = resource.replace(/\n/g, '%20');
-
+          var state = $('#node-input-state').val();
+          state = state.replace(/\n/g, '%20');
           var url;
           if (authorizationEndpoint) {
-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
+            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
               callback
             )}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${encodeURIComponent(redirectUri)}&proxy=${encodeURIComponent(proxy)}`;
           } else {
-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
+            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
               callback
             )}&proxy=${encodeURIComponent(proxy)}`;
           }
-          console.log(url);
           $(this).attr('href', url);
-
           window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
         });
         $('#authorizeButton').click(function () {
