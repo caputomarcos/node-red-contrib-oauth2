@@ -57,6 +57,9 @@ module.exports = function (RED) {
       this.client_secret = oauth2Node.client_secret || '';
       this.scope = oauth2Node.scope || '';
       this.resource = oauth2Node.resource || '';
+      this.response_type = oauth2Node.response_type || 'code';
+      this.access_type = oauth2Node.access_type || 'offline';
+      this.prompt = oauth2Node.prompt || 'consent';
       this.state = oauth2Node.state || '';
       this.rejectUnauthorized = oauth2Node.rejectUnauthorized || false;
       this.client_credentials_in_body = oauth2Node.client_credentials_in_body || false;
@@ -182,17 +185,14 @@ module.exports = function (RED) {
             baseOptions.form.username = node.username;
             baseOptions.form.password = node.password;
           } else if (node.grant_type === 'authorization_code') {
-            if (node.client_credentials_in_body) {
-              baseOptions.form.client_id = node.client_id;
-              baseOptions.form.client_secret = node.client_secret;
-              baseOptions.headers = Object.fromEntries(Object.entries(baseOptions.headers).filter(([key]) => key !== 'Authorization'));
-            }
 
             const credentials = RED.nodes.getCredentials(node.id);
             if (credentials) {
               baseOptions.form.code = credentials.code;
               baseOptions.form.redirect_uri = credentials.redirectUri;
             }
+          } else if (node.grant_type === 'authorization_code') {
+
           }
         }
 
@@ -335,14 +335,14 @@ module.exports = function (RED) {
    * @param {Object} res - The HTTP response object
    */
   RED.httpAdmin.get('/oauth2/auth', async function (req, res) {
-    if (!req.query.clientId || !req.query.clientSecret || !req.query.id || !req.query.callback) {
-      res.sendStatus(400);
-      return;
-    }
+    // if (!req.query.clientId || !req.query.clientSecret || !req.query.id || !req.query.callback) {
+    //   res.sendStatus(400);
+    //   return;
+    // }
 
     const node_id = req.query.id;
     const callback = req.query.callback;
-    const redirectUri = req.query.redirectUri;
+    const redirectUri = req.query.redirect_uri || req.query.redirectUri;
     const credentials = JSON.parse(JSON.stringify(req.query, getCircularReplacer()));
     const proxy = RED.nodes.getNode(credentials.proxy);
 

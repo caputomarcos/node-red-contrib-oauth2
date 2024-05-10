@@ -1,84 +1,212 @@
+<style>
+  .settings-box {
+    border: 1px solid #ccc;
+    /* Borda sutil para a caixa */
+    padding: 20px;
+    /* Espaço interno para não colar os elementos nas bordas */
+    margin-bottom: 20px;
+    /* Espaço abaixo da caixa para separar de outros elementos */
+    background-color: #f9f9f9;
+    /* Cor de fundo leve para destacar a área */
+    border-radius: 5px;
+    /* Bordas arredondadas para estética moderna */
+  }
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .form-row label {
+    flex: 0 0 30%;
+    /* Mantém 30% da largura para labels, evitando que cresçam ou encolham */
+    margin-right: 10px;
+    /* Espaçamento entre o label e o campo */
+  }
+
+  .form-row input[type="text"],
+  .form-row input[type="password"],
+  .form-row select {
+    flex: 1;
+    /* Permite que os campos de texto e seleção ocupem o espaço restante */
+  }
+
+  .form-row a {
+    padding: 5px 10px;
+    /* Espaçamento interno para botões */
+    margin-right: 10px;
+    /* Espaço após o botão */
+  }
+
+  .form-row input[type="checkbox"] {
+    margin-right: 10px;
+    /* Espaçamento após os checkboxes */
+  }
+
+  #node-open_authentication input {
+    flex: 1;
+    /* Permite que o campo de input dentro de open_authentication ocupe o espaço restante */
+    margin-top: 0;
+    /* Remove qualquer margem superior indesejada */
+  }
+
+  .form-row .hide {
+    display: none;
+    /* Oculta elementos com essa classe */
+  }
+
+  #node-input-headers-container {
+    flex: 1;
+    /* Ocupa todo o espaço disponível */
+    min-width: 450px;
+    /* Largura mínima como especificado */
+    min-height: 0;
+    /* Altura mínima, permitindo que cresça conforme o conteúdo */
+  }
+
+  #node-input-open_authentication input {
+    margin-top: 0;
+    /* Remove qualquer margem superior indesejada */
+  }
+
+  .form-row.form-tips.node-help {
+    width: 100%;
+    /* Ocupa toda a largura */
+    /* padding-left: 30%; Alinhamento com os inputs para consistência visual */
+    margin-bottom: 10px;
+    /* Espaço abaixo para não sobrepor outros elementos */
+    /* text-align: left; Texto justificado para melhor leitura */
+    font-size: 0.9em;
+    /* Tamanho de fonte menor para informações secundárias */
+  }
+</style>
+
+
 <script type="text/html" data-template-name="oauth2">
   <!-- node-input-name -->
-  <div class="form-row">
-    <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="oauth2.label.name"></span></label>
-    <input type="text" id="node-input-name" data-i18n="[placeholder]oauth2.placeholder.name" style="width:70%;" />
-  </div>
-  <!-- node-input-container -->
-  <div class="form-row">
-    <label for="node-input-container"><i class="fa fa-ellipsis-h"></i> <span data-i18n="oauth2.label.container"></span></label>
-    <input type="text" id="node-input-container" data-i18n="[placeholder]oauth2.placeholder.container" style="width:70%;" />
-  </div>
-  <!-- node-input-grant_type -->
-  <div class="form-row">
-    <label for="node-input-grant_type"><i class="fa fa-wrench"></i> <span data-i18n="oauth2.label.grant_type"></span></label>
-    <select type="text" id="node-input-grant_type" style="width:70%;">
-      <option value="client_credentials" data-i18n="oauth2.opts.client_credentials"></option>
-      <option value="password" data-i18n="oauth2.opts.password_credentials"></option>
-      <option value="authorization_code" data-i18n="oauth2.opts.authorization_code"></option>
-      <option value="set_by_credentials" data-i18n="oauth2.opts.set_by_credentials"></option>
-    </select>
-  </div>
-  <!-- node-access_token_url -->
-  <div class="form-row" id="node-access_token_url">
-    <label for="node-input-access_token_url"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.access_token_url"></span></label>
-    <input type="text" id="node-input-access_token_url" data-i18n="[placeholder]oauth2.placeholder.access_token_url" style="width:70%;" />
-  </div>
-  <!-- node-authorization_endpoint -->
-  <div class="form-row" id="node-authorization_endpoint">
-    <label for="node-input-authorization_endpoint"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.authorization_endpoint"></span></label>
-    <input type="text" id="node-input-authorization_endpoint" data-i18n="[placeholder]oauth2.placeholder.authorization_endpoint" style="width:70%;" />
-  </div>
-  <!-- node-password_credentials -->
-  <div class="form-row" id="node-password_credentials">
-    <!--node-input-username -->
-    <div class="form-row">
-      <label for="node-input-username"><i class="fa fa-user fa-fw"></i> <span data-i18n="oauth2.label.username"></span></label>
-      <input type="text" id="node-input-username" data-i18n="[placeholder]oauth2.placeholder.username" style="width:70%;" />
-    </div>
-    <!-- node-input-password -->
-    <div class="form-row">
-      <label for="node-input-password"><i class="fa  fa-lock fa-fw"></i> <span data-i18n="oauth2.label.password"></span></label>
-      <input type="password" id="node-input-password" data-i18n="[placeholder]oauth2.placeholder.password" style="width:70%;" />
-    </div>
-  </div>
-  <!-- node-client_id -->
-  <div class="form-row" id="node-client_id">
-    <label for="node-input-client_id"><i class="fa fa-user fa-fw"></i> <span data-i18n="oauth2.label.client_id"></span></label>
-    <input type="text" id="node-input-client_id" data-i18n="[placeholder]oauth2.placeholder.client_id" style="width:70%;" />
-  </div>
-  <!-- node-client_secret -->
-  <div class="form-row" id="node-client_secret">
-    <label for="node-input-client_secret"><i class="fa fa-lock fa-fw"></i> <span data-i18n="oauth2.label.client_secret"></span></label>
-    <input type="password" id="node-input-client_secret" data-i18n="[placeholder]oauth2.placeholder.client_secret" style="width:70%;" />
-  </div>
-  <!-- node-scope -->
-  <div class="form-row" id="node-scope">
-    <label for="node-input-scope"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.scope"></span></label>
-    <input type="text" id="node-input-scope" data-i18n="[placeholder]oauth2.placeholder.scope" style="width:70%;" />
-  </div>
-    <!-- node-resource -->
-    <div class="form-row" id="node-resource">
-      <label for="node-input-resource"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.resource"></span></label>
-      <input type="text" id="node-input-resource" data-i18n="[placeholder]oauth2.placeholder.resource" style="width:70%;" />
-    </div>
-   <!-- node-state -->
-   <div class="form-row" id="node-state">
-    <label for="node-input-state"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.state"></span></label>
-    <input type="text" id="node-input-state" data-i18n="[placeholder]oauth2.placeholder.state" style="width:70%;" />
-  </div>     
-  <!-- node-open_authentication -->
-  <div class="form-row" id="node-open_authentication">
-    <label for="node-input-open_authentication"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.open_authentication"></span></label>
-    <a class="red-ui-button fa fa-key" id="authorizeButton" href="#" target="_blank"></a>
-    <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication" style="width:62%;margin-top: -2px;" disabled />
-  </div>
+<div class="form-row">
+  <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="oauth2.label.name"></span></label>
+  <input type="text" id="node-input-name" data-i18n="[placeholder]oauth2.placeholder.name" style="width:70%;" />
+</div>
+<!-- node-input-container -->
+<div class="form-row">
+  <label for="node-input-container"><i class="fa fa-ellipsis-h"></i> <span
+      data-i18n="oauth2.label.container"></span></label>
+  <input type="text" id="node-input-container" data-i18n="[placeholder]oauth2.placeholder.container"
+    style="width:70%;" />
+</div>
+<!-- node-input-grant_type -->
+<div class="form-row">
+  <label for="node-input-grant_type"><i class="fa fa-wrench"></i> <span
+      data-i18n="oauth2.label.grant_type"></span></label>
+  <select type="text" id="node-input-grant_type" style="width:70%;">
+    <option value="client_credentials" data-i18n="oauth2.opts.client_credentials"></option>
+    <option value="password" data-i18n="oauth2.opts.password_credentials"></option>
+    <option value="authorization_code" data-i18n="oauth2.opts.authorization_code"></option>
+    <option value="implicit" data-i18n="oauth2.opts.implicit"></option>
+    <option value="set_by_credentials" data-i18n="oauth2.opts.set_by_credentials"></option>
+  </select>
+</div>
+<!-- node-access_token_url -->
+<div class="form-row" id="node-access_token_url">
+  <label for="node-input-access_token_url"><i class="fa fa-link fa-fw"></i> <span
+      data-i18n="oauth2.label.access_token_url"></span></label>
+  <input type="text" id="node-input-access_token_url" data-i18n="[placeholder]oauth2.placeholder.access_token_url"
+    style="width:70%;" />
+</div>
+<!-- node-authorization_endpoint -->
+<div class="form-row" id="node-authorization_endpoint">
+  <label for="node-input-authorization_endpoint"><i class="fa fa-link fa-fw"></i> <span
+      data-i18n="oauth2.label.authorization_endpoint"></span></label>
+  <input type="text" id="node-input-authorization_endpoint"
+    data-i18n="[placeholder]oauth2.placeholder.authorization_endpoint" style="width:70%;" />
+</div>
+<!-- node-password_credentials -->
+<!-- <div class="form-row" id="node-password_credentials"> -->
+<!--node-input-username -->
+<div class="form-row" id="node-username">
+  <label for="node-input-username"><i class="fa fa-user fa-fw"></i> <span
+      data-i18n="oauth2.label.username"></span></label>
+  <input type="text" id="node-input-username" data-i18n="[placeholder]oauth2.placeholder.username" style="width:70%;" />
+</div>
+<!-- node-input-password -->
+<div class="form-row" id="node-password">
+  <label for="node-input-password"><i class="fa  fa-lock fa-fw"></i> <span
+      data-i18n="oauth2.label.password"></span></label>
+  <input type="password" id="node-input-password" data-i18n="[placeholder]oauth2.placeholder.password"
+    style="width:70%;" />
+</div>
+<!-- </div> -->
+<!-- node-client_id -->
+<div class="form-row" id="node-client_id">
+  <label for="node-input-client_id"><i class="fa fa-user fa-fw"></i> <span
+      data-i18n="oauth2.label.client_id"></span></label>
+  <input type="text" id="node-input-client_id" data-i18n="[placeholder]oauth2.placeholder.client_id"
+    style="width:70%;" />
+</div>
+<!-- node-client_secret -->
+<div class="form-row" id="node-client_secret">
+  <label for="node-input-client_secret"><i class="fa fa-lock fa-fw"></i> <span
+      data-i18n="oauth2.label.client_secret"></span></label>
+  <input type="password" id="node-input-client_secret" data-i18n="[placeholder]oauth2.placeholder.client_secret"
+    style="width:70%;" />
+</div>
+
+<!-- node-access_type -->
+<div class="form-row" id="node-access_type">
+  <label for="node-input-access_type"><i class="fa fa-link fa-fw"></i> <span
+      data-i18n="oauth2.label.access_type"></span></label>
+  <input type="text" id="node-input-access_type" data-i18n="[placeholder]oauth2.placeholder.access_type"
+    style="width:70%;" />
+</div>
+<!-- node-response_type -->
+<div class="form-row" id="node-response_type">
+  <label for="node-input-response_type"><i class="fa fa-link fa-fw"></i> <span
+      data-i18n="oauth2.label.response_type"></span></label>
+  <input type="text" id="node-input-response_type" data-i18n="[placeholder]oauth2.placeholder.response_type"
+    style="width:70%;" />
+</div>
+<!-- node-prompt -->
+<div class="form-row" id="node-prompt">
+  <label for="node-input-prompt"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.prompt"></span></label>
+  <input type="text" id="node-input-prompt" data-i18n="[placeholder]oauth2.placeholder.prompt" style="width:70%;" />
+</div>
+<!-- node-scope -->
+<div class="form-row" id="node-scope">
+  <label for="node-input-scope"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.scope"></span></label>
+  <input type="text" id="node-input-scope" data-i18n="[placeholder]oauth2.placeholder.scope" style="width:70%;" />
+</div>
+<!-- node-resource -->
+<div class="form-row" id="node-resource">
+  <label for="node-input-resource"><i class="fa fa-code fa-fw"></i> <span
+      data-i18n="oauth2.label.resource"></span></label>
+  <input type="text" id="node-input-resource" data-i18n="[placeholder]oauth2.placeholder.resource" style="width:70%;" />
+</div>
+<!-- node-state -->
+<div class="form-row" id="node-state">
+  <label for="node-input-state"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.state"></span></label>
+  <input type="text" id="node-input-state" data-i18n="[placeholder]oauth2.placeholder.state" style="width:70%;" />
+</div>
+<!-- node-open_authentication -->
+<div class="form-row" id="node-open_authentication">
+  <label for="node-input-open_authentication"><i class="fa fa-sign-in fa-fw"></i> <span
+      data-i18n="oauth2.label.open_authentication"></span></label>
+  <a class="red-ui-button fa fa-key" id="authorizeButton" href="#" target="_blank"></a>
+  <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication"
+    disabled />
+</div>
+
+<div class="settings-box">
 
   <div class="form-row">
     <input type="checkbox" id="node-input-useProxy" style="display: inline-block; width: auto; vertical-align: top;" />
     <label for="node-input-useProxy" style="width: auto;"><span data-i18n="oauth2.label.use-proxy"></span></label>
     <div id="node-input-useProxy-row" class="hide">
-      <label style="width: auto; margin-left: 20px; margin-right: 10px;" for="node-input-proxy"><i class="fa fa-globe"></i> <span data-i18n="oauth2.label.proxy-config"></span></label><input type="text" style="width: 270px" id="node-input-proxy" />
+      <label style="width: auto; margin-left: 20px; margin-right: 10px;" for="node-input-proxy"><i
+          class="fa fa-globe"></i> <span data-i18n="oauth2.label.proxy-config"></span></label><input type="text"
+        style="width: 270px" id="node-input-proxy" />
     </div>
   </div>
 
@@ -89,8 +217,10 @@
 
   <!-- node-client_credentials_in_body -->
   <div class="form-row" id="node-client_credentials_in_body">
-    <input type="checkbox" id="node-input-client_credentials_in_body" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
-    <label for="node-input-client_credentials_in_body" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.client_credentials_in_body_label"></span></label>
+    <input type="checkbox" id="node-input-client_credentials_in_body" autocomplete="on"
+      style="display: inline-block; width: auto; vertical-align: top;" checked />
+    <label for="node-input-client_credentials_in_body" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span
+        data-i18n="oauth2.label.client_credentials_in_body_label"></span></label>
     <div abria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
       <i class="fa fa-exclamation-circle fa-fw"></i><b>Embedded Credentials</b> -
       <span data-i18n="oauth2.label.client_credentials_in_body"></span>
@@ -99,8 +229,10 @@
 
   <!-- node-rejectUnauthorized -->
   <div class="form-row" id="node-rejectUnauthorized">
-    <input type="checkbox" id="node-input-rejectUnauthorized" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
-    <label for="node-input-rejectUnauthorized" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.rejectUnauthorized_label"></span></label>
+    <input type="checkbox" id="node-input-rejectUnauthorized" autocomplete="on"
+      style="display: inline-block; width: auto; vertical-align: top;" checked />
+    <label for="node-input-rejectUnauthorized" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span
+        data-i18n="oauth2.label.rejectUnauthorized_label"></span></label>
     <div aria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
       <i class="fa fa-exclamation-circle fa-fw"></i><b>Reject Unauthorized</b> -
       <span data-i18n="oauth2.label.rejectUnauthorized"></span>
@@ -114,6 +246,8 @@
   <div class="form-row node-input-headers-container-row">
     <ol id="node-input-headers-container"></ol>
   </div>
+
+</div>
 </script>
 
 <!-- text/javascript -->
@@ -162,7 +296,10 @@
         client_id: { value: '' },
         client_secret: { value: '' },
         scope: { value: '' },
-        resource: { value: ''},
+        resource: { value: '' },
+        response_type: { value: 'code' },
+        access_type: { value: 'offline' },
+        prompt: { value: 'conconsent' },
         state: { value: '' },
         proxy: {
           type: 'http proxy',
@@ -219,12 +356,16 @@
             $('#node-authorization_endpoint').hide();
             $('#node-open_authentication').hide();
             $('#node-redirect_uri').hide();
-            $('#node-password_credentials').hide();
+            $('#node-username').hide();
+            $('#node-password').hide();
             $('#node-access_token_url').hide();
             $('#node-client_id').hide();
             $('#node-client_secret').hide();
             $('#node-scope').hide();
             $('#node-resource').hide();
+            $('#node-response_type').hide();
+            $('#node-access_type').hide();
+            $('#node-prompt').hide();
             $('#node-state').hide();
             $('#node-rejectUnauthorized').show();
             $('#node-client_credentials_in_body').show();
@@ -232,12 +373,16 @@
             $('#node-authorization_endpoint').hide();
             $('#node-open_authentication').hide();
             $('#node-redirect_uri').hide();
-            $('#node-password_credentials').hide();
+            $('#node-username').hide();
+            $('#node-password').hide();
             $('#node-access_token_url').show();
             $('#node-client_id').show();
             $('#node-client_secret').show();
             $('#node-scope').show();
             $('#node-resource').show();
+            $('#node-response_type').hide();
+            $('#node-access_type').hide();
+            $('#node-prompt').hide();
             $('#node-state').show();
             $('#node-rejectUnauthorized').show();
             $('#node-client_credentials_in_body').show();
@@ -245,17 +390,22 @@
             $('#node-authorization_endpoint').hide();
             $('#node-open_authentication').hide();
             $('#node-redirect_uri').hide();
-            $('#node-password_credentials').show();
+            $('#node-username').show();
+            $('#node-password').show();
             $('#node-access_token_url').show();
             $('#node-client_id').show();
             $('#node-client_secret').show();
             $('#node-scope').show();
             $('#node-resource').show();
+            $('#node-response_type').hide();
+            $('#node-access_type').hide();
+            $('#node-prompt').hide();
             $('#node-state').show();
             $('#node-rejectUnauthorized').show();
             $('#node-client_credentials_in_body').show();
           } else if ($('#node-input-grant_type').val() === 'authorization_code') {
-            $('#node-password_credentials').hide();
+            $('#node-username').hide();
+            $('#node-password').hide();
             $('#node-open_authentication').show();
             $('#node-redirect_uri').show();
             $('#node-access_token_url').show();
@@ -264,7 +414,27 @@
             $('#node-client_secret').show();
             $('#node-scope').show();
             $('#node-resource').show();
+            $('#node-response_type').hide();
+            $('#node-access_type').hide();
+            $('#node-prompt').hide();
             $('#node-state').show();
+            $('#node-rejectUnauthorized').show();
+            $('#node-client_credentials_in_body').show();
+          } else if ($('#node-input-grant_type').val() === 'implicit') {
+            $('#node-username').hide();
+            $('#node-password').hide();
+            $('#node-open_authentication').show();
+            $('#node-redirect_uri').show();
+            $('#node-access_token_url').show();
+            $('#node-authorization_endpoint').show();
+            $('#node-client_id').show();
+            $('#node-client_secret').show();
+            $('#node-scope').show();
+            $('#node-resource').hide();
+            $('#node-response_type').show();
+            $('#node-access_type').show();
+            $('#node-prompt').show();
+            $('#node-state').hide();
             $('#node-rejectUnauthorized').show();
             $('#node-client_credentials_in_body').show();
           }
@@ -293,15 +463,32 @@
           resource = resource.replace(/\n/g, '%20');
           var state = $('#node-input-state').val();
           state = state.replace(/\n/g, '%20');
-          var url;
-          if (authorizationEndpoint) {
-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
-              callback
-            )}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${encodeURIComponent(redirectUri)}&proxy=${encodeURIComponent(proxy)}`;
+
+          var accessType = $('#node-input-access_type').val(); // 'offline'
+          var prompt = $('#node-input-prompt').val(); // 'consent'
+          var responseType = $('#node-input-response_type').val(); // 'code'
+          if (accessType) {
+            var redirectUri = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/redirect`;
+            var url = `${authorizationEndpoint}?redirect_uri=${redirectUri}&client_id=${clientId}&response_type=${responseType}&scope=${scope}&access_type=${accessType}&prompt=${prompt}`;
           } else {
-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
-              callback
-            )}&proxy=${encodeURIComponent(proxy)}`;
+            var urlParams = {
+              id: encodeURIComponent(id),
+              clientId: encodeURIComponent(clientId),
+              clientSecret: encodeURIComponent(clientSecret),
+              scope: encodeURIComponent(scope),
+              state: encodeURIComponent(state),
+              resource: encodeURIComponent(resource),
+              callback: encodeURIComponent(callback),
+              proxy: encodeURIComponent(proxy)
+            };
+
+            if (authorizationEndpoint) {
+              urlParams.authorizationEndpoint = encodeURIComponent(authorizationEndpoint);
+              urlParams.redirectUri = encodeURIComponent(redirectUri);
+            }
+
+            var baseQueryString = Object.keys(urlParams).map(key => `${key}=${urlParams[key]}`).join('&');
+            url = `oauth2/auth?${baseQueryString}`;
           }
           $(this).attr('href', url);
           window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
@@ -363,13 +550,13 @@
                     header.h === 'content-type'
                       ? contentTypes
                       : [
-                          {
-                            value: 'other',
-                            label: RED._('node-red:httpin.label.other'),
-                            hasValue: true,
-                            icon: 'red/images/typedInput/az.svg'
-                          }
-                        ]
+                        {
+                          value: 'other',
+                          label: RED._('node-red:httpin.label.other'),
+                          hasValue: true,
+                          icon: 'red/images/typedInput/az.svg'
+                        }
+                      ]
                 });
 
               var matchedType = headerTypes.filter(function (ht) {

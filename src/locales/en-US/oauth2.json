@@ -15,6 +15,9 @@
       "client_secret": "Client Secret",
       "scope": "Scope",
       "resource": "Resource",
+      "access_type": "Access Type",
+      "response_type": "Response Type",
+      "prompt": "Prompt",
       "state": "State",
       "rejectUnauthorized": "The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.",
       "rejectUnauthorized_label": "Reject Unauthorized",
@@ -38,6 +41,9 @@
       "scope": "scope",
       "resource": "resource",
       "state": "state",
+      "access_type": "offline",
+      "response_type": "code",
+      "prompt": "consent",
       "rejectUnauthorized": "rejectUnauthorized",
       "headers": "headers"
     },
@@ -45,6 +51,7 @@
       "client_credentials": "Client Credentials",
       "password_credentials": "Password",
       "authorization_code": "Authorization Code",
+      "implicit": "Implicit",
       "set_by_credentials": "- Set by msg.oauth2Request -"
     }
   }
