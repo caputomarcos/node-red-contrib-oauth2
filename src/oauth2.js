@@ -172,6 +172,26 @@ module.exports = function (RED) {
             baseOptions.form.client_secret = msg.oauth2Request.credentials.client_secret;
             baseOptions.headers = Object.fromEntries(Object.entries(baseOptions.headers).filter(([key]) => key !== 'Authorization'));
           }
+        } else if (node.grant_type === 'implicit') {
+          const credentials = RED.nodes.getCredentials(node.id);
+          baseOptions.headers = {
+            'Content-Type': 'application/json'
+          }
+          baseOptions.maxBodyLength = Infinity;
+          baseOptions.url = 'https://accounts.google.com/o/oauth2/token'
+          baseOptions.data = {
+            "client_id": credentials.clientId,
+            "client_secret": credentials.clientSecret,
+            "redirect_uri": credentials.redirectUri,
+            "grant_type": "authorization_code",
+            "code": credentials.code
+          }
+          delete baseOptions.form;
+          baseOptions.form.grant_type = 'authorization_code'
+          baseOptions.form.code = credentials.code;
+          baseOptions.form.client_id = credentials.clientId;
+          baseOptions.form.client_secret = credentials.clientSecret;
+          baseOptions.form.redirect_uri = credentials.redirectUri;
         } else {
           baseOptions.url = node.access_token_url;
           baseOptions.headers.Authorization = 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64');
@@ -191,8 +211,6 @@ module.exports = function (RED) {
               baseOptions.form.code = credentials.code;
               baseOptions.form.redirect_uri = credentials.redirectUri;
             }
-          } else if (node.grant_type === 'authorization_code') {
-
           }
         }
 
@@ -335,14 +353,14 @@ module.exports = function (RED) {
    * @param {Object} res - The HTTP response object
    */
   RED.httpAdmin.get('/oauth2/auth', async function (req, res) {
-    // if (!req.query.clientId || !req.query.clientSecret || !req.query.id || !req.query.callback) {
-    //   res.sendStatus(400);
-    //   return;
-    // }
+    if (!req.query.clientId || !req.query.clientSecret || !req.query.id || !req.query.callback) {
+      res.sendStatus(400);
+      return;
+    }
 
     const node_id = req.query.id;
     const callback = req.query.callback;
-    const redirectUri = req.query.redirect_uri || req.query.redirectUri;
+    const redirectUri = req.query.redirectUri;
     const credentials = JSON.parse(JSON.stringify(req.query, getCircularReplacer()));
     const proxy = RED.nodes.getNode(credentials.proxy);
 

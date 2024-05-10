@@ -300,6 +300,7 @@
         response_type: { value: 'code' },
         access_type: { value: 'offline' },
         prompt: { value: 'conconsent' },
+        code: { value: '' },
         state: { value: '' },
         proxy: {
           type: 'http proxy',
@@ -467,28 +468,19 @@
           var accessType = $('#node-input-access_type').val(); // 'offline'
           var prompt = $('#node-input-prompt').val(); // 'consent'
           var responseType = $('#node-input-response_type').val(); // 'code'
+          var url;
           if (accessType) {
-            var redirectUri = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/redirect`;
-            var url = `${authorizationEndpoint}?redirect_uri=${redirectUri}&client_id=${clientId}&response_type=${responseType}&scope=${scope}&access_type=${accessType}&prompt=${prompt}`;
+            url = `${authorizationEndpoint}?id=${encodeURIComponent(id)}&redirect_uri=${redirectUri}&client_id=${clientId}&response_type=${responseType}&scope=${scope}&access_type=${accessType}&prompt=${prompt}&state=${encodeURIComponent(id)}:node_id`;
           } else {
-            var urlParams = {
-              id: encodeURIComponent(id),
-              clientId: encodeURIComponent(clientId),
-              clientSecret: encodeURIComponent(clientSecret),
-              scope: encodeURIComponent(scope),
-              state: encodeURIComponent(state),
-              resource: encodeURIComponent(resource),
-              callback: encodeURIComponent(callback),
-              proxy: encodeURIComponent(proxy)
-            };
-
             if (authorizationEndpoint) {
-              urlParams.authorizationEndpoint = encodeURIComponent(authorizationEndpoint);
-              urlParams.redirectUri = encodeURIComponent(redirectUri);
+              url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
+                callback
+              )}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${encodeURIComponent(redirectUri)}&proxy=${encodeURIComponent(proxy)}`;
+            } else {
+              url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
+                callback
+              )}&proxy=${encodeURIComponent(proxy)}`;
             }
-
-            var baseQueryString = Object.keys(urlParams).map(key => `${key}=${urlParams[key]}`).join('&');
-            url = `oauth2/auth?${baseQueryString}`;
           }
           $(this).attr('href', url);
           window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
