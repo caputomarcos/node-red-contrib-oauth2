@@ -4,69 +4,81 @@
     <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="oauth2.label.name"></span></label>
     <input type="text" id="node-input-name" data-i18n="[placeholder]oauth2.placeholder.name" style="width:70%;" />
   </div>
+
   <!-- node-input-container -->
   <div class="form-row">
     <label for="node-input-container"><i class="fa fa-ellipsis-h"></i> <span data-i18n="oauth2.label.container"></span></label>
     <input type="text" id="node-input-container" data-i18n="[placeholder]oauth2.placeholder.container" style="width:70%;" />
   </div>
+
   <!-- node-input-grant_type -->
   <div class="form-row">
     <label for="node-input-grant_type"><i class="fa fa-wrench"></i> <span data-i18n="oauth2.label.grant_type"></span></label>
-    <select type="text" id="node-input-grant_type" style="width:70%;">
+    <select id="node-input-grant_type" data-i18n="[placeholder]oauth2.placeholder.grant_type" style="width:70%;">
       <option value="client_credentials" data-i18n="oauth2.opts.client_credentials"></option>
       <option value="password" data-i18n="oauth2.opts.password_credentials"></option>
       <option value="authorization_code" data-i18n="oauth2.opts.authorization_code"></option>
       <option value="set_by_credentials" data-i18n="oauth2.opts.set_by_credentials"></option>
     </select>
   </div>
+
   <!-- node-access_token_url -->
   <div class="form-row" id="node-access_token_url">
     <label for="node-input-access_token_url"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.access_token_url"></span></label>
     <input type="text" id="node-input-access_token_url" data-i18n="[placeholder]oauth2.placeholder.access_token_url" style="width:70%;" />
   </div>
+
   <!-- node-authorization_endpoint -->
   <div class="form-row" id="node-authorization_endpoint">
     <label for="node-input-authorization_endpoint"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.authorization_endpoint"></span></label>
     <input type="text" id="node-input-authorization_endpoint" data-i18n="[placeholder]oauth2.placeholder.authorization_endpoint" style="width:70%;" />
   </div>
+
   <!-- node-password_credentials -->
   <div class="form-row" id="node-password_credentials">
-    <!--node-input-username -->
+    <!-- node-input-username -->
     <div class="form-row">
       <label for="node-input-username"><i class="fa fa-user fa-fw"></i> <span data-i18n="oauth2.label.username"></span></label>
       <input type="text" id="node-input-username" data-i18n="[placeholder]oauth2.placeholder.username" style="width:70%;" />
     </div>
+
     <!-- node-input-password -->
     <div class="form-row">
       <label for="node-input-password"><i class="fa  fa-lock fa-fw"></i> <span data-i18n="oauth2.label.password"></span></label>
       <input type="password" id="node-input-password" data-i18n="[placeholder]oauth2.placeholder.password" style="width:70%;" />
     </div>
   </div>
+
   <!-- node-client_id -->
   <div class="form-row" id="node-client_id">
     <label for="node-input-client_id"><i class="fa fa-user fa-fw"></i> <span data-i18n="oauth2.label.client_id"></span></label>
     <input type="text" id="node-input-client_id" data-i18n="[placeholder]oauth2.placeholder.client_id" style="width:70%;" />
   </div>
+
   <!-- node-client_secret -->
   <div class="form-row" id="node-client_secret">
     <label for="node-input-client_secret"><i class="fa fa-lock fa-fw"></i> <span data-i18n="oauth2.label.client_secret"></span></label>
     <input type="password" id="node-input-client_secret" data-i18n="[placeholder]oauth2.placeholder.client_secret" style="width:70%;" />
   </div>
+
   <!-- node-scope -->
   <div class="form-row" id="node-scope">
     <label for="node-input-scope"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.scope"></span></label>
     <input type="text" id="node-input-scope" data-i18n="[placeholder]oauth2.placeholder.scope" style="width:70%;" />
   </div>
-    <!-- node-resource -->
-    <div class="form-row" id="node-resource">
-      <label for="node-input-resource"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.resource"></span></label>
-      <input type="text" id="node-input-resource" data-i18n="[placeholder]oauth2.placeholder.resource" style="width:70%;" />
-    </div>
-   <!-- node-state -->
-   <div class="form-row" id="node-state">
+
+  <!-- node-resource -->
+  <div class="form-row" id="node-resource">
+    <label for="node-input-resource"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.resource"></span></label>
+    <input type="text" id="node-input-resource" data-i18n="[placeholder]oauth2.placeholder.resource" style="width:70%;" />
+  </div>
+
+  <!-- node-state -->
+  <div class="form-row" id="node-state">
     <label for="node-input-state"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.state"></span></label>
     <input type="text" id="node-input-state" data-i18n="[placeholder]oauth2.placeholder.state" style="width:70%;" />
-  </div>     
+  </div>
+
   <!-- node-open_authentication -->
   <div class="form-row" id="node-open_authentication">
     <label for="node-input-open_authentication"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.open_authentication"></span></label>
@@ -78,7 +90,8 @@
     <input type="checkbox" id="node-input-useProxy" style="display: inline-block; width: auto; vertical-align: top;" />
     <label for="node-input-useProxy" style="width: auto;"><span data-i18n="oauth2.label.use-proxy"></span></label>
     <div id="node-input-useProxy-row" class="hide">
-      <label style="width: auto; margin-left: 20px; margin-right: 10px;" for="node-input-proxy"><i class="fa fa-globe"></i> <span data-i18n="oauth2.label.proxy-config"></span></label><input type="text" style="width: 270px" id="node-input-proxy" />
+      <label style="width: auto; margin-left: 20px; margin-right: 10px;" for="node-input-proxy"><i class="fa fa-globe"></i> <span data-i18n="oauth2.label.proxy-config"></span></label>
+      <input type="text" style="width: 270px" id="node-input-proxy" />
     </div>
   </div>
 
@@ -91,7 +104,7 @@
   <div class="form-row" id="node-client_credentials_in_body">
     <input type="checkbox" id="node-input-client_credentials_in_body" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
     <label for="node-input-client_credentials_in_body" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.client_credentials_in_body_label"></span></label>
-    <div abria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
+    <div aria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
       <i class="fa fa-exclamation-circle fa-fw"></i><b>Embedded Credentials</b> -
       <span data-i18n="oauth2.label.client_credentials_in_body"></span>
     </div>
@@ -116,7 +129,6 @@
   </div>
 </script>
 
-<!-- text/javascript -->
 <script type="text/javascript">
   (function () {
     var headerTypes = [
@@ -148,9 +160,7 @@
       category: 'DevSecOps',
       color: '#fff',
       defaults: {
-        name: {
-          value: ''
-        },
+        name: { value: '' },
         container: { value: 'oauth2Response' },
         grant_type: { value: 'set_by_credentials' },
         access_token_url: { value: '' },
@@ -162,7 +172,7 @@
         client_id: { value: '' },
         client_secret: { value: '' },
         scope: { value: '' },
-        resource: { value: ''},
+        resource: { value: '' },
         state: { value: '' },
         proxy: {
           type: 'http proxy',
@@ -173,6 +183,16 @@
         client_credentials_in_body: { value: false },
         rejectUnauthorized: { value: true },
         headers: { value: {} }
+      },
+      credentials: {
+        displayName: { type: 'text' },
+        clientId: { type: 'text' },
+        clientSecret: { type: 'password' },
+        accessToken: { type: 'password' },
+        refreshToken: { type: 'password' },
+        expireTime: { type: 'password' },
+        code: { type: 'password' },
+        proxy: { type: 'json' }
       },
       inputs: 1,
       outputs: 1,
@@ -185,14 +205,11 @@
       },
       oneditprepare: function () {
         const id = this.id;
-
         var pathname = document.location.pathname;
         if (pathname.slice(-1) != '/') {
           pathname += '/';
         }
-
         var privateIPRegex = /(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/;
-
         var callback;
         if (privateIPRegex.test(location.hostname)) {
           // if private IP has been detected
@@ -202,75 +219,77 @@
         } else {
           callback = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/auth/callback`;
         }
-
         var redirectUri = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/redirect`;
-
         if (this.container === undefined) {
           $('#node-input-container').val('payload');
         }
-
-        $('#node-input-container').typedInput({
-          default: 'msg',
-          types: ['msg']
-        });
-
+        $('#node-input-container').typedInput({ default: 'msg', types: ['msg'] });
         $('#node-input-grant_type').on('change', function () {
-          if ($('#node-input-grant_type').val() === 'set_by_credentials') {
-            $('#node-authorization_endpoint').hide();
-            $('#node-open_authentication').hide();
-            $('#node-redirect_uri').hide();
-            $('#node-password_credentials').hide();
-            $('#node-access_token_url').hide();
-            $('#node-client_id').hide();
-            $('#node-client_secret').hide();
-            $('#node-scope').hide();
-            $('#node-resource').hide();
-            $('#node-state').hide();
-            $('#node-rejectUnauthorized').show();
-            $('#node-client_credentials_in_body').show();
-          } else if ($('#node-input-grant_type').val() === 'client_credentials') {
-            $('#node-authorization_endpoint').hide();
-            $('#node-open_authentication').hide();
-            $('#node-redirect_uri').hide();
-            $('#node-password_credentials').hide();
-            $('#node-access_token_url').show();
-            $('#node-client_id').show();
-            $('#node-client_secret').show();
-            $('#node-scope').show();
-            $('#node-resource').show();
-            $('#node-state').show();
-            $('#node-rejectUnauthorized').show();
-            $('#node-client_credentials_in_body').show();
-          } else if ($('#node-input-grant_type').val() === 'password') {
-            $('#node-authorization_endpoint').hide();
-            $('#node-open_authentication').hide();
-            $('#node-redirect_uri').hide();
-            $('#node-password_credentials').show();
-            $('#node-access_token_url').show();
-            $('#node-client_id').show();
-            $('#node-client_secret').show();
-            $('#node-scope').show();
-            $('#node-resource').show();
-            $('#node-state').show();
-            $('#node-rejectUnauthorized').show();
-            $('#node-client_credentials_in_body').show();
-          } else if ($('#node-input-grant_type').val() === 'authorization_code') {
-            $('#node-password_credentials').hide();
-            $('#node-open_authentication').show();
-            $('#node-redirect_uri').show();
-            $('#node-access_token_url').show();
-            $('#node-authorization_endpoint').show();
-            $('#node-client_id').show();
-            $('#node-client_secret').show();
-            $('#node-scope').show();
-            $('#node-resource').show();
-            $('#node-state').show();
-            $('#node-rejectUnauthorized').show();
-            $('#node-client_credentials_in_body').show();
+          var grantType = $('#node-input-grant_type').val();
+          var elementsToHide = [
+            '#node-authorization_endpoint',
+            '#node-open_authentication',
+            '#node-redirect_uri',
+            '#node-password_credentials',
+            '#node-access_token_url',
+            '#node-client_id',
+            '#node-client_secret',
+            '#node-scope',
+            '#node-resource',
+            '#node-state'
+          ];
+          var elementsToShow = ['#node-rejectUnauthorized', '#node-client_credentials_in_body'];
+
+          if (grantType === 'set_by_credentials') {
+            elementsToHide.forEach(function (selector) {
+              $(selector).hide();
+            });
+            elementsToShow.forEach(function (selector) {
+              $(selector).show();
+            });
+          } else if (grantType === 'client_credentials') {
+            elementsToHide = elementsToHide.filter(function (item) {
+              return item !== '#node-access_token_url' && item !== '#node-client_id' && item !== '#node-client_secret' && item !== '#node-scope' && item !== '#node-resource' && item !== '#node-state';
+            });
+            elementsToHide.forEach(function (selector) {
+              $(selector).hide();
+            });
+            elementsToShow.forEach(function (selector) {
+              $(selector).show();
+            });
+          } else if (grantType === 'password') {
+            elementsToHide = elementsToHide.filter(function (item) {
+              return item !== '#node-password_credentials' && item !== '#node-access_token_url' && item !== '#node-client_id' && item !== '#node-client_secret' && item !== '#node-scope' && item !== '#node-resource' && item !== '#node-state';
+            });
+            elementsToHide.forEach(function (selector) {
+              $(selector).hide();
+            });
+            elementsToShow.forEach(function (selector) {
+              $(selector).show();
+            });
+          } else if (grantType === 'authorization_code') {
+            elementsToHide = elementsToHide.filter(function (item) {
+              return (
+                item !== '#node-authorization_endpoint' &&
+                item !== '#node-open_authentication' &&
+                item !== '#node-redirect_uri' &&
+                item !== '#node-access_token_url' &&
+                item !== '#node-client_id' &&
+                item !== '#node-client_secret' &&
+                item !== '#node-scope' &&
+                item !== '#node-resource' &&
+                item !== '#node-state'
+              );
+            });
+            elementsToHide.forEach(function (selector) {
+              $(selector).hide();
+            });
+            elementsToShow.forEach(function (selector) {
+              $(selector).show();
+            });
           }
           RED.tray.resize();
         });
-
         function pollCredentials() {
           $.getJSON('oauth2/credentials/' + id, function (data) {
             if (data) {
@@ -281,7 +300,6 @@
             }
           });
         }
-
         $('#authorizeButton').mousedown(function () {
           const authorizationEndpoint = $('#node-input-authorization_endpoint').val();
           const clientId = $('#node-input-client_id').val();
@@ -295,25 +313,24 @@
           state = state.replace(/\n/g, '%20');
           var url;
           if (authorizationEndpoint) {
-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
-              callback
-            )}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${encodeURIComponent(redirectUri)}&proxy=${encodeURIComponent(proxy)}`;
+            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(
+              resource
+            )}&callback=${encodeURIComponent(callback)}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${encodeURIComponent(redirectUri)}&proxy=${encodeURIComponent(proxy)}`;
           } else {
-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
-              callback
-            )}&proxy=${encodeURIComponent(proxy)}`;
+            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(
+              resource
+            )}&callback=${encodeURIComponent(callback)}&proxy=${encodeURIComponent(proxy)}`;
           }
           $(this).attr('href', url);
           window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
         });
-        $('#authorizeButton').click(function () {
+        $('#authorizeButton').click(function (e) {
           var clientId = $('#node-input-client_id').val();
           var clientSecret = $('#node-input-client_secret').val();
           if (clientId === '' || clientSecret === '') {
             e.preventDefault();
           }
         });
-
         $('#node-input-useProxy').on('click', function () {
           updateProxyOptions();
         });
@@ -331,7 +348,6 @@
           $('#node-input-useProxy').prop('checked', false);
         }
         updateProxyOptions();
-
         var headerList = $('#node-input-headers-container')
           .css('min-height', '150px')
           .css('min-width', '450px')
@@ -343,7 +359,6 @@
                   whiteSpace: 'nowrap'
                 })
                 .appendTo(container);
-
               var propertyName = $('<input/>', {
                 class: 'node-input-header-name',
                 type: 'text',
@@ -351,7 +366,6 @@
               })
                 .appendTo(row)
                 .typedInput({ types: headerTypes });
-
               var propertyValue = $('<input/>', {
                 class: 'node-input-header-value',
                 type: 'text',
@@ -371,7 +385,6 @@
                           }
                         ]
                 });
-
               var matchedType = headerTypes.filter(function (ht) {
                 return ht.value === header.h;
               });
@@ -381,7 +394,6 @@
                 propertyValue.typedInput('value', header.v);
               } else {
                 propertyName.typedInput('type', header.h);
-
                 if (header.h === 'content-type') {
                   matchedType = contentTypes.filter(function (ct) {
                     return ct.value === header.v;
@@ -396,7 +408,6 @@
                   propertyValue.typedInput('value', header.v);
                 }
               }
-
               matchedType = headerTypes.filter(function (ht) {
                 return ht.value === header.h;
               });
@@ -406,7 +417,6 @@
               } else {
                 propertyName.typedInput('type', header.h);
               }
-
               propertyName.on('change', function (event) {
                 var type = propertyName.typedInput('type');
                 if (type === 'content-type') {
@@ -427,7 +437,6 @@
             },
             removable: true
           });
-
         if (this.headers) {
           for (var key in this.headers) {
             if (this.headers.hasOwnProperty(key)) {
@@ -471,7 +480,7 @@
         let height = dlg.height() - 5;
         if (expandRow && expandRow.length) {
           const siblingRows = dlg.find('> .form-row:not(.node-input-headers-container-row)');
-          for (let i = 0; i < siblingRows.size(); i++) {
+          for (let i = 0; i < siblingRows.length; i++) {
             const cr = $(siblingRows[i]);
             if (cr.is(':visible')) height -= cr.outerHeight(true);
           }
