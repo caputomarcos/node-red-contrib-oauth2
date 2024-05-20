@@ -76,9 +76,9 @@ SOFTWARE.
 
   The client credentials can be sent as part of the message payload to the node. The `msg.oauth2Request.credentials` object should contain the following properties:
 
-  - `grant_type` (string): This specifies the grant type. For dynamic credentials, the value should be set to "client_credentials".
-  - `client_id` (string): This is the client ID of the OAuth2 client.
-  - `client_secret` (string): This is the client secret of the OAuth2 client.
+  - `grantType` (string): This specifies the grant type. For dynamic credentials, the value should be set to "clientCredentials".
+  - `clientId` (string): This is the client ID of the OAuth2 client.
+  - `clientSecret` (string): This is the client secret of the OAuth2 client.
   - `scope` (string): This specifies the scope of the access requested.
   - `resource` (string): This specifies the resource of the access requested.
 
@@ -86,11 +86,11 @@ SOFTWARE.
 
   ```js
   msg.oauth2Request = {
-    access_token_url: 'http://localhost:8080/v1/oauth/tokens',
+    accessTokenUrl: 'http://localhost:8080/v1/oauth/tokens',
     credentials: {
-      grant_type: 'client_credentials',
-      client_id: 'test_client_1',
-      client_secret: 'test_secret',
+      grantType: 'clientCredentials',
+      clientId: 'test_client_1',
+      clientSecret: 'test_secret',
       scope: 'read_write',
       resource: 'http://localhost:8080'
     }
@@ -102,9 +102,9 @@ SOFTWARE.
 
   The username and password can be sent as part of the message payload to the node. The `msg.oauth2Request.credentials` object should contain the following properties:
 
-  - `grant_type` (string): This specifies the grant type. For password credentials, the value should be set to "password".
-  - `client_id` (string): This is the client ID of the OAuth2 client.
-  - `client_secret` (string): This is the client secret of the OAuth2 client.
+  - `grantType` (string): This specifies the grant type. For password credentials, the value should be set to "password".
+  - `clientId` (string): This is the client ID of the OAuth2 client.
+  - `clientSecret` (string): This is the client secret of the OAuth2 client.
   - `scope` (string): This specifies the scope of the access requested.
   - `resource` (string): This specifies the resource of the access requested.
   - `username` (string): This is the username of the user.
@@ -114,11 +114,11 @@ SOFTWARE.
 
   ```js
   msg.oauth2Request = {
-    access_token_url: 'http://localhost:8080/v1/oauth/tokens',
+    accessTokenUrl: 'http://localhost:8080/v1/oauth/tokens',
     credentials: {
-      grant_type: 'password',
-      client_id: 'test_client_1',
-      client_secret: 'test_secret',
+      grantType: 'password',
+      clientId: 'test_client_1',
+      clientSecret: 'test_secret',
       scope: 'read_write',
       resource: 'http://localhost:8080',
       username: 'test@user',
@@ -132,9 +132,9 @@ SOFTWARE.
 
   A refresh token can be used to obtain a new access token without requiring the user to re-authenticate. The `msg.oauth2Request.credentials` object should contain the following properties:
 
-  - `grant_type` (string): This specifies the grant type. For refresh token credentials, the value should be set to "refresh_token".
-  - `client_id` (string): This is the client ID of the OAuth2 client.
-  - `client_secret` (string): This is the client secret of the OAuth2 client.
+  - `grantType` (string): This specifies the grant type. For refresh token credentials, the value should be set to "refresh_token".
+  - `clientId` (string): This is the client ID of the OAuth2 client.
+  - `clientSecret` (string): This is the client secret of the OAuth2 client.
   - `scope` (string): This specifies the scope of the access requested.
   - `resource` (string): This specifies the resource of the access requested.
   - `refresh_token` (string): This is the refresh token obtained from a previous authentication.
@@ -145,11 +145,11 @@ SOFTWARE.
   let refreshToken = global.get('refreshToken');
 
   msg.oauth2Request = {
-    access_token_url: 'http://localhost:8080/v1/oauth/tokens',
+    accessTokenUrl: 'http://localhost:8080/v1/oauth/tokens',
     credentials: {
-      grant_type: 'refresh_token',
-      client_id: 'test_client_1',
-      client_secret: 'test_secret',
+      grantType: 'refresh_token',
+      clientId: 'test_client_1',
+      clientSecret: 'test_secret',
       scope: 'read_write',
       resource: 'http://localhost:8080',
       refresh_token: refreshToken
