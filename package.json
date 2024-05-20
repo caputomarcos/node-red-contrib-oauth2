@@ -10,7 +10,7 @@
     "serotonie",
     "deosrc"
   ],
-  "license": "MIT License",
+  "license": "MIT",
   "homepage": "https://github.com/caputomarcos/node-red-contrib-oauth2#readme",
   "repository": {
     "type": "git",
