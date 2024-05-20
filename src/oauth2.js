@@ -49,17 +49,17 @@ module.exports = function (RED) {
       // Store local copies of the node configuration (as defined in the .html)
       this.name = oauth2Node.name || '';
       this.container = oauth2Node.container || '';
-      this.access_token_url = oauth2Node.access_token_url || '';
-      this.grant_type = oauth2Node.grant_type || '';
+      this.accessTokenUrl = oauth2Node.accessTokenUrl || '';
+      this.grantType = oauth2Node.grantType || '';
       this.username = oauth2Node.username || '';
       this.password = oauth2Node.password || '';
-      this.client_id = oauth2Node.client_id || '';
-      this.client_secret = oauth2Node.client_secret || '';
+      this.clientId = oauth2Node.clientId || '';
+      this.clientSecret = oauth2Node.clientSecret || '';
       this.scope = oauth2Node.scope || '';
       this.resource = oauth2Node.resource || '';
       this.state = oauth2Node.state || '';
       this.rejectUnauthorized = oauth2Node.rejectUnauthorized || false;
-      this.client_credentials_in_body = oauth2Node.client_credentials_in_body || false;
+      this.clientCredentialsInBody = oauth2Node.clientCredentialsInBody || false;
       this.headers = oauth2Node.headers || {};
       this.sendErrorsToCatch = oauth2Node.senderr || false;
 
@@ -148,50 +148,50 @@ module.exports = function (RED) {
           form: {}
         };
 
-        if (node.grant_type === 'set_by_credentials') {
-          baseOptions.url = msg.oauth2Request.access_token_url;
-          baseOptions.headers.Authorization = 'Basic ' + Buffer.from(`${msg.oauth2Request.credentials.client_id}:${msg.oauth2Request.credentials.client_secret}`).toString('base64');
-          baseOptions.form.grant_type = msg.oauth2Request.credentials.grant_type;
+        if (node.grantType === 'setByCredentials') {
+          baseOptions.url = msg.oauth2Request.accessTokenUrl;
+          baseOptions.headers.Authorization = 'Basic ' + Buffer.from(`${msg.oauth2Request.credentials.clientId}:${msg.oauth2Request.credentials.clientSecret}`).toString('base64');
+          baseOptions.form.grantType = msg.oauth2Request.credentials.grantType;
           baseOptions.form.scope = msg.oauth2Request.credentials.scope;
           baseOptions.form.resource = msg.oauth2Request.credentials.resource;
           baseOptions.form.state = msg.oauth2Request.credentials.state;
 
           // Additional configurations based on grant type
-          if (msg.oauth2Request.credentials.grant_type === 'password') {
+          if (msg.oauth2Request.credentials.grantType === 'password') {
             baseOptions.form.username = msg.oauth2Request.credentials.username;
             baseOptions.form.password = msg.oauth2Request.credentials.password;
-          } else if (msg.oauth2Request.credentials.grant_type === 'refresh_token') {
+          } else if (msg.oauth2Request.credentials.grantType === 'refresh_token') {
             baseOptions.form.refresh_token = msg.oauth2Request.credentials.refresh_token;
           }
 
-          if (node.client_credentials_in_body) {
-            baseOptions.form.client_id = msg.oauth2Request.credentials.client_id;
-            baseOptions.form.client_secret = msg.oauth2Request.credentials.client_secret;
+          if (node.clientCredentialsInBody) {
+            baseOptions.form.clientId = msg.oauth2Request.credentials.clientId;
+            baseOptions.form.clientSecret = msg.oauth2Request.credentials.clientSecret;
             baseOptions.headers = Object.fromEntries(Object.entries(baseOptions.headers).filter(([key]) => key !== 'Authorization'));
           }
         } else {
-          baseOptions.url = node.access_token_url;
-          baseOptions.headers.Authorization = 'Basic ' + Buffer.from(`${node.client_id}:${node.client_secret}`).toString('base64');
-          baseOptions.form.grant_type = node.grant_type;
+          baseOptions.url = node.accessTokenUrl;
+          baseOptions.headers.Authorization = 'Basic ' + Buffer.from(`${node.clientId}:${node.clientSecret}`).toString('base64');
+          baseOptions.form.grantType = node.grantType;
           baseOptions.form.scope = node.scope;
           baseOptions.form.resource = node.resource;
           baseOptions.form.state = node.state;
 
           // Additional configurations based on grant type
-          if (node.grant_type === 'password') {
+          if (node.grantType === 'password') {
             baseOptions.form.username = node.username;
             baseOptions.form.password = node.password;
-          } else if (node.grant_type === 'authorization_code') {
-            if (node.client_credentials_in_body) {
-              baseOptions.form.client_id = node.client_id;
-              baseOptions.form.client_secret = node.client_secret;
+          } else if (node.grantType === 'authorizationCode') {
+            if (node.clientCredentialsInBody) {
+              baseOptions.form.clientId = node.clientId;
+              baseOptions.form.clientSecret = node.clientSecret;
               baseOptions.headers = Object.fromEntries(Object.entries(baseOptions.headers).filter(([key]) => key !== 'Authorization'));
             }
 
             const credentials = RED.nodes.getCredentials(node.id);
             if (credentials) {
               baseOptions.form.code = credentials.code;
-              baseOptions.form.redirect_uri = credentials.redirectUri;
+              baseOptions.form.redirectUri = credentials.redirectUri;
             }
           }
         }
@@ -286,7 +286,7 @@ module.exports = function (RED) {
     if (credentials) {
       res.json({
         code: credentials.code,
-        redirect_uri: credentials.redirect_uri
+        redirectUri: credentials.redirectUri
       });
     } else {
       res.send('oauth2.error.no-credentials');
@@ -301,11 +301,11 @@ module.exports = function (RED) {
   RED.httpAdmin.get('/oauth2/redirect', function (req, res) {
     if (req.query.code) {
       const state = req.query.state.split(':');
-      const node_id = state[0];
-      const credentials = RED.nodes.getCredentials(node_id);
+      const nodeId = state[0];
+      const credentials = RED.nodes.getCredentials(nodeId);
       if (credentials) {
         credentials.code = req.query.code;
-        RED.nodes.addCredentials(node_id, credentials);
+        RED.nodes.addCredentials(nodeId, credentials);
         const html = `<HTML>
         <HEAD>
             <script language="javascript" type="text/javascript">
@@ -340,7 +340,7 @@ module.exports = function (RED) {
       return;
     }
 
-    const node_id = req.query.id;
+    const nodeId = req.query.id;
     const callback = req.query.callback;
     const redirectUri = req.query.redirectUri;
     const credentials = JSON.parse(JSON.stringify(req.query, getCircularReplacer()));
@@ -372,9 +372,9 @@ module.exports = function (RED) {
 
     const l = url.parse(req.query.authorizationEndpoint, true);
     const redirectUrl = new URL(l.href);
-    redirectUrl.searchParams.set('client_id', credentials.clientId);
-    redirectUrl.searchParams.set('redirect_uri', redirectUri);
-    redirectUrl.searchParams.set('state', node_id + ':' + csrfToken);
+    redirectUrl.searchParams.set('clientId', credentials.clientId);
+    redirectUrl.searchParams.set('redirectUri', redirectUri);
+    redirectUrl.searchParams.set('state', nodeId + ':' + csrfToken);
     redirectUrl.searchParams.set('scope', scope);
     redirectUrl.searchParams.set('resource', req.query.resource);
     redirectUrl.searchParams.set('response_type', 'code');
@@ -386,7 +386,7 @@ module.exports = function (RED) {
         proxy: proxyOptions
       });
       res.redirect(response.request.res.responseUrl);
-      RED.nodes.addCredentials(node_id, credentials);
+      RED.nodes.addCredentials(nodeId, credentials);
     } catch (error) {
       res.sendStatus(404);
     }
@@ -405,8 +405,8 @@ module.exports = function (RED) {
       });
     }
     const state = req.query.state.split(':');
-    const node_id = state[0];
-    const credentials = RED.nodes.getCredentials(node_id);
+    const nodeId = state[0];
+    const credentials = RED.nodes.getCredentials(nodeId);
     if (!credentials || !credentials.clientId || !credentials.clientSecret) {
       return res.send('oauth2.error.no-credentials');
     }

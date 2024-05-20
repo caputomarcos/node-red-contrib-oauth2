@@ -9,28 +9,28 @@
     <label for="node-input-container"><i class="fa fa-ellipsis-h"></i> <span data-i18n="oauth2.label.container"></span></label>
     <input type="text" id="node-input-container" data-i18n="[placeholder]oauth2.placeholder.container" style="width:70%;" />
   </div>
-  <!-- node-input-grant_type -->
+  <!-- node-input-grantType -->
   <div class="form-row">
-    <label for="node-input-grant_type"><i class="fa fa-wrench"></i> <span data-i18n="oauth2.label.grant_type"></span></label>
-    <select type="text" id="node-input-grant_type" style="width:70%;">
-      <option value="client_credentials" data-i18n="oauth2.opts.client_credentials"></option>
-      <option value="password" data-i18n="oauth2.opts.password_credentials"></option>
-      <option value="authorization_code" data-i18n="oauth2.opts.authorization_code"></option>
-      <option value="set_by_credentials" data-i18n="oauth2.opts.set_by_credentials"></option>
+    <label for="node-input-grantType"><i class="fa fa-wrench"></i> <span data-i18n="oauth2.label.grantType"></span></label>
+    <select type="text" id="node-input-grantType" style="width:70%;">
+      <option value="clientCredentials" data-i18n="oauth2.opts.clientCredentials"></option>
+      <option value="password" data-i18n="oauth2.opts.passwordCredentials"></option>
+      <option value="authorizationCode" data-i18n="oauth2.opts.authorizationCode"></option>
+      <option value="setByCredentials" data-i18n="oauth2.opts.setByCredentials"></option>
     </select>
   </div>
-  <!-- node-access_token_url -->
-  <div class="form-row" id="node-access_token_url">
-    <label for="node-input-access_token_url"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.access_token_url"></span></label>
-    <input type="text" id="node-input-access_token_url" data-i18n="[placeholder]oauth2.placeholder.access_token_url" style="width:70%;" />
+  <!-- node-accessTokenUrl -->
+  <div class="form-row" id="node-accessTokenUrl">
+    <label for="node-input-accessTokenUrl"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.accessTokenUrl"></span></label>
+    <input type="text" id="node-input-accessTokenUrl" data-i18n="[placeholder]oauth2.placeholder.accessTokenUrl" style="width:70%;" />
   </div>
-  <!-- node-authorization_endpoint -->
-  <div class="form-row" id="node-authorization_endpoint">
-    <label for="node-input-authorization_endpoint"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.authorization_endpoint"></span></label>
-    <input type="text" id="node-input-authorization_endpoint" data-i18n="[placeholder]oauth2.placeholder.authorization_endpoint" style="width:70%;" />
+  <!-- node-authorizationEndpoint -->
+  <div class="form-row" id="node-authorizationEndpoint">
+    <label for="node-input-authorizationEndpoint"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.authorizationEndpoint"></span></label>
+    <input type="text" id="node-input-authorizationEndpoint" data-i18n="[placeholder]oauth2.placeholder.authorizationEndpoint" style="width:70%;" />
   </div>
-  <!-- node-password_credentials -->
-  <div class="form-row" id="node-password_credentials">
+  <!-- node-passwordCredentials -->
+  <div class="form-row" id="node-passwordCredentials">
     <!--node-input-username -->
     <div class="form-row">
       <label for="node-input-username"><i class="fa fa-user fa-fw"></i> <span data-i18n="oauth2.label.username"></span></label>
@@ -42,15 +42,15 @@
       <input type="password" id="node-input-password" data-i18n="[placeholder]oauth2.placeholder.password" style="width:70%;" />
     </div>
   </div>
-  <!-- node-client_id -->
-  <div class="form-row" id="node-client_id">
-    <label for="node-input-client_id"><i class="fa fa-user fa-fw"></i> <span data-i18n="oauth2.label.client_id"></span></label>
-    <input type="text" id="node-input-client_id" data-i18n="[placeholder]oauth2.placeholder.client_id" style="width:70%;" />
+  <!-- node-clientId -->
+  <div class="form-row" id="node-clientId">
+    <label for="node-input-clientId"><i class="fa fa-user fa-fw"></i> <span data-i18n="oauth2.label.clientId"></span></label>
+    <input type="text" id="node-input-clientId" data-i18n="[placeholder]oauth2.placeholder.clientId" style="width:70%;" />
   </div>
-  <!-- node-client_secret -->
-  <div class="form-row" id="node-client_secret">
-    <label for="node-input-client_secret"><i class="fa fa-lock fa-fw"></i> <span data-i18n="oauth2.label.client_secret"></span></label>
-    <input type="password" id="node-input-client_secret" data-i18n="[placeholder]oauth2.placeholder.client_secret" style="width:70%;" />
+  <!-- node-clientSecret -->
+  <div class="form-row" id="node-clientSecret">
+    <label for="node-input-clientSecret"><i class="fa fa-lock fa-fw"></i> <span data-i18n="oauth2.label.clientSecret"></span></label>
+    <input type="password" id="node-input-clientSecret" data-i18n="[placeholder]oauth2.placeholder.clientSecret" style="width:70%;" />
   </div>
   <!-- node-scope -->
   <div class="form-row" id="node-scope">
@@ -67,11 +67,11 @@
     <label for="node-input-state"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.state"></span></label>
     <input type="text" id="node-input-state" data-i18n="[placeholder]oauth2.placeholder.state" style="width:70%;" />
   </div>     
-  <!-- node-open_authentication -->
-  <div class="form-row" id="node-open_authentication">
-    <label for="node-input-open_authentication"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.open_authentication"></span></label>
+  <!-- node-openAuthentication -->
+  <div class="form-row" id="node-openAuthentication">
+    <label for="node-input-openAuthentication"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.openAuthentication"></span></label>
     <a class="red-ui-button fa fa-key" id="authorizeButton" href="#" target="_blank"></a>
-    <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication" style="width:62%;margin-top: -2px;" disabled />
+    <input type="text" id="node-input-openAuthentication" data-i18n="[placeholder]oauth2.placeholder.openAuthentication" style="width:62%;margin-top: -2px;" disabled />
   </div>
 
   <div class="form-row">
@@ -87,13 +87,13 @@
     <label for="node-input-senderr" style="width: auto;" data-i18n="oauth2.label.senderr"></label>
   </div>
 
-  <!-- node-client_credentials_in_body -->
-  <div class="form-row" id="node-client_credentials_in_body">
-    <input type="checkbox" id="node-input-client_credentials_in_body" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
-    <label for="node-input-client_credentials_in_body" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.client_credentials_in_body_label"></span></label>
+  <!-- node-clientCredentialsInBody -->
+  <div class="form-row" id="node-clientCredentialsInBody">
+    <input type="checkbox" id="node-input-clientCredentialsInBody" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
+    <label for="node-input-clientCredentialsInBody" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.clientCredentialsInBody_label"></span></label>
     <div abria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
       <i class="fa fa-exclamation-circle fa-fw"></i><b>Embedded Credentials</b> -
-      <span data-i18n="oauth2.label.client_credentials_in_body"></span>
+      <span data-i18n="oauth2.label.clientCredentialsInBody"></span>
     </div>
   </div>
 
@@ -152,15 +152,15 @@
           value: ''
         },
         container: { value: 'oauth2Response' },
-        grant_type: { value: 'set_by_credentials' },
-        access_token_url: { value: '' },
-        authorization_endpoint: { value: '' },
-        redirect_uri: { value: '/oauth2/redirect_uri' },
-        open_authentication: { value: '' },
+        grantType: { value: 'setByCredentials' },
+        accessTokenUrl: { value: '' },
+        authorizationEndpoint: { value: '' },
+        redirectUri: { value: '/oauth2/redirectUri' },
+        openAuthentication: { value: '' },
         username: { value: '' },
         password: { value: '' },
-        client_id: { value: '' },
-        client_secret: { value: '' },
+        clientId: { value: '' },
+        clientSecret: { value: '' },
         scope: { value: '' },
         resource: { value: ''},
         state: { value: '' },
@@ -170,7 +170,7 @@
           label: RED._('node-red:oauth2.label.proxy-config')
         },
         senderr: { value: false },
-        client_credentials_in_body: { value: false },
+        clientCredentialsInBody: { value: false },
         rejectUnauthorized: { value: true },
         headers: { value: {} }
       },
@@ -214,59 +214,59 @@
           types: ['msg']
         });
 
-        $('#node-input-grant_type').on('change', function () {
-          if ($('#node-input-grant_type').val() === 'set_by_credentials') {
-            $('#node-authorization_endpoint').hide();
-            $('#node-open_authentication').hide();
-            $('#node-redirect_uri').hide();
-            $('#node-password_credentials').hide();
-            $('#node-access_token_url').hide();
-            $('#node-client_id').hide();
-            $('#node-client_secret').hide();
+        $('#node-input-grantType').on('change', function () {
+          if ($('#node-input-grantType').val() === 'setByCredentials') {
+            $('#node-authorizationEndpoint').hide();
+            $('#node-openAuthentication').hide();
+            $('#node-redirectUri').hide();
+            $('#node-passwordCredentials').hide();
+            $('#node-accessTokenUrl').hide();
+            $('#node-clientId').hide();
+            $('#node-clientSecret').hide();
             $('#node-scope').hide();
             $('#node-resource').hide();
             $('#node-state').hide();
             $('#node-rejectUnauthorized').show();
-            $('#node-client_credentials_in_body').show();
-          } else if ($('#node-input-grant_type').val() === 'client_credentials') {
-            $('#node-authorization_endpoint').hide();
-            $('#node-open_authentication').hide();
-            $('#node-redirect_uri').hide();
-            $('#node-password_credentials').hide();
-            $('#node-access_token_url').show();
-            $('#node-client_id').show();
-            $('#node-client_secret').show();
+            $('#node-clientCredentialsInBody').show();
+          } else if ($('#node-input-grantType').val() === 'clientCredentials') {
+            $('#node-authorizationEndpoint').hide();
+            $('#node-openAuthentication').hide();
+            $('#node-redirectUri').hide();
+            $('#node-passwordCredentials').hide();
+            $('#node-accessTokenUrl').show();
+            $('#node-clientId').show();
+            $('#node-clientSecret').show();
             $('#node-scope').show();
             $('#node-resource').show();
             $('#node-state').show();
             $('#node-rejectUnauthorized').show();
-            $('#node-client_credentials_in_body').show();
-          } else if ($('#node-input-grant_type').val() === 'password') {
-            $('#node-authorization_endpoint').hide();
-            $('#node-open_authentication').hide();
-            $('#node-redirect_uri').hide();
-            $('#node-password_credentials').show();
-            $('#node-access_token_url').show();
-            $('#node-client_id').show();
-            $('#node-client_secret').show();
+            $('#node-clientCredentialsInBody').show();
+          } else if ($('#node-input-grantType').val() === 'password') {
+            $('#node-authorizationEndpoint').hide();
+            $('#node-openAuthentication').hide();
+            $('#node-redirectUri').hide();
+            $('#node-passwordCredentials').show();
+            $('#node-accessTokenUrl').show();
+            $('#node-clientId').show();
+            $('#node-clientSecret').show();
             $('#node-scope').show();
             $('#node-resource').show();
             $('#node-state').show();
             $('#node-rejectUnauthorized').show();
-            $('#node-client_credentials_in_body').show();
-          } else if ($('#node-input-grant_type').val() === 'authorization_code') {
-            $('#node-password_credentials').hide();
-            $('#node-open_authentication').show();
-            $('#node-redirect_uri').show();
-            $('#node-access_token_url').show();
-            $('#node-authorization_endpoint').show();
-            $('#node-client_id').show();
-            $('#node-client_secret').show();
+            $('#node-clientCredentialsInBody').show();
+          } else if ($('#node-input-grantType').val() === 'authorizationCode') {
+            $('#node-passwordCredentials').hide();
+            $('#node-openAuthentication').show();
+            $('#node-redirectUri').show();
+            $('#node-accessTokenUrl').show();
+            $('#node-authorizationEndpoint').show();
+            $('#node-clientId').show();
+            $('#node-clientSecret').show();
             $('#node-scope').show();
             $('#node-resource').show();
             $('#node-state').show();
             $('#node-rejectUnauthorized').show();
-            $('#node-client_credentials_in_body').show();
+            $('#node-clientCredentialsInBody').show();
           }
           RED.tray.resize();
         });
@@ -274,7 +274,7 @@
         function pollCredentials() {
           $.getJSON('oauth2/credentials/' + id, function (data) {
             if (data) {
-              $('#node-input-open_authentication').val(data.code);
+              $('#node-input-openAuthentication').val(data.code);
               delete window.configNodeIntervalId;
             } else {
               window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
@@ -283,9 +283,9 @@
         }
 
         $('#authorizeButton').mousedown(function () {
-          const authorizationEndpoint = $('#node-input-authorization_endpoint').val();
-          const clientId = $('#node-input-client_id').val();
-          const clientSecret = $('#node-input-client_secret').val();
+          const authorizationEndpoint = $('#node-input-authorizationEndpoint').val();
+          const clientId = $('#node-input-clientId').val();
+          const clientSecret = $('#node-input-clientSecret').val();
           const proxy = $('#node-input-proxy').val();
           var scope = $('#node-input-scope').val();
           scope = scope.replace(/\n/g, '%20');
@@ -307,8 +307,8 @@
           window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
         });
         $('#authorizeButton').click(function () {
-          var clientId = $('#node-input-client_id').val();
-          var clientSecret = $('#node-input-client_secret').val();
+          var clientId = $('#node-input-clientId').val();
+          var clientSecret = $('#node-input-clientSecret').val();
           if (clientId === '' || clientSecret === '') {
             e.preventDefault();
           }
