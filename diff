@@ -1,0 +1,676 @@
+diff --git a/.eslintrc.yml b/.eslintrc.yml
+index b7dc0c8..9412df7 100644
+--- a/.eslintrc.yml
++++ b/.eslintrc.yml
+@@ -6,8 +6,11 @@ env:
+   node: true
+   jasmine: true
+ overrides:
+-  - files:
+-      - "*.js"
++  - files: ["test/**/*.js"]
++    rules:
++      no-console: "off"
++  # - files:
++      # - "*.js"
+     rules:
+       # Exemplo de regras personalizadas para arquivos JavaScript
+       semi: [2, 'always'] # Verificar se há ponto e vírgula ausente
+diff --git a/package.json b/package.json
+index 7b879f3..298d084 100644
+--- a/package.json
++++ b/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "node-red-contrib-oauth2",
+-  "version": "5.2.7",
++  "version": "6.0.0",
+   "description": "The node-red-contrib-oauth2 is a Node-RED node that provides an OAuth2 authentication flow. This node uses the OAuth2 protocol to obtain an access token, which can be used to make authenticated API requests.",
+   "author": "Marcos Caputo <caputo.marcos@gmail.com>",
+   "contributors": [
+@@ -35,7 +35,7 @@
+   },
+   "dependencies": {
+     "axios": ">=1.3.3",
+-    "json-schema": ">=0.4.0"
++    "mocha": "^10.4.0"
+   },
+   "devDependencies": {
+     "@babel/eslint-parser": "^7.21.8",
+@@ -49,7 +49,11 @@
+     "eslint-plugin-promise": "^6.1.1",
+     "jsdoc": "^4.0.3",
+     "json-schema": ">=0.4.0",
+-    "prettier": "^2.8.8"
++    "nock": "^13.5.4",
++    "node-red": "^3.1.9",
++    "node-red-node-test-helper": "^0.3.4",
++    "prettier": "^2.8.8",
++    "should": "^13.2.3"
+   },
+   "eslintConfig": {
+     "extends": "./.eslintrc.yml"
+@@ -58,6 +62,7 @@
+     "fix": "npx eslint ./src/. && npx eslint ./src/. --fix",
+     "lint": "prettier --plugin-search-dir . --check ./src/. && npx eslint ./src/.",
+     "format": "prettier --plugin-search-dir . --write ./src/.",
+-    "doc": "jsdoc -c jsdoc.json"
++    "doc": "jsdoc -c jsdoc.json",
++    "test": "mocha \"test/**/*_spec.js\""
+   }
+ }
+diff --git a/src/locales/en-US/oauth2.json b/src/locales/en-US/oauth2.json
+index d543d2d..476d8cb 100644
+--- a/src/locales/en-US/oauth2.json
++++ b/src/locales/en-US/oauth2.json
+@@ -13,6 +13,9 @@
+       "password": "Password",
+       "client_id": "Client ID",
+       "client_secret": "Client Secret",
++      "access_type": "Access Type",
++      "response_type": "Response Type",
++      "prompt": "Prompt",
+       "scope": "Scope",
+       "resource": "Resource",
+       "state": "State",
+@@ -35,6 +38,9 @@
+       "password": "admin",
+       "client_id": "012493af6282be51660dbc8e21a8462e",
+       "client_secret": "5621bd4b5a8b09ed31817efb8d54fda2c72bfc1c6968cd4563d83f7cc26f68f6",
++      "access_type": "offline",
++      "response_type": "code",
++      "prompt": "consent",
+       "scope": "scope",
+       "resource": "resource",
+       "state": "state",
+@@ -45,6 +51,7 @@
+       "client_credentials": "Client Credentials",
+       "password_credentials": "Password",
+       "authorization_code": "Authorization Code",
++      "implicit_flow": "Implicit Flow",
+       "set_by_credentials": "- Set by msg.oauth2Request -"
+     }
+   }
+diff --git a/src/oauth2.html b/src/oauth2.html
+index 2fba7bb..6835e1f 100644
+--- a/src/oauth2.html
++++ b/src/oauth2.html
+@@ -16,6 +16,7 @@
+       <option value="client_credentials" data-i18n="oauth2.opts.client_credentials"></option>
+       <option value="password" data-i18n="oauth2.opts.password_credentials"></option>
+       <option value="authorization_code" data-i18n="oauth2.opts.authorization_code"></option>
++      <option value="implicit_flow" data-i18n="oauth2.opts.implicit_flow"></option>
+       <option value="set_by_credentials" data-i18n="oauth2.opts.set_by_credentials"></option>
+     </select>
+   </div>
+@@ -52,6 +53,22 @@
+     <label for="node-input-client_secret"><i class="fa fa-lock fa-fw"></i> <span data-i18n="oauth2.label.client_secret"></span></label>
+     <input type="password" id="node-input-client_secret" data-i18n="[placeholder]oauth2.placeholder.client_secret" style="width:70%;" />
+   </div>
++
++  <div class="form-row" id="node-access_type">
++    <label for="node-input-access_type"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.access_type"></span></label>
++    <input type="text" id="node-input-access_type" data-i18n="[placeholder]oauth2.placeholder.access_type" style="width:70%;" />
++  </div>
++  <!-- node-response_type -->
++  <div class="form-row" id="node-response_type">
++    <label for="node-input-response_type"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.response_type"></span></label>
++    <input type="text" id="node-input-response_type" data-i18n="[placeholder]oauth2.placeholder.response_type" style="width:70%;" />
++  </div>
++  <!-- node-prompt -->
++  <div class="form-row" id="node-prompt">
++    <label for="node-input-prompt"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.prompt"></span></label>
++    <input type="text" id="node-input-prompt" data-i18n="[placeholder]oauth2.placeholder.prompt" style="width:70%;" />
++  </div>
++
+   <!-- node-scope -->
+   <div class="form-row" id="node-scope">
+     <label for="node-input-scope"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.scope"></span></label>
+@@ -147,7 +164,7 @@
+         icon: 'red/images/typedInput/az.svg'
+       }
+     ];
+-    
++
+     RED.nodes.registerType('oauth2', {
+       category: 'DevSecOps',
+       color: '#fff',
+@@ -157,12 +174,15 @@
+         grant_type: { value: 'set_by_credentials' },
+         access_token_url: { value: '' },
+         authorization_endpoint: { value: '' },
+-        redirect_uri: { value: '/oauth2/redirect_uri' },
++        redirect_uri: { value: '' },
+         open_authentication: { value: '' },
+         username: { value: '' },
+         password: { value: '' },
+         client_id: { value: '' },
+         client_secret: { value: '' },
++        response_type: { value: '' },
++        access_type: { value: '' },
++        prompt: { value: '' },
+         scope: { value: '' },
+         resource: { value: '' },
+         state: { value: '' },
+@@ -202,7 +222,9 @@
+           callback = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/auth/callback`;
+         }
+ 
++        // TODO - Aqui nasce o MOSTRO, está feio mas funciona!
+         const redirectUri = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/redirect`;
++        this.redirect_uri = redirectUri;
+ 
+         if (this.container === undefined) {
+           $('#node-input-container').val('payload');
+@@ -214,18 +236,46 @@
+         });
+ 
+         const elementMapping = {
+-          'set_by_credentials': ['#node-rejectUnauthorized', '#node-client_credentials_in_body'],
+-          'client_credentials': ['#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
+-          'password': ['#node-password_credentials', '#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
+-          'authorization_code': ['#node-open_authentication', '#node-redirect_uri', '#node-access_token_url', '#node-authorization_endpoint', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body']
++          set_by_credentials: ['#node-rejectUnauthorized', '#node-client_credentials_in_body'],
++          client_credentials: ['#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
++          password: ['#node-password_credentials', '#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
++          authorization_code: [
++            '#node-open_authentication',
++            '#node-redirect_uri',
++            '#node-access_token_url',
++            '#node-authorization_endpoint',
++            '#node-client_id',
++            '#node-client_secret',
++            '#node-scope',
++            '#node-resource',
++            '#node-state',
++            '#node-rejectUnauthorized',
++            '#node-client_credentials_in_body'
++          ],
++          implicit_flow: [
++            '#node-open_authentication',
++            '#node-redirect_uri',
++            '#node-access_token_url',
++            '#node-authorization_endpoint',
++            '#node-client_id',
++            '#node-client_secret',
++            '#node-access_type',
++            '#node-response_type',
++            '#node-prompt',
++            '#node-scope',
++            '#node-resource',
++            '#node-state',
++            '#node-rejectUnauthorized',
++            '#node-client_credentials_in_body'
++          ]
+         };
+ 
+         function updateVisibility() {
+           const grantType = $('#node-input-grant_type').val();
+           for (const key in elementMapping) {
+-            elementMapping[key].forEach(selector => $(selector).hide());
++            elementMapping[key].forEach((selector) => $(selector).hide());
+           }
+-          elementMapping[grantType].forEach(selector => $(selector).show());
++          elementMapping[grantType].forEach((selector) => $(selector).show());
+           RED.tray.resize();
+         }
+ 
+@@ -246,17 +296,24 @@
+         $('#authorizeButton').mousedown(function () {
+           const authorizationEndpoint = $('#node-input-authorization_endpoint').val();
+           const clientId = $('#node-input-client_id').val();
+-          const clientSecret = $('#node-input-client_secret').val();
+           const proxy = $('#node-input-proxy').val();
+-          let scope = $('#node-input-scope').val().replace(/\n/g, '%20');
+-          let resource = $('#node-input-resource').val().replace(/\n/g, '%20');
+-          let state = $('#node-input-state').val().replace(/\n/g, '%20');
+-          let url;
++          const scope = $('#node-input-scope').val().replace(/\n/g, '%20');
++          const resource = $('#node-input-resource').val().replace(/\n/g, '%20');
++          const state = $('#node-input-state').val().replace(/\n/g, '%20');
+ 
+-          if (authorizationEndpoint) {
+-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(callback)}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${encodeURIComponent(redirectUri)}&proxy=${encodeURIComponent(proxy)}`;
+-          } else {
+-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(callback)}&proxy=${encodeURIComponent(proxy)}`;
++          const accessType = $('#node-input-access_type').val();
++          const responseType = $('#node-input-response_type').val();
++          const prompt = $('#node-input-prompt').val();
++
++          let url;
++          if (accessType) {
++            url = `${authorizationEndpoint}?id=${encodeURIComponent(id)}&redirect_uri=${encodeURIComponent(redirectUri)}&client_id=${encodeURIComponent(clientId)}&response_type=${responseType}&scope=${encodeURIComponent(
++              scope
++            )}&access_type=${encodeURIComponent(accessType)}&prompt=${encodeURIComponent(prompt)}&state=${encodeURIComponent(id)}:node_id`;
++          } else if (authorizationEndpoint) {
++            url = `${authorizationEndpoint}?id=${encodeURIComponent(id)}&redirect_uri=${encodeURIComponent(redirectUri)}&client_id=${encodeURIComponent(clientId)}&response_type=code&scope=${encodeURIComponent(scope)}&resource=${encodeURIComponent(
++              resource
++            )}&state=${encodeURIComponent(id)}:node_id`;
+           }
+           $(this).attr('href', url);
+           window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
+@@ -292,25 +349,27 @@
+           .css('min-width', '450px')
+           .editableList({
+             addItem: function (container, i, header) {
+-              const row = $('<div/>')
+-                .css({ overflow: 'hidden', whiteSpace: 'nowrap' })
+-                .appendTo(container);
++              const row = $('<div/>').css({ overflow: 'hidden', whiteSpace: 'nowrap' }).appendTo(container);
+ 
+               const propertyName = $('<input/>', {
+                 class: 'node-input-header-name',
+                 type: 'text',
+                 style: 'width: 50%'
+-              }).appendTo(row).typedInput({ types: headerTypes });
++              })
++                .appendTo(row)
++                .typedInput({ types: headerTypes });
+ 
+               const propertyValue = $('<input/>', {
+                 class: 'node-input-header-value',
+                 type: 'text',
+                 style: 'margin-left: 10px; width: 45%;'
+-              }).appendTo(row).typedInput({
+-                types: header.h === 'content-type' ? contentTypes : [{ value: 'other', label: RED._('node-red:httpin.label.other'), hasValue: true, icon: 'red/images/typedInput/az.svg' }]
+-              });
++              })
++                .appendTo(row)
++                .typedInput({
++                  types: header.h === 'content-type' ? contentTypes : [{ value: 'other', label: RED._('node-red:httpin.label.other'), hasValue: true, icon: 'red/images/typedInput/az.svg' }]
++                });
+ 
+-              const matchedType = headerTypes.filter(ht => ht.value === header.h);
++              const matchedType = headerTypes.filter((ht) => ht.value === header.h);
+               if (matchedType.length === 0) {
+                 propertyName.typedInput('type', 'other');
+                 propertyName.typedInput('value', header.h);
+@@ -318,7 +377,7 @@
+               } else {
+                 propertyName.typedInput('type', header.h);
+                 if (header.h === 'content-type') {
+-                  const matchedContentType = contentTypes.filter(ct => ct.value === header.v);
++                  const matchedContentType = contentTypes.filter((ct) => ct.value === header.v);
+                   if (matchedContentType.length === 0) {
+                     propertyValue.typedInput('type', 'other');
+                     propertyValue.typedInput('value', header.v);
+@@ -359,24 +418,26 @@
+         }
+         const headers = $('#node-input-headers-container').editableList('items');
+         this.headers = {};
+-        headers.each(function () {
+-          const header = $(this);
+-          const keyType = header.find('.node-input-header-name').typedInput('type');
+-          const keyValue = header.find('.node-input-header-name').typedInput('value');
+-          const valueType = header.find('.node-input-header-value').typedInput('type');
+-          const valueValue = header.find('.node-input-header-value').typedInput('value');
+-          let key = keyType;
+-          let value = valueType;
+-          if (keyType === 'other') {
+-            key = keyValue;
+-          }
+-          if (valueType === 'other') {
+-            value = valueValue;
+-          }
+-          if (key !== '') {
+-            this.headers[key] = value;
+-          }
+-        }.bind(this));
++        headers.each(
++          function () {
++            const header = $(this);
++            const keyType = header.find('.node-input-header-name').typedInput('type');
++            const keyValue = header.find('.node-input-header-name').typedInput('value');
++            const valueType = header.find('.node-input-header-value').typedInput('type');
++            const valueValue = header.find('.node-input-header-value').typedInput('value');
++            let key = keyType;
++            let value = valueType;
++            if (keyType === 'other') {
++              key = keyValue;
++            }
++            if (valueType === 'other') {
++              value = valueValue;
++            }
++            if (key !== '') {
++              this.headers[key] = value;
++            }
++          }.bind(this)
++        );
+       },
+       oneditresize: function (size) {
+         const dlg = $('#dialog-form');
+@@ -394,4 +455,3 @@
+     });
+   })();
+ </script>
+-
+diff --git a/src/oauth2.js b/src/oauth2.js
+index 4db44aa..9bea803 100644
+--- a/src/oauth2.js
++++ b/src/oauth2.js
+@@ -38,6 +38,7 @@ module.exports = function (RED) {
+       this.name = config.name || '';
+       this.container = config.container || '';
+       this.access_token_url = config.access_token_url || '';
++      this.redirect_uri = config.redirect_uri || '';
+       this.grant_type = config.grant_type || '';
+       this.username = config.username || '';
+       this.password = config.password || '';
+@@ -57,6 +58,7 @@ module.exports = function (RED) {
+ 
+       // Register the input handler
+       this.on('input', this.onInput.bind(this));
++      this.host = RED.settings.uiHost || 'localhost';
+     }
+ 
+     /**
+@@ -66,19 +68,29 @@ module.exports = function (RED) {
+      * @param {Function} done - Function to indicate processing is complete.
+      */
+     async onInput(msg, send, done) {
++      // console.log('OAuth2Node received input:', msg);
++
+       const options = this.generateOptions(msg); // Generate request options
++      // console.log('Generated options:', options);
++
+       this.configureProxy(); // Configure proxy settings
++      // console.log('Configured proxy settings:', this.proxy);
++
+ 
+       delete msg.oauth2Request; // Remove oauth2Request from msg
+       options.form = this.cleanForm(options.form); // Clean the form data
+ 
+       try {
++        // console.log('Making POST request...');
+         const response = await this.makePostRequest(options); // Make the POST request
++        // console.log('Received response:', response);
+         this.handleResponse(response, msg, send); // Handle the response
+       } catch (error) {
++        // console.error('Error making POST request:', error);
+         this.handleError(error, msg, send); // Handle any errors
+       }
+       done(); // Indicate that processing is complete
++      // console.log('Finished processing input.');
+     }
+ 
+     /**
+@@ -93,31 +105,32 @@ module.exports = function (RED) {
+         'Content-Type': 'application/x-www-form-urlencoded',
+         Accept: 'application/json'
+       };
+-
++    
+       // Set options based on grant type
+-      if (this.grant_type === 'set_by_credentials') {
++      if (msg.oauth2Request) {
++        const creds = msg.oauth2Request.credentials;
+         form = {
+-          grant_type: msg.oauth2Request.credentials.grant_type,
+-          scope: msg.oauth2Request.credentials.scope,
+-          resource: msg.oauth2Request.credentials.resource,
+-          state: msg.oauth2Request.credentials.state
++          grant_type: creds.grant_type || this.grant_type,
++          scope: creds.scope || this.scope,
++          resource: creds.resource || this.resource,
++          state: creds.state || this.state
+         };
+-
+-        if (msg.oauth2Request.credentials.grant_type === 'password') {
+-          form.username = msg.oauth2Request.credentials.username;
+-          form.password = msg.oauth2Request.credentials.password;
+-        } else if (msg.oauth2Request.credentials.grant_type === 'refresh_token') {
+-          form.refresh_token = msg.oauth2Request.credentials.refresh_token;
++    
++        if (creds.grant_type === 'password') {
++          form.username = creds.username || this.username;
++          form.password = creds.password || this.password;
++        } else if (creds.grant_type === 'refresh_token') {
++          form.refresh_token = creds.refresh_token;
+         }
+-
++    
+         if (this.client_credentials_in_body) {
+-          form.client_id = msg.oauth2Request.credentials.client_id;
+-          form.client_secret = msg.oauth2Request.credentials.client_secret;
++          form.client_id = creds.client_id || this.client_id;
++          form.client_secret = creds.client_secret || this.client_secret;
+         } else {
+-          headers.Authorization = 'Basic ' + Buffer.from(`${msg.oauth2Request.credentials.client_id}:${msg.oauth2Request.credentials.client_secret}`).toString('base64');
++          headers.Authorization = 'Basic ' + Buffer.from(`${creds.client_id}:${creds.client_secret}`).toString('base64');
+         }
+-
+-        url = msg.oauth2Request.access_token_url;
++    
++        url = msg.oauth2Request.access_token_url || this.access_token_url;
+       } else {
+         form = {
+           grant_type: this.grant_type,
+@@ -125,7 +138,7 @@ module.exports = function (RED) {
+           resource: this.resource,
+           state: this.state
+         };
+-
++    
+         if (this.grant_type === 'password') {
+           form.username = this.username;
+           form.password = this.password;
+@@ -133,10 +146,19 @@ module.exports = function (RED) {
+           const credentials = RED.nodes.getCredentials(this.id);
+           if (credentials) {
+             form.code = credentials.code;
+-            form.redirect_uri = credentials.redirectUri;
++            form.redirect_uri = this.redirect_uri;
++          }
++        } else if (this.grant_type === 'implicit_flow') {
++          const credentials = RED.nodes.getCredentials(this.id);
++          if (credentials) {
++            form.client_id = this.client_id;
++            form.client_secret = this.client_secret;
++            form.code = credentials.code;
++            form.grant_type = 'authorization_code';
++            form.redirect_uri = this.redirect_uri;
+           }
+         }
+-
++    
+         if (this.client_credentials_in_body) {
+           form.client_id = this.client_id;
+           form.client_secret = this.client_secret;
+@@ -144,7 +166,7 @@ module.exports = function (RED) {
+           headers.Authorization = 'Basic ' + Buffer.from(`${this.client_id}:${this.client_secret}`).toString('base64');
+         }
+       }
+-
++    
+       return {
+         method: 'POST',
+         url: url,
+@@ -153,7 +175,7 @@ module.exports = function (RED) {
+         form: form
+       };
+     }
+-
++  
+     /**
+      * Configures proxy settings.
+      */
+@@ -200,11 +222,10 @@ module.exports = function (RED) {
+      * @param {Function} send - Function to send messages.
+      */
+     handleResponse(response, msg, send) {
+-      msg[this.container] = response.data || {};
++      msg.oauth2Response = response.data || {};
+       this.setStatus('green', `HTTP ${response.status}, ok`);
+       send(msg);
+     }
+-
+     /**
+      * Handles errors from the POST request.
+      * @param {Object} error - The error object.
+@@ -214,11 +235,15 @@ module.exports = function (RED) {
+     handleError(error, msg, send) {
+       const status = error.response ? error.response.status : error.code;
+       const message = error.response ? error.response.statusText : error.message;
+-      msg[this.container] = error.response || {};
++      msg.oauth2Error = error.response || { status, message };
+       this.setStatus('red', `HTTP ${status}, ${message}`);
+-      if (this.sendErrorsToCatch) send(msg);
++      if (this.sendErrorsToCatch) send([null, msg]);
++      else {
++        this.error(message, msg);
++        send([null, msg]);
++      }
+     }
+-
++    
+     /**
+      * Sets the status of the node.
+      * @param {string} color - The color of the status indicator.
+@@ -232,20 +257,6 @@ module.exports = function (RED) {
+     }
+   }
+ 
+-  // Register the OAuth2Node node type
+-  RED.nodes.registerType('oauth2-credentials', OAuth2Node, {
+-    credentials: {
+-      displayName: { type: 'text' },
+-      clientId: { type: 'text' },
+-      clientSecret: { type: 'password' },
+-      accessToken: { type: 'password' },
+-      refreshToken: { type: 'password' },
+-      expireTime: { type: 'password' },
+-      code: { type: 'password' },
+-      proxy: { type: 'json' }
+-    }
+-  });
+-
+   /**
+    * Endpoint to retrieve OAuth2 credentials based on a token.
+    * @param {Object} req - The request object.
+@@ -268,91 +279,47 @@ module.exports = function (RED) {
+   RED.httpAdmin.get('/oauth2/redirect', (req, res) => {
+     if (req.query.code) {
+       const [node_id] = req.query.state.split(':');
+-      const credentials = RED.nodes.getCredentials(node_id);
+-      if (credentials) {
+-        credentials.code = req.query.code;
+-        RED.nodes.addCredentials(node_id, credentials);
+-        res.send(`
+-          <HTML>
+-            <HEAD>
+-              <script language="javascript" type="text/javascript">
+-                function closeWindow() {
+-                  window.open('', '_parent', '');
+-                  window.close();
+-                }
+-                function delay() {
+-                  setTimeout("closeWindow()", 1000);
+-                }
+-              </script>
+-            </HEAD>
+-            <BODY onload="javascript:delay();">
+-              <p>Success! This page can be closed if it doesn't do so automatically.</p>
+-            </BODY>
+-          </HTML>
+-        `);
+-      }
+-    } else {
+-      res.send('oauth2.error.no-credentials');
+-    }
+-  });
+-
+-  /**
+-   * Endpoint to handle the OAuth2 authorization code flow.
+-   * @param {Object} req - The request object.
+-   * @param {Object} res - The response object.
+-   */
+-  RED.httpAdmin.get('/oauth2/auth', async (req, res) => {
+-    if (!req.query.clientId || !req.query.clientSecret || !req.query.id || !req.query.callback) {
+-      res.sendStatus(400);
+-      return;
+-    }
++      let credentials = RED.nodes.getCredentials(node_id);
+ 
+-    const { clientId, clientSecret, id: node_id, callback, redirectUri, authorizationEndpoint, scope, resource } = req.query;
+-    const csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
+-    const credentials = { clientId, clientSecret, callback, redirectUri, csrfToken };
+-
+-    const proxy = RED.nodes.getNode(req.query.proxy);
+-    const proxyOptions = proxy ? new URL(proxy.url) : null;
+-
+-    res.cookie('csrf', csrfToken);
+-
+-    const redirectUrl = new URL(authorizationEndpoint);
+-    redirectUrl.searchParams.set('client_id', clientId);
+-    redirectUrl.searchParams.set('redirect_uri', redirectUri);
+-    redirectUrl.searchParams.set('state', `${node_id}:${csrfToken}`);
+-    redirectUrl.searchParams.set('scope', scope);
+-    redirectUrl.searchParams.set('resource', resource);
+-    redirectUrl.searchParams.set('response_type', 'code');
++      if (!credentials) {
++        credentials = {};
++      }
+ 
+-    try {
+-      const response = await axios.get(redirectUrl.toString(), {
+-        httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+-        httpAgent: new http.Agent({ rejectUnauthorized: false }),
+-        proxy: proxyOptions
+-      });
+-      res.redirect(response.request.res.responseUrl);
++      credentials = { ...credentials, ...req.query };
+       RED.nodes.addCredentials(node_id, credentials);
+-    } catch (error) {
+-      res.sendStatus(404);
+-    }
+-  });
+ 
+-  /**
+-   * Endpoint to handle the OAuth2 authorization callback.
+-   * @param {Object} req - The request object.
+-   * @param {Object} res - The response object.
+-   */
+-  RED.httpAdmin.get('/oauth2/auth/callback', (req, res) => {
+-    if (req.query.error) {
+-      return res.send(`oauth2.error.error: ${req.query.error}, description: ${req.query.error_description}`);
+-    }
+-    const [node_id, csrfToken] = req.query.state.split(':');
+-    const credentials = RED.nodes.getCredentials(node_id);
+-    if (!credentials || !credentials.clientId || !credentials.clientSecret || csrfToken !== credentials.csrfToken) {
+-      return res.status(401).send('oauth2.error.token-mismatch');
++      res.send(`
++        <HTML>
++          <HEAD>
++            <script language="javascript" type="text/javascript">
++              function closeWindow() {
++                window.open('', '_parent', '');
++                window.close();
++              }
++              function delay() {
++                setTimeout("closeWindow()", 1000);
++              }
++            </script>
++          </HEAD>
++          <BODY onload="javascript:delay();">
++            <p>Success! This page can be closed if it doesn't do so automatically.</p>
++          </BODY>
++        </HTML>
++      `);
++    } else {
++      res.send('oauth2.error.no-credentials');
+     }
+   });
+ 
+   // Register the OAuth2Node node type
+-  RED.nodes.registerType('oauth2', OAuth2Node);
++  RED.nodes.registerType('oauth2', OAuth2Node, {
++    credentials: {
++      clientId: { type: 'text' },
++      clientSecret: { type: 'password' },
++      accessToken: { type: 'password' },
++      refreshToken: { type: 'password' },
++      expireTime: { type: 'password' },
++      code: { type: 'password' }
++    }
++  });
+ };

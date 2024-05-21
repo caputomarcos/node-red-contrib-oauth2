@@ -13,6 +13,9 @@
       "password": "Password",
       "client_id": "Client ID",
       "client_secret": "Client Secret",
+      "access_type": "Access Type",
+      "response_type": "Response Type",
+      "prompt": "Prompt",
       "scope": "Scope",
       "resource": "Resource",
       "state": "State",
@@ -35,6 +38,9 @@
       "password": "admin",
       "client_id": "012493af6282be51660dbc8e21a8462e",
       "client_secret": "5621bd4b5a8b09ed31817efb8d54fda2c72bfc1c6968cd4563d83f7cc26f68f6",
+      "access_type": "offline",
+      "response_type": "code",
+      "prompt": "consent",
       "scope": "scope",
       "resource": "resource",
       "state": "state",
@@ -45,6 +51,7 @@
       "client_credentials": "Client Credentials",
       "password_credentials": "Password",
       "authorization_code": "Authorization Code",
+      "implicit_flow": "Implicit Flow",
       "set_by_credentials": "- Set by msg.oauth2Request -"
     }
   }
