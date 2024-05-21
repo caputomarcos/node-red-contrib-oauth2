@@ -3,25 +3,8 @@ module.exports = function (RED) {
 
   const axios = require('axios');
   const { URL } = require('url');
-  const crypto = require('crypto');
   const http = require('http');
   const https = require('https');
-
-  /**
-   * Replaces circular references in an object to allow safe stringification.
-   *
-   * @returns {Function} A replacer function for JSON.stringify.
-   */
-  const getCircularReplacer = () => {
-    const seen = new WeakSet();
-    return (key, value) => {
-      if (typeof value === 'object' && value !== null) {
-        if (seen.has(value)) return;
-        seen.add(value);
-      }
-      return value;
-    };
-  };
 
   /**
    * Class representing an OAuth2 Node.
@@ -76,7 +59,6 @@ module.exports = function (RED) {
       this.configureProxy(); // Configure proxy settings
       // console.log('Configured proxy settings:', this.proxy);
 
-
       delete msg.oauth2Request; // Remove oauth2Request from msg
       options.form = this.cleanForm(options.form); // Clean the form data
 
@@ -105,7 +87,7 @@ module.exports = function (RED) {
         'Content-Type': 'application/x-www-form-urlencoded',
         Accept: 'application/json'
       };
-    
+
       // Set options based on grant type
       if (msg.oauth2Request) {
         const creds = msg.oauth2Request.credentials;
@@ -115,21 +97,21 @@ module.exports = function (RED) {
           resource: creds.resource || this.resource,
           state: creds.state || this.state
         };
-    
+
         if (creds.grant_type === 'password') {
           form.username = creds.username || this.username;
           form.password = creds.password || this.password;
         } else if (creds.grant_type === 'refresh_token') {
           form.refresh_token = creds.refresh_token;
         }
-    
+
         if (this.client_credentials_in_body) {
           form.client_id = creds.client_id || this.client_id;
           form.client_secret = creds.client_secret || this.client_secret;
         } else {
           headers.Authorization = 'Basic ' + Buffer.from(`${creds.client_id}:${creds.client_secret}`).toString('base64');
         }
-    
+
         url = msg.oauth2Request.access_token_url || this.access_token_url;
       } else {
         form = {
@@ -138,7 +120,7 @@ module.exports = function (RED) {
           resource: this.resource,
           state: this.state
         };
-    
+
         if (this.grant_type === 'password') {
           form.username = this.username;
           form.password = this.password;
@@ -158,7 +140,7 @@ module.exports = function (RED) {
             form.redirect_uri = this.redirect_uri;
           }
         }
-    
+
         if (this.client_credentials_in_body) {
           form.client_id = this.client_id;
           form.client_secret = this.client_secret;
@@ -166,7 +148,7 @@ module.exports = function (RED) {
           headers.Authorization = 'Basic ' + Buffer.from(`${this.client_id}:${this.client_secret}`).toString('base64');
         }
       }
-    
+
       return {
         method: 'POST',
         url: url,
@@ -175,7 +157,7 @@ module.exports = function (RED) {
         form: form
       };
     }
-  
+
     /**
      * Configures proxy settings.
      */
@@ -207,12 +189,22 @@ module.exports = function (RED) {
      * @returns {Promise<Object>} - The response from the request.
      */
     async makePostRequest(options) {
-      return axios.post(options.url, options.form, {
+      const axiosOptions = {
+        method: options.method,
+        url: options.url,
         headers: options.headers,
-        proxy: this.proxy,
-        httpAgent: new http.Agent({ rejectUnauthorized: this.rejectUnauthorized }),
-        httpsAgent: new https.Agent({ rejectUnauthorized: this.rejectUnauthorized })
-      });
+        data: new URLSearchParams(options.form).toString(),
+        proxy: false,
+        httpAgent: new http.Agent({ rejectUnauthorized: options.rejectUnauthorized }),
+        httpsAgent: new https.Agent({ rejectUnauthorized: options.rejectUnauthorized })
+      };
+
+      if (this.proxy) {
+        const HttpsProxyAgent = require('https-proxy-agent');
+        axiosOptions.httpsAgent = new HttpsProxyAgent(this.proxy);
+      }
+
+      return axios(axiosOptions);
     }
 
     /**
@@ -223,6 +215,7 @@ module.exports = function (RED) {
      */
     handleResponse(response, msg, send) {
       msg.oauth2Response = response.data || {};
+      msg.headers = response.headers || {}; // Include headers in the message
       this.setStatus('green', `HTTP ${response.status}, ok`);
       send(msg);
     }
@@ -243,7 +236,7 @@ module.exports = function (RED) {
         send([null, msg]);
       }
     }
-    
+
     /**
      * Sets the status of the node.
      * @param {string} color - The color of the status indicator.

@@ -1,25 +1,30 @@
-extends: "eslint:recommended"
-parserOptions:
-  ecmaVersion: 2017
 env:
+  browser: true
   es6: true
   node: true
-  jasmine: true
-overrides:
-  - files: ["test/**/*.js"]
-    rules:
-      no-console: "off"
-  # - files:
-      # - "*.js"
-    rules:
-      # Exemplo de regras personalizadas para arquivos JavaScript
-      semi: [2, 'always'] # Verificar se há ponto e vírgula ausente
-      indent: [error, 2] # Verificar se a indentação está com 2 espaços
-      quotes: [error, "single"] # Verificar se as aspas estão usando 'single' (simples)
-      no-unused-vars: error # Verificar se há variáveis não utilizadas
-      no-console: warn # Mostrar um aviso quando console.log é usado
-ignorePatterns:
-  - "*.json"
-  - "*.md"
-  - "*.yml"
+  mocha: true
+extends:
+  - "eslint:recommended"
+  - "plugin:prettier/recommended"
+parser: "@babel/eslint-parser"
+parserOptions:
+  requireConfigFile: false
+  babelOptions:
+    configFile: "./babel.config.js"
+rules:
+  indent:
+    - error
+    - 2
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
+  no-console: "off"
+plugins:
+  - mocha
 

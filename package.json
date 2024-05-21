@@ -38,12 +38,14 @@
     "mocha": "^10.4.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.21.8",
-    "eslint": "^8.41.0",
+    "@babel/eslint-parser": "^7.24.5",
+    "@babel/preset-env": "^7.24.5",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsdoc": "^44.2.4",
+    "eslint-plugin-mocha": "^10.4.3",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.1.1",
@@ -59,7 +61,7 @@
     "extends": "./.eslintrc.yml"
   },
   "scripts": {
-    "fix": "npx eslint ./src/. && npx eslint ./src/. --fix",
+    "fix": "prettier --plugin-search-dir . --write ./src/. && npx eslint ./src/. --fix",
     "lint": "prettier --plugin-search-dir . --check ./src/. && npx eslint ./src/.",
     "format": "prettier --plugin-search-dir . --write ./src/.",
     "doc": "jsdoc -c jsdoc.json",
