@@ -9,28 +9,28 @@
     <label for="node-input-container"><i class="fa fa-ellipsis-h"></i> <span data-i18n="oauth2.label.container"></span></label>
     <input type="text" id="node-input-container" data-i18n="[placeholder]oauth2.placeholder.container" style="width:70%;" />
   </div>
-  <!-- node-input-grantType -->
+  <!-- node-input-grant_type -->
   <div class="form-row">
-    <label for="node-input-grantType"><i class="fa fa-wrench"></i> <span data-i18n="oauth2.label.grantType"></span></label>
-    <select type="text" id="node-input-grantType" style="width:70%;">
-      <option value="clientCredentials" data-i18n="oauth2.opts.clientCredentials"></option>
-      <option value="password" data-i18n="oauth2.opts.passwordCredentials"></option>
-      <option value="authorizationCode" data-i18n="oauth2.opts.authorizationCode"></option>
-      <option value="setByCredentials" data-i18n="oauth2.opts.setByCredentials"></option>
+    <label for="node-input-grant_type"><i class="fa fa-wrench"></i> <span data-i18n="oauth2.label.grant_type"></span></label>
+    <select type="text" id="node-input-grant_type" style="width:70%;">
+      <option value="client_credentials" data-i18n="oauth2.opts.client_credentials"></option>
+      <option value="password" data-i18n="oauth2.opts.password_credentials"></option>
+      <option value="authorization_code" data-i18n="oauth2.opts.authorization_code"></option>
+      <option value="set_by_credentials" data-i18n="oauth2.opts.set_by_credentials"></option>
     </select>
   </div>
-  <!-- node-accessTokenUrl -->
-  <div class="form-row" id="node-accessTokenUrl">
-    <label for="node-input-accessTokenUrl"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.accessTokenUrl"></span></label>
-    <input type="text" id="node-input-accessTokenUrl" data-i18n="[placeholder]oauth2.placeholder.accessTokenUrl" style="width:70%;" />
+  <!-- node-access_token_url -->
+  <div class="form-row" id="node-access_token_url">
+    <label for="node-input-access_token_url"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.access_token_url"></span></label>
+    <input type="text" id="node-input-access_token_url" data-i18n="[placeholder]oauth2.placeholder.access_token_url" style="width:70%;" />
   </div>
-  <!-- node-authorizationEndpoint -->
-  <div class="form-row" id="node-authorizationEndpoint">
-    <label for="node-input-authorizationEndpoint"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.authorizationEndpoint"></span></label>
-    <input type="text" id="node-input-authorizationEndpoint" data-i18n="[placeholder]oauth2.placeholder.authorizationEndpoint" style="width:70%;" />
+  <!-- node-authorization_endpoint -->
+  <div class="form-row" id="node-authorization_endpoint">
+    <label for="node-input-authorization_endpoint"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.authorization_endpoint"></span></label>
+    <input type="text" id="node-input-authorization_endpoint" data-i18n="[placeholder]oauth2.placeholder.authorization_endpoint" style="width:70%;" />
   </div>
-  <!-- node-passwordCredentials -->
-  <div class="form-row" id="node-passwordCredentials">
+  <!-- node-password_credentials -->
+  <div class="form-row" id="node-password_credentials">
     <!--node-input-username -->
     <div class="form-row">
       <label for="node-input-username"><i class="fa fa-user fa-fw"></i> <span data-i18n="oauth2.label.username"></span></label>
@@ -42,36 +42,36 @@
       <input type="password" id="node-input-password" data-i18n="[placeholder]oauth2.placeholder.password" style="width:70%;" />
     </div>
   </div>
-  <!-- node-clientId -->
-  <div class="form-row" id="node-clientId">
-    <label for="node-input-clientId"><i class="fa fa-user fa-fw"></i> <span data-i18n="oauth2.label.clientId"></span></label>
-    <input type="text" id="node-input-clientId" data-i18n="[placeholder]oauth2.placeholder.clientId" style="width:70%;" />
+  <!-- node-client_id -->
+  <div class="form-row" id="node-client_id">
+    <label for="node-input-client_id"><i class="fa fa-user fa-fw"></i> <span data-i18n="oauth2.label.client_id"></span></label>
+    <input type="text" id="node-input-client_id" data-i18n="[placeholder]oauth2.placeholder.client_id" style="width:70%;" />
   </div>
-  <!-- node-clientSecret -->
-  <div class="form-row" id="node-clientSecret">
-    <label for="node-input-clientSecret"><i class="fa fa-lock fa-fw"></i> <span data-i18n="oauth2.label.clientSecret"></span></label>
-    <input type="password" id="node-input-clientSecret" data-i18n="[placeholder]oauth2.placeholder.clientSecret" style="width:70%;" />
+  <!-- node-client_secret -->
+  <div class="form-row" id="node-client_secret">
+    <label for="node-input-client_secret"><i class="fa fa-lock fa-fw"></i> <span data-i18n="oauth2.label.client_secret"></span></label>
+    <input type="password" id="node-input-client_secret" data-i18n="[placeholder]oauth2.placeholder.client_secret" style="width:70%;" />
   </div>
   <!-- node-scope -->
   <div class="form-row" id="node-scope">
     <label for="node-input-scope"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.scope"></span></label>
     <input type="text" id="node-input-scope" data-i18n="[placeholder]oauth2.placeholder.scope" style="width:70%;" />
   </div>
-    <!-- node-resource -->
-    <div class="form-row" id="node-resource">
-      <label for="node-input-resource"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.resource"></span></label>
-      <input type="text" id="node-input-resource" data-i18n="[placeholder]oauth2.placeholder.resource" style="width:70%;" />
-    </div>
-   <!-- node-state -->
-   <div class="form-row" id="node-state">
+  <!-- node-resource -->
+  <div class="form-row" id="node-resource">
+    <label for="node-input-resource"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.resource"></span></label>
+    <input type="text" id="node-input-resource" data-i18n="[placeholder]oauth2.placeholder.resource" style="width:70%;" />
+  </div>
+  <!-- node-state -->
+  <div class="form-row" id="node-state">
     <label for="node-input-state"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.state"></span></label>
     <input type="text" id="node-input-state" data-i18n="[placeholder]oauth2.placeholder.state" style="width:70%;" />
-  </div>     
-  <!-- node-openAuthentication -->
-  <div class="form-row" id="node-openAuthentication">
-    <label for="node-input-openAuthentication"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.openAuthentication"></span></label>
+  </div>
+  <!-- node-open_authentication -->
+  <div class="form-row" id="node-open_authentication">
+    <label for="node-input-open_authentication"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.open_authentication"></span></label>
     <a class="red-ui-button fa fa-key" id="authorizeButton" href="#" target="_blank"></a>
-    <input type="text" id="node-input-openAuthentication" data-i18n="[placeholder]oauth2.placeholder.openAuthentication" style="width:62%;margin-top: -2px;" disabled />
+    <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication" style="width:62%;margin-top: -2px;" disabled />
   </div>
 
   <div class="form-row">
@@ -87,13 +87,13 @@
     <label for="node-input-senderr" style="width: auto;" data-i18n="oauth2.label.senderr"></label>
   </div>
 
-  <!-- node-clientCredentialsInBody -->
-  <div class="form-row" id="node-clientCredentialsInBody">
-    <input type="checkbox" id="node-input-clientCredentialsInBody" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
-    <label for="node-input-clientCredentialsInBody" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.clientCredentialsInBody_label"></span></label>
+  <!-- node-client_credentials_in_body -->
+  <div class="form-row" id="node-client_credentials_in_body">
+    <input type="checkbox" id="node-input-client_credentials_in_body" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
+    <label for="node-input-client_credentials_in_body" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.client_credentials_in_body_label"></span></label>
     <div abria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
       <i class="fa fa-exclamation-circle fa-fw"></i><b>Embedded Credentials</b> -
-      <span data-i18n="oauth2.label.clientCredentialsInBody"></span>
+      <span data-i18n="oauth2.label.client_credentials_in_body"></span>
     </div>
   </div>
 
@@ -116,7 +116,10 @@
   </div>
 </script>
 
-<!-- text/javascript -->
+<script type="text/html" data-template-name="oauth2">
+  <!-- (restante do código HTML permanece o mesmo) -->
+</script>
+
 <script type="text/javascript">
   (function () {
     var headerTypes = [
@@ -144,25 +147,24 @@
         icon: 'red/images/typedInput/az.svg'
       }
     ];
+    
     RED.nodes.registerType('oauth2', {
       category: 'DevSecOps',
       color: '#fff',
       defaults: {
-        name: {
-          value: ''
-        },
+        name: { value: '' },
         container: { value: 'oauth2Response' },
-        grantType: { value: 'setByCredentials' },
-        accessTokenUrl: { value: '' },
-        authorizationEndpoint: { value: '' },
-        redirectUri: { value: '/oauth2/redirectUri' },
-        openAuthentication: { value: '' },
+        grant_type: { value: 'set_by_credentials' },
+        access_token_url: { value: '' },
+        authorization_endpoint: { value: '' },
+        redirect_uri: { value: '/oauth2/redirect_uri' },
+        open_authentication: { value: '' },
         username: { value: '' },
         password: { value: '' },
-        clientId: { value: '' },
-        clientSecret: { value: '' },
+        client_id: { value: '' },
+        client_secret: { value: '' },
         scope: { value: '' },
-        resource: { value: ''},
+        resource: { value: '' },
         state: { value: '' },
         proxy: {
           type: 'http proxy',
@@ -170,7 +172,7 @@
           label: RED._('node-red:oauth2.label.proxy-config')
         },
         senderr: { value: false },
-        clientCredentialsInBody: { value: false },
+        client_credentials_in_body: { value: false },
         rejectUnauthorized: { value: true },
         headers: { value: {} }
       },
@@ -185,25 +187,22 @@
       },
       oneditprepare: function () {
         const id = this.id;
-
         var pathname = document.location.pathname;
-        if (pathname.slice(-1) != '/') {
+        if (pathname.slice(-1) !== '/') {
           pathname += '/';
         }
 
-        var privateIPRegex = /(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/;
-
-        var callback;
+        const privateIPRegex = /(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/;
+        let callback;
         if (privateIPRegex.test(location.hostname)) {
-          // if private IP has been detected
-          var dummyDomain = 'node-red.example.com';
-          var actualIP = location.hostname;
+          const dummyDomain = 'node-red.example.com';
+          const actualIP = location.hostname;
           callback = `${location.protocol}//${dummyDomain}${location.port ? ':' + location.port : ''}${pathname}oauth2/auth/callback`;
         } else {
           callback = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/auth/callback`;
         }
 
-        var redirectUri = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/redirect`;
+        const redirectUri = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/redirect`;
 
         if (this.container === undefined) {
           $('#node-input-container').val('payload');
@@ -214,67 +213,29 @@
           types: ['msg']
         });
 
-        $('#node-input-grantType').on('change', function () {
-          if ($('#node-input-grantType').val() === 'setByCredentials') {
-            $('#node-authorizationEndpoint').hide();
-            $('#node-openAuthentication').hide();
-            $('#node-redirectUri').hide();
-            $('#node-passwordCredentials').hide();
-            $('#node-accessTokenUrl').hide();
-            $('#node-clientId').hide();
-            $('#node-clientSecret').hide();
-            $('#node-scope').hide();
-            $('#node-resource').hide();
-            $('#node-state').hide();
-            $('#node-rejectUnauthorized').show();
-            $('#node-clientCredentialsInBody').show();
-          } else if ($('#node-input-grantType').val() === 'clientCredentials') {
-            $('#node-authorizationEndpoint').hide();
-            $('#node-openAuthentication').hide();
-            $('#node-redirectUri').hide();
-            $('#node-passwordCredentials').hide();
-            $('#node-accessTokenUrl').show();
-            $('#node-clientId').show();
-            $('#node-clientSecret').show();
-            $('#node-scope').show();
-            $('#node-resource').show();
-            $('#node-state').show();
-            $('#node-rejectUnauthorized').show();
-            $('#node-clientCredentialsInBody').show();
-          } else if ($('#node-input-grantType').val() === 'password') {
-            $('#node-authorizationEndpoint').hide();
-            $('#node-openAuthentication').hide();
-            $('#node-redirectUri').hide();
-            $('#node-passwordCredentials').show();
-            $('#node-accessTokenUrl').show();
-            $('#node-clientId').show();
-            $('#node-clientSecret').show();
-            $('#node-scope').show();
-            $('#node-resource').show();
-            $('#node-state').show();
-            $('#node-rejectUnauthorized').show();
-            $('#node-clientCredentialsInBody').show();
-          } else if ($('#node-input-grantType').val() === 'authorizationCode') {
-            $('#node-passwordCredentials').hide();
-            $('#node-openAuthentication').show();
-            $('#node-redirectUri').show();
-            $('#node-accessTokenUrl').show();
-            $('#node-authorizationEndpoint').show();
-            $('#node-clientId').show();
-            $('#node-clientSecret').show();
-            $('#node-scope').show();
-            $('#node-resource').show();
-            $('#node-state').show();
-            $('#node-rejectUnauthorized').show();
-            $('#node-clientCredentialsInBody').show();
+        const elementMapping = {
+          'set_by_credentials': ['#node-rejectUnauthorized', '#node-client_credentials_in_body'],
+          'client_credentials': ['#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
+          'password': ['#node-password_credentials', '#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
+          'authorization_code': ['#node-open_authentication', '#node-redirect_uri', '#node-access_token_url', '#node-authorization_endpoint', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body']
+        };
+
+        function updateVisibility() {
+          const grantType = $('#node-input-grant_type').val();
+          for (const key in elementMapping) {
+            elementMapping[key].forEach(selector => $(selector).hide());
           }
+          elementMapping[grantType].forEach(selector => $(selector).show());
           RED.tray.resize();
-        });
+        }
+
+        $('#node-input-grant_type').on('change', updateVisibility);
+        updateVisibility();
 
         function pollCredentials() {
           $.getJSON('oauth2/credentials/' + id, function (data) {
             if (data) {
-              $('#node-input-openAuthentication').val(data.code);
+              $('#node-input-open_authentication').val(data.code);
               delete window.configNodeIntervalId;
             } else {
               window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
@@ -283,40 +244,33 @@
         }
 
         $('#authorizeButton').mousedown(function () {
-          const authorizationEndpoint = $('#node-input-authorizationEndpoint').val();
-          const clientId = $('#node-input-clientId').val();
-          const clientSecret = $('#node-input-clientSecret').val();
+          const authorizationEndpoint = $('#node-input-authorization_endpoint').val();
+          const clientId = $('#node-input-client_id').val();
+          const clientSecret = $('#node-input-client_secret').val();
           const proxy = $('#node-input-proxy').val();
-          var scope = $('#node-input-scope').val();
-          scope = scope.replace(/\n/g, '%20');
-          var resource = $('#node-input-resource').val();
-          resource = resource.replace(/\n/g, '%20');
-          var state = $('#node-input-state').val();
-          state = state.replace(/\n/g, '%20');
-          var url;
+          let scope = $('#node-input-scope').val().replace(/\n/g, '%20');
+          let resource = $('#node-input-resource').val().replace(/\n/g, '%20');
+          let state = $('#node-input-state').val().replace(/\n/g, '%20');
+          let url;
+
           if (authorizationEndpoint) {
-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
-              callback
-            )}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${encodeURIComponent(redirectUri)}&proxy=${encodeURIComponent(proxy)}`;
+            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(callback)}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${encodeURIComponent(redirectUri)}&proxy=${encodeURIComponent(proxy)}`;
           } else {
-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(
-              callback
-            )}&proxy=${encodeURIComponent(proxy)}`;
+            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(callback)}&proxy=${encodeURIComponent(proxy)}`;
           }
           $(this).attr('href', url);
           window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
         });
-        $('#authorizeButton').click(function () {
-          var clientId = $('#node-input-clientId').val();
-          var clientSecret = $('#node-input-clientSecret').val();
+
+        $('#authorizeButton').click(function (e) {
+          const clientId = $('#node-input-client_id').val();
+          const clientSecret = $('#node-input-client_secret').val();
           if (clientId === '' || clientSecret === '') {
             e.preventDefault();
           }
         });
 
-        $('#node-input-useProxy').on('click', function () {
-          updateProxyOptions();
-        });
+        $('#node-input-useProxy').on('click', updateProxyOptions);
         function updateProxyOptions() {
           if ($('#node-input-useProxy').is(':checked')) {
             $('#node-input-useProxy-row').show();
@@ -325,6 +279,7 @@
           }
           RED.tray.resize();
         }
+
         if (this.proxy) {
           $('#node-input-useProxy').prop('checked', true);
         } else {
@@ -332,61 +287,39 @@
         }
         updateProxyOptions();
 
-        var headerList = $('#node-input-headers-container')
+        const headerList = $('#node-input-headers-container')
           .css('min-height', '150px')
           .css('min-width', '450px')
           .editableList({
             addItem: function (container, i, header) {
-              var row = $('<div/>')
-                .css({
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap'
-                })
+              const row = $('<div/>')
+                .css({ overflow: 'hidden', whiteSpace: 'nowrap' })
                 .appendTo(container);
 
-              var propertyName = $('<input/>', {
+              const propertyName = $('<input/>', {
                 class: 'node-input-header-name',
                 type: 'text',
                 style: 'width: 50%'
-              })
-                .appendTo(row)
-                .typedInput({ types: headerTypes });
+              }).appendTo(row).typedInput({ types: headerTypes });
 
-              var propertyValue = $('<input/>', {
+              const propertyValue = $('<input/>', {
                 class: 'node-input-header-value',
                 type: 'text',
                 style: 'margin-left: 10px; width: 45%;'
-              })
-                .appendTo(row)
-                .typedInput({
-                  types:
-                    header.h === 'content-type'
-                      ? contentTypes
-                      : [
-                          {
-                            value: 'other',
-                            label: RED._('node-red:httpin.label.other'),
-                            hasValue: true,
-                            icon: 'red/images/typedInput/az.svg'
-                          }
-                        ]
-                });
-
-              var matchedType = headerTypes.filter(function (ht) {
-                return ht.value === header.h;
+              }).appendTo(row).typedInput({
+                types: header.h === 'content-type' ? contentTypes : [{ value: 'other', label: RED._('node-red:httpin.label.other'), hasValue: true, icon: 'red/images/typedInput/az.svg' }]
               });
+
+              const matchedType = headerTypes.filter(ht => ht.value === header.h);
               if (matchedType.length === 0) {
                 propertyName.typedInput('type', 'other');
                 propertyName.typedInput('value', header.h);
                 propertyValue.typedInput('value', header.v);
               } else {
                 propertyName.typedInput('type', header.h);
-
                 if (header.h === 'content-type') {
-                  matchedType = contentTypes.filter(function (ct) {
-                    return ct.value === header.v;
-                  });
-                  if (matchedType.length === 0) {
+                  const matchedContentType = contentTypes.filter(ct => ct.value === header.v);
+                  if (matchedContentType.length === 0) {
                     propertyValue.typedInput('type', 'other');
                     propertyValue.typedInput('value', header.v);
                   } else {
@@ -397,44 +330,25 @@
                 }
               }
 
-              matchedType = headerTypes.filter(function (ht) {
-                return ht.value === header.h;
-              });
-              if (matchedType.length === 0) {
-                propertyName.typedInput('type', 'other');
-                propertyName.typedInput('value', header.h);
-              } else {
-                propertyName.typedInput('type', header.h);
-              }
-
-              propertyName.on('change', function (event) {
-                var type = propertyName.typedInput('type');
+              propertyName.on('change', function () {
+                const type = propertyName.typedInput('type');
                 if (type === 'content-type') {
                   propertyValue.typedInput('types', contentTypes);
                 } else {
-                  propertyValue.typedInput('types', [
-                    {
-                      value: 'other',
-                      label: RED._('node-red:httpin.label.other'),
-                      hasValue: true,
-                      icon: 'red/images/typedInput/az.svg'
-                    }
-                  ]);
+                  propertyValue.typedInput('types', [{ value: 'other', label: RED._('node-red:httpin.label.other'), hasValue: true, icon: 'red/images/typedInput/az.svg' }]);
                 }
                 RED.tray.resize();
               });
+
               RED.tray.resize();
             },
             removable: true
           });
 
         if (this.headers) {
-          for (var key in this.headers) {
+          for (const key in this.headers) {
             if (this.headers.hasOwnProperty(key)) {
-              headerList.editableList('addItem', {
-                h: key,
-                v: this.headers[key]
-              });
+              headerList.editableList('addItem', { h: key, v: this.headers[key] });
             }
           }
         }
@@ -443,17 +357,16 @@
         if (!$('#node-input-useProxy').is(':checked')) {
           $('#node-input-proxy').val('_ADD_');
         }
-        var headers = $('#node-input-headers-container').editableList('items');
-        var node = this;
-        node.headers = {};
-        headers.each(function (i) {
-          var header = $(this);
-          var keyType = header.find('.node-input-header-name').typedInput('type');
-          var keyValue = header.find('.node-input-header-name').typedInput('value');
-          var valueType = header.find('.node-input-header-value').typedInput('type');
-          var valueValue = header.find('.node-input-header-value').typedInput('value');
-          var key = keyType;
-          var value = valueType;
+        const headers = $('#node-input-headers-container').editableList('items');
+        this.headers = {};
+        headers.each(function () {
+          const header = $(this);
+          const keyType = header.find('.node-input-header-name').typedInput('type');
+          const keyValue = header.find('.node-input-header-name').typedInput('value');
+          const valueType = header.find('.node-input-header-value').typedInput('type');
+          const valueValue = header.find('.node-input-header-value').typedInput('value');
+          let key = keyType;
+          let value = valueType;
           if (keyType === 'other') {
             key = keyValue;
           }
@@ -461,9 +374,9 @@
             value = valueValue;
           }
           if (key !== '') {
-            node.headers[key] = value;
+            this.headers[key] = value;
           }
-        });
+        }.bind(this));
       },
       oneditresize: function (size) {
         const dlg = $('#dialog-form');
@@ -481,3 +394,4 @@
     });
   })();
 </script>
+

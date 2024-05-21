@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-oauth2",
-  "version": "5.2.6",
+  "version": "5.2.7",
   "description": "The node-red-contrib-oauth2 is a Node-RED node that provides an OAuth2 authentication flow. This node uses the OAuth2 protocol to obtain an access token, which can be used to make authenticated API requests.",
   "author": "Marcos Caputo <caputo.marcos@gmail.com>",
   "contributors": [
@@ -47,8 +47,9 @@
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.1.1",
+    "jsdoc": "^4.0.3",
     "json-schema": ">=0.4.0",
-    "prettier": "^2.8.0"
+    "prettier": "^2.8.8"
   },
   "eslintConfig": {
     "extends": "./.eslintrc.yml"
@@ -56,6 +57,7 @@
   "scripts": {
     "fix": "npx eslint ./src/. && npx eslint ./src/. --fix",
     "lint": "prettier --plugin-search-dir . --check ./src/. && npx eslint ./src/.",
-    "format": "prettier --plugin-search-dir . --write ./src/."
+    "format": "prettier --plugin-search-dir . --write ./src/.",
+    "doc": "jsdoc -c jsdoc.json"
   }
 }
