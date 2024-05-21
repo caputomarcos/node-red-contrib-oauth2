@@ -6,8 +6,11 @@ env:
   node: true
   jasmine: true
 overrides:
-  - files:
-      - "*.js"
+  - files: ["test/**/*.js"]
+    rules:
+      no-console: "off"
+  # - files:
+      # - "*.js"
     rules:
       # Exemplo de regras personalizadas para arquivos JavaScript
       semi: [2, 'always'] # Verificar se há ponto e vírgula ausente

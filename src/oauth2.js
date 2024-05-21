@@ -38,6 +38,7 @@ module.exports = function (RED) {
       this.name = config.name || '';
       this.container = config.container || '';
       this.access_token_url = config.access_token_url || '';
+      this.redirect_uri = config.redirect_uri || '';
       this.grant_type = config.grant_type || '';
       this.username = config.username || '';
       this.password = config.password || '';
@@ -57,6 +58,7 @@ module.exports = function (RED) {
 
       // Register the input handler
       this.on('input', this.onInput.bind(this));
+      this.host = RED.settings.uiHost || 'localhost';
     }
 
     /**
@@ -66,19 +68,29 @@ module.exports = function (RED) {
      * @param {Function} done - Function to indicate processing is complete.
      */
     async onInput(msg, send, done) {
+      // console.log('OAuth2Node received input:', msg);
+
       const options = this.generateOptions(msg); // Generate request options
+      // console.log('Generated options:', options);
+
       this.configureProxy(); // Configure proxy settings
+      // console.log('Configured proxy settings:', this.proxy);
+
 
       delete msg.oauth2Request; // Remove oauth2Request from msg
       options.form = this.cleanForm(options.form); // Clean the form data
 
       try {
+        // console.log('Making POST request...');
         const response = await this.makePostRequest(options); // Make the POST request
+        // console.log('Received response:', response);
         this.handleResponse(response, msg, send); // Handle the response
       } catch (error) {
+        // console.error('Error making POST request:', error);
         this.handleError(error, msg, send); // Handle any errors
       }
       done(); // Indicate that processing is complete
+      // console.log('Finished processing input.');
     }
 
     /**
@@ -93,31 +105,32 @@ module.exports = function (RED) {
         'Content-Type': 'application/x-www-form-urlencoded',
         Accept: 'application/json'
       };
-
+    
       // Set options based on grant type
-      if (this.grant_type === 'set_by_credentials') {
+      if (msg.oauth2Request) {
+        const creds = msg.oauth2Request.credentials;
         form = {
-          grant_type: msg.oauth2Request.credentials.grant_type,
-          scope: msg.oauth2Request.credentials.scope,
-          resource: msg.oauth2Request.credentials.resource,
-          state: msg.oauth2Request.credentials.state
+          grant_type: creds.grant_type || this.grant_type,
+          scope: creds.scope || this.scope,
+          resource: creds.resource || this.resource,
+          state: creds.state || this.state
         };
-
-        if (msg.oauth2Request.credentials.grant_type === 'password') {
-          form.username = msg.oauth2Request.credentials.username;
-          form.password = msg.oauth2Request.credentials.password;
-        } else if (msg.oauth2Request.credentials.grant_type === 'refresh_token') {
-          form.refresh_token = msg.oauth2Request.credentials.refresh_token;
+    
+        if (creds.grant_type === 'password') {
+          form.username = creds.username || this.username;
+          form.password = creds.password || this.password;
+        } else if (creds.grant_type === 'refresh_token') {
+          form.refresh_token = creds.refresh_token;
         }
-
+    
         if (this.client_credentials_in_body) {
-          form.client_id = msg.oauth2Request.credentials.client_id;
-          form.client_secret = msg.oauth2Request.credentials.client_secret;
+          form.client_id = creds.client_id || this.client_id;
+          form.client_secret = creds.client_secret || this.client_secret;
         } else {
-          headers.Authorization = 'Basic ' + Buffer.from(`${msg.oauth2Request.credentials.client_id}:${msg.oauth2Request.credentials.client_secret}`).toString('base64');
+          headers.Authorization = 'Basic ' + Buffer.from(`${creds.client_id}:${creds.client_secret}`).toString('base64');
         }
-
-        url = msg.oauth2Request.access_token_url;
+    
+        url = msg.oauth2Request.access_token_url || this.access_token_url;
       } else {
         form = {
           grant_type: this.grant_type,
@@ -125,7 +138,7 @@ module.exports = function (RED) {
           resource: this.resource,
           state: this.state
         };
-
+    
         if (this.grant_type === 'password') {
           form.username = this.username;
           form.password = this.password;
@@ -133,10 +146,19 @@ module.exports = function (RED) {
           const credentials = RED.nodes.getCredentials(this.id);
           if (credentials) {
             form.code = credentials.code;
-            form.redirect_uri = credentials.redirectUri;
+            form.redirect_uri = this.redirect_uri;
+          }
+        } else if (this.grant_type === 'implicit_flow') {
+          const credentials = RED.nodes.getCredentials(this.id);
+          if (credentials) {
+            form.client_id = this.client_id;
+            form.client_secret = this.client_secret;
+            form.code = credentials.code;
+            form.grant_type = 'authorization_code';
+            form.redirect_uri = this.redirect_uri;
           }
         }
-
+    
         if (this.client_credentials_in_body) {
           form.client_id = this.client_id;
           form.client_secret = this.client_secret;
@@ -144,7 +166,7 @@ module.exports = function (RED) {
           headers.Authorization = 'Basic ' + Buffer.from(`${this.client_id}:${this.client_secret}`).toString('base64');
         }
       }
-
+    
       return {
         method: 'POST',
         url: url,
@@ -153,7 +175,7 @@ module.exports = function (RED) {
         form: form
       };
     }
-
+  
     /**
      * Configures proxy settings.
      */
@@ -200,11 +222,10 @@ module.exports = function (RED) {
      * @param {Function} send - Function to send messages.
      */
     handleResponse(response, msg, send) {
-      msg[this.container] = response.data || {};
+      msg.oauth2Response = response.data || {};
       this.setStatus('green', `HTTP ${response.status}, ok`);
       send(msg);
     }
-
     /**
      * Handles errors from the POST request.
      * @param {Object} error - The error object.
@@ -214,11 +235,15 @@ module.exports = function (RED) {
     handleError(error, msg, send) {
       const status = error.response ? error.response.status : error.code;
       const message = error.response ? error.response.statusText : error.message;
-      msg[this.container] = error.response || {};
+      msg.oauth2Error = error.response || { status, message };
       this.setStatus('red', `HTTP ${status}, ${message}`);
-      if (this.sendErrorsToCatch) send(msg);
+      if (this.sendErrorsToCatch) send([null, msg]);
+      else {
+        this.error(message, msg);
+        send([null, msg]);
+      }
     }
-
+    
     /**
      * Sets the status of the node.
      * @param {string} color - The color of the status indicator.
@@ -231,20 +256,6 @@ module.exports = function (RED) {
       }, 250);
     }
   }
-
-  // Register the OAuth2Node node type
-  RED.nodes.registerType('oauth2-credentials', OAuth2Node, {
-    credentials: {
-      displayName: { type: 'text' },
-      clientId: { type: 'text' },
-      clientSecret: { type: 'password' },
-      accessToken: { type: 'password' },
-      refreshToken: { type: 'password' },
-      expireTime: { type: 'password' },
-      code: { type: 'password' },
-      proxy: { type: 'json' }
-    }
-  });
 
   /**
    * Endpoint to retrieve OAuth2 credentials based on a token.
@@ -268,91 +279,47 @@ module.exports = function (RED) {
   RED.httpAdmin.get('/oauth2/redirect', (req, res) => {
     if (req.query.code) {
       const [node_id] = req.query.state.split(':');
-      const credentials = RED.nodes.getCredentials(node_id);
-      if (credentials) {
-        credentials.code = req.query.code;
-        RED.nodes.addCredentials(node_id, credentials);
-        res.send(`
-          <HTML>
-            <HEAD>
-              <script language="javascript" type="text/javascript">
-                function closeWindow() {
-                  window.open('', '_parent', '');
-                  window.close();
-                }
-                function delay() {
-                  setTimeout("closeWindow()", 1000);
-                }
-              </script>
-            </HEAD>
-            <BODY onload="javascript:delay();">
-              <p>Success! This page can be closed if it doesn't do so automatically.</p>
-            </BODY>
-          </HTML>
-        `);
+      let credentials = RED.nodes.getCredentials(node_id);
+
+      if (!credentials) {
+        credentials = {};
       }
+
+      credentials = { ...credentials, ...req.query };
+      RED.nodes.addCredentials(node_id, credentials);
+
+      res.send(`
+        <HTML>
+          <HEAD>
+            <script language="javascript" type="text/javascript">
+              function closeWindow() {
+                window.open('', '_parent', '');
+                window.close();
+              }
+              function delay() {
+                setTimeout("closeWindow()", 1000);
+              }
+            </script>
+          </HEAD>
+          <BODY onload="javascript:delay();">
+            <p>Success! This page can be closed if it doesn't do so automatically.</p>
+          </BODY>
+        </HTML>
+      `);
     } else {
       res.send('oauth2.error.no-credentials');
     }
   });
 
-  /**
-   * Endpoint to handle the OAuth2 authorization code flow.
-   * @param {Object} req - The request object.
-   * @param {Object} res - The response object.
-   */
-  RED.httpAdmin.get('/oauth2/auth', async (req, res) => {
-    if (!req.query.clientId || !req.query.clientSecret || !req.query.id || !req.query.callback) {
-      res.sendStatus(400);
-      return;
-    }
-
-    const { clientId, clientSecret, id: node_id, callback, redirectUri, authorizationEndpoint, scope, resource } = req.query;
-    const csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
-    const credentials = { clientId, clientSecret, callback, redirectUri, csrfToken };
-
-    const proxy = RED.nodes.getNode(req.query.proxy);
-    const proxyOptions = proxy ? new URL(proxy.url) : null;
-
-    res.cookie('csrf', csrfToken);
-
-    const redirectUrl = new URL(authorizationEndpoint);
-    redirectUrl.searchParams.set('client_id', clientId);
-    redirectUrl.searchParams.set('redirect_uri', redirectUri);
-    redirectUrl.searchParams.set('state', `${node_id}:${csrfToken}`);
-    redirectUrl.searchParams.set('scope', scope);
-    redirectUrl.searchParams.set('resource', resource);
-    redirectUrl.searchParams.set('response_type', 'code');
-
-    try {
-      const response = await axios.get(redirectUrl.toString(), {
-        httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-        httpAgent: new http.Agent({ rejectUnauthorized: false }),
-        proxy: proxyOptions
-      });
-      res.redirect(response.request.res.responseUrl);
-      RED.nodes.addCredentials(node_id, credentials);
-    } catch (error) {
-      res.sendStatus(404);
-    }
-  });
-
-  /**
-   * Endpoint to handle the OAuth2 authorization callback.
-   * @param {Object} req - The request object.
-   * @param {Object} res - The response object.
-   */
-  RED.httpAdmin.get('/oauth2/auth/callback', (req, res) => {
-    if (req.query.error) {
-      return res.send(`oauth2.error.error: ${req.query.error}, description: ${req.query.error_description}`);
-    }
-    const [node_id, csrfToken] = req.query.state.split(':');
-    const credentials = RED.nodes.getCredentials(node_id);
-    if (!credentials || !credentials.clientId || !credentials.clientSecret || csrfToken !== credentials.csrfToken) {
-      return res.status(401).send('oauth2.error.token-mismatch');
-    }
-  });
-
   // Register the OAuth2Node node type
-  RED.nodes.registerType('oauth2', OAuth2Node);
+  RED.nodes.registerType('oauth2', OAuth2Node, {
+    credentials: {
+      clientId: { type: 'text' },
+      clientSecret: { type: 'password' },
+      accessToken: { type: 'password' },
+      refreshToken: { type: 'password' },
+      expireTime: { type: 'password' },
+      code: { type: 'password' }
+    }
+  });
 };

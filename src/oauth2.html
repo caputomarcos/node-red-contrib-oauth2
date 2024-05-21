@@ -16,6 +16,7 @@
       <option value="client_credentials" data-i18n="oauth2.opts.client_credentials"></option>
       <option value="password" data-i18n="oauth2.opts.password_credentials"></option>
       <option value="authorization_code" data-i18n="oauth2.opts.authorization_code"></option>
+      <option value="implicit_flow" data-i18n="oauth2.opts.implicit_flow"></option>
       <option value="set_by_credentials" data-i18n="oauth2.opts.set_by_credentials"></option>
     </select>
   </div>
@@ -52,6 +53,22 @@
     <label for="node-input-client_secret"><i class="fa fa-lock fa-fw"></i> <span data-i18n="oauth2.label.client_secret"></span></label>
     <input type="password" id="node-input-client_secret" data-i18n="[placeholder]oauth2.placeholder.client_secret" style="width:70%;" />
   </div>
+
+  <div class="form-row" id="node-access_type">
+    <label for="node-input-access_type"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.access_type"></span></label>
+    <input type="text" id="node-input-access_type" data-i18n="[placeholder]oauth2.placeholder.access_type" style="width:70%;" />
+  </div>
+  <!-- node-response_type -->
+  <div class="form-row" id="node-response_type">
+    <label for="node-input-response_type"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.response_type"></span></label>
+    <input type="text" id="node-input-response_type" data-i18n="[placeholder]oauth2.placeholder.response_type" style="width:70%;" />
+  </div>
+  <!-- node-prompt -->
+  <div class="form-row" id="node-prompt">
+    <label for="node-input-prompt"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.prompt"></span></label>
+    <input type="text" id="node-input-prompt" data-i18n="[placeholder]oauth2.placeholder.prompt" style="width:70%;" />
+  </div>
+
   <!-- node-scope -->
   <div class="form-row" id="node-scope">
     <label for="node-input-scope"><i class="fa fa-code fa-fw"></i> <span data-i18n="oauth2.label.scope"></span></label>
@@ -147,7 +164,7 @@
         icon: 'red/images/typedInput/az.svg'
       }
     ];
-    
+
     RED.nodes.registerType('oauth2', {
       category: 'DevSecOps',
       color: '#fff',
@@ -157,12 +174,15 @@
         grant_type: { value: 'set_by_credentials' },
         access_token_url: { value: '' },
         authorization_endpoint: { value: '' },
-        redirect_uri: { value: '/oauth2/redirect_uri' },
+        redirect_uri: { value: '' },
         open_authentication: { value: '' },
         username: { value: '' },
         password: { value: '' },
         client_id: { value: '' },
         client_secret: { value: '' },
+        response_type: { value: '' },
+        access_type: { value: '' },
+        prompt: { value: '' },
         scope: { value: '' },
         resource: { value: '' },
         state: { value: '' },
@@ -202,7 +222,9 @@
           callback = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/auth/callback`;
         }
 
+        // TODO - Aqui nasce o MOSTRO, está feio mas funciona!
         const redirectUri = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}${pathname}oauth2/redirect`;
+        this.redirect_uri = redirectUri;
 
         if (this.container === undefined) {
           $('#node-input-container').val('payload');
@@ -214,18 +236,46 @@
         });
 
         const elementMapping = {
-          'set_by_credentials': ['#node-rejectUnauthorized', '#node-client_credentials_in_body'],
-          'client_credentials': ['#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
-          'password': ['#node-password_credentials', '#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
-          'authorization_code': ['#node-open_authentication', '#node-redirect_uri', '#node-access_token_url', '#node-authorization_endpoint', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body']
+          set_by_credentials: ['#node-rejectUnauthorized', '#node-client_credentials_in_body'],
+          client_credentials: ['#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
+          password: ['#node-password_credentials', '#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
+          authorization_code: [
+            '#node-open_authentication',
+            '#node-redirect_uri',
+            '#node-access_token_url',
+            '#node-authorization_endpoint',
+            '#node-client_id',
+            '#node-client_secret',
+            '#node-scope',
+            '#node-resource',
+            '#node-state',
+            '#node-rejectUnauthorized',
+            '#node-client_credentials_in_body'
+          ],
+          implicit_flow: [
+            '#node-open_authentication',
+            '#node-redirect_uri',
+            '#node-access_token_url',
+            '#node-authorization_endpoint',
+            '#node-client_id',
+            '#node-client_secret',
+            '#node-access_type',
+            '#node-response_type',
+            '#node-prompt',
+            '#node-scope',
+            '#node-resource',
+            '#node-state',
+            '#node-rejectUnauthorized',
+            '#node-client_credentials_in_body'
+          ]
         };
 
         function updateVisibility() {
           const grantType = $('#node-input-grant_type').val();
           for (const key in elementMapping) {
-            elementMapping[key].forEach(selector => $(selector).hide());
+            elementMapping[key].forEach((selector) => $(selector).hide());
           }
-          elementMapping[grantType].forEach(selector => $(selector).show());
+          elementMapping[grantType].forEach((selector) => $(selector).show());
           RED.tray.resize();
         }
 
@@ -246,17 +296,24 @@
         $('#authorizeButton').mousedown(function () {
           const authorizationEndpoint = $('#node-input-authorization_endpoint').val();
           const clientId = $('#node-input-client_id').val();
-          const clientSecret = $('#node-input-client_secret').val();
           const proxy = $('#node-input-proxy').val();
-          let scope = $('#node-input-scope').val().replace(/\n/g, '%20');
-          let resource = $('#node-input-resource').val().replace(/\n/g, '%20');
-          let state = $('#node-input-state').val().replace(/\n/g, '%20');
-          let url;
+          const scope = $('#node-input-scope').val().replace(/\n/g, '%20');
+          const resource = $('#node-input-resource').val().replace(/\n/g, '%20');
+          const state = $('#node-input-state').val().replace(/\n/g, '%20');
 
-          if (authorizationEndpoint) {
-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(callback)}&authorizationEndpoint=${encodeURIComponent(authorizationEndpoint)}&redirectUri=${encodeURIComponent(redirectUri)}&proxy=${encodeURIComponent(proxy)}`;
-          } else {
-            url = `oauth2/auth?id=${encodeURIComponent(id)}&clientId=${encodeURIComponent(clientId)}&clientSecret=${encodeURIComponent(clientSecret)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}&resource=${encodeURIComponent(resource)}&callback=${encodeURIComponent(callback)}&proxy=${encodeURIComponent(proxy)}`;
+          const accessType = $('#node-input-access_type').val();
+          const responseType = $('#node-input-response_type').val();
+          const prompt = $('#node-input-prompt').val();
+
+          let url;
+          if (accessType) {
+            url = `${authorizationEndpoint}?id=${encodeURIComponent(id)}&redirect_uri=${encodeURIComponent(redirectUri)}&client_id=${encodeURIComponent(clientId)}&response_type=${responseType}&scope=${encodeURIComponent(
+              scope
+            )}&access_type=${encodeURIComponent(accessType)}&prompt=${encodeURIComponent(prompt)}&state=${encodeURIComponent(id)}:node_id`;
+          } else if (authorizationEndpoint) {
+            url = `${authorizationEndpoint}?id=${encodeURIComponent(id)}&redirect_uri=${encodeURIComponent(redirectUri)}&client_id=${encodeURIComponent(clientId)}&response_type=code&scope=${encodeURIComponent(scope)}&resource=${encodeURIComponent(
+              resource
+            )}&state=${encodeURIComponent(id)}:node_id`;
           }
           $(this).attr('href', url);
           window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
@@ -292,25 +349,27 @@
           .css('min-width', '450px')
           .editableList({
             addItem: function (container, i, header) {
-              const row = $('<div/>')
-                .css({ overflow: 'hidden', whiteSpace: 'nowrap' })
-                .appendTo(container);
+              const row = $('<div/>').css({ overflow: 'hidden', whiteSpace: 'nowrap' }).appendTo(container);
 
               const propertyName = $('<input/>', {
                 class: 'node-input-header-name',
                 type: 'text',
                 style: 'width: 50%'
-              }).appendTo(row).typedInput({ types: headerTypes });
+              })
+                .appendTo(row)
+                .typedInput({ types: headerTypes });
 
               const propertyValue = $('<input/>', {
                 class: 'node-input-header-value',
                 type: 'text',
                 style: 'margin-left: 10px; width: 45%;'
-              }).appendTo(row).typedInput({
-                types: header.h === 'content-type' ? contentTypes : [{ value: 'other', label: RED._('node-red:httpin.label.other'), hasValue: true, icon: 'red/images/typedInput/az.svg' }]
-              });
+              })
+                .appendTo(row)
+                .typedInput({
+                  types: header.h === 'content-type' ? contentTypes : [{ value: 'other', label: RED._('node-red:httpin.label.other'), hasValue: true, icon: 'red/images/typedInput/az.svg' }]
+                });
 
-              const matchedType = headerTypes.filter(ht => ht.value === header.h);
+              const matchedType = headerTypes.filter((ht) => ht.value === header.h);
               if (matchedType.length === 0) {
                 propertyName.typedInput('type', 'other');
                 propertyName.typedInput('value', header.h);
@@ -318,7 +377,7 @@
               } else {
                 propertyName.typedInput('type', header.h);
                 if (header.h === 'content-type') {
-                  const matchedContentType = contentTypes.filter(ct => ct.value === header.v);
+                  const matchedContentType = contentTypes.filter((ct) => ct.value === header.v);
                   if (matchedContentType.length === 0) {
                     propertyValue.typedInput('type', 'other');
                     propertyValue.typedInput('value', header.v);
@@ -359,24 +418,26 @@
         }
         const headers = $('#node-input-headers-container').editableList('items');
         this.headers = {};
-        headers.each(function () {
-          const header = $(this);
-          const keyType = header.find('.node-input-header-name').typedInput('type');
-          const keyValue = header.find('.node-input-header-name').typedInput('value');
-          const valueType = header.find('.node-input-header-value').typedInput('type');
-          const valueValue = header.find('.node-input-header-value').typedInput('value');
-          let key = keyType;
-          let value = valueType;
-          if (keyType === 'other') {
-            key = keyValue;
-          }
-          if (valueType === 'other') {
-            value = valueValue;
-          }
-          if (key !== '') {
-            this.headers[key] = value;
-          }
-        }.bind(this));
+        headers.each(
+          function () {
+            const header = $(this);
+            const keyType = header.find('.node-input-header-name').typedInput('type');
+            const keyValue = header.find('.node-input-header-name').typedInput('value');
+            const valueType = header.find('.node-input-header-value').typedInput('type');
+            const valueValue = header.find('.node-input-header-value').typedInput('value');
+            let key = keyType;
+            let value = valueType;
+            if (keyType === 'other') {
+              key = keyValue;
+            }
+            if (valueType === 'other') {
+              value = valueValue;
+            }
+            if (key !== '') {
+              this.headers[key] = value;
+            }
+          }.bind(this)
+        );
       },
       oneditresize: function (size) {
         const dlg = $('#dialog-form');
@@ -394,4 +455,3 @@
     });
   })();
 </script>
-
