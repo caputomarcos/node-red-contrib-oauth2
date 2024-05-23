@@ -1,3 +1,5 @@
+const { count } = require('console');
+
 module.exports = function (RED) {
    'use strict';
 
@@ -18,7 +20,7 @@ module.exports = function (RED) {
        */
       constructor(config) {
          RED.nodes.createNode(this, config);
-         this.logger = new Logger({ name: 'identifier', count: 10, active: config.debug || false, label: 'debug' });
+         this.logger = new Logger({ name: 'identifier', count: null, active: config.debug || false, label: 'debug' });
          this.logger.debug('Constructor: Initializing node with config', config);
          // Node configuration properties
          this.name = config.name || '';
@@ -26,6 +28,7 @@ module.exports = function (RED) {
          this.access_token_url = config.access_token_url || '';
          this.redirect_uri = config.redirect_uri || '';
          this.grant_type = config.grant_type || '';
+         this.refresh_token = config.refresh_token || '';
          this.username = config.username || '';
          this.password = config.password || '';
          this.client_id = config.client_id || '';
@@ -91,57 +94,62 @@ module.exports = function (RED) {
        * @returns {Object} - The request options.
        */
       generateOptions(msg) {
+         // Log the start of the option generation process with the input message
          this.logger.debug('generateOptions: Configuring options with message', msg);
 
+         // Initialize the form object to hold the form data
          let form = {};
+         // Set the default URL to the access token URL configured in the node
          let url = this.access_token_url;
+         // Initialize headers with default Content-Type and Accept headers
          let headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
             Accept: 'application/json'
          };
 
-         if (msg.oauth2Request) {
-            const creds = msg.oauth2Request.credentials || {};
-            form = {
-               grant_type: creds.grant_type || this.grant_type,
-               scope: creds.scope || this.scope,
-               resource: creds.resource || this.resource,
-               state: creds.state || this.state
-            };
+         // Retrieve credentials from the message if available, otherwise use an empty object
+         const creds = msg.oauth2Request ? msg.oauth2Request.credentials || {} : {};
+         // Initialize the form data with grant_type, scope, resource, and state
+         form = {
+            grant_type: creds.grant_type || this.grant_type,
+            scope: creds.scope || this.scope,
+            resource: creds.resource || this.resource,
+            state: creds.state || this.state
+         };
 
-            if (creds.grant_type === 'password') {
+         // Define functions for different OAuth2 flows
+         const flows = {
+            // Password flow function
+            password: () => {
+               this.logger.debug('generateOptions: Password flow detected');
                form.username = creds.username || this.username;
                form.password = creds.password || this.password;
-            } else if (creds.grant_type === 'refresh_token') {
-               form.refresh_token = creds.refresh_token;
-            }
-
-            if (this.client_credentials_in_body) {
+            },
+            // Client credentials flow function
+            client_credential: () => {
+               this.logger.debug('generateOptions: Client credentials flow detected');
                form.client_id = creds.client_id || this.client_id;
                form.client_secret = creds.client_secret || this.client_secret;
-            } else {
-               headers.Authorization = 'Basic ' + Buffer.from(`${creds.client_id || this.client_id}:${creds.client_secret || this.client_secret}`).toString('base64');
-            }
-
-            url = msg.oauth2Request.access_token_url || this.access_token_url;
-         } else {
-            form = {
-               grant_type: this.grant_type,
-               scope: this.scope,
-               resource: this.resource,
-               state: this.state
-            };
-
-            if (this.grant_type === 'password') {
-               form.username = this.username;
-               form.password = this.password;
-            } else if (this.grant_type === 'authorization_code') {
+            },
+            // Refresh token flow function
+            refresh_token: () => {
+               this.logger.debug('generateOptions: Refresh token flow detected');
+               form.client_id = creds.client_id || this.client_id;
+               form.client_secret = creds.client_secret || this.client_secret;
+               form.refresh_token = creds.refresh_token || this.refresh_token;
+            },
+            // Authorization code flow function
+            authorization_code: () => {
+               this.logger.debug('generateOptions: Authorization code flow detected');
                const credentials = RED.nodes.getCredentials(this.id) || {};
                if (credentials) {
                   form.code = credentials.code;
                   form.redirect_uri = this.redirect_uri;
                }
-            } else if (this.grant_type === 'implicit_flow') {
+            },
+            // Implicit flow function
+            implicit_flow: () => {
+               this.logger.debug('generateOptions: Implicit flow detected');
                const credentials = RED.nodes.getCredentials(this.id) || {};
                if (credentials) {
                   form.client_id = this.client_id;
@@ -150,17 +158,44 @@ module.exports = function (RED) {
                   form.grant_type = 'authorization_code';
                   form.redirect_uri = this.redirect_uri;
                }
+            },
+            // Set by credentials function
+            set_by_credentials: () => {
+               this.logger.debug('generateOptions: Set by credentials flow detected');
+               if (msg.oauth2Request) {
+                  const credentials = msg.oauth2Request.credentials || {};
+                  form.client_id = credentials.client_id || this.client_id;
+                  form.client_secret = credentials.client_secret || this.client_secret;
+                  form.refresh_token = credentials.refresh_token || '';
+               }
             }
+         };
 
-            if (this.client_credentials_in_body) {
-               form.client_id = this.client_id;
-               form.client_secret = this.client_secret;
-            } else {
-               headers.Authorization = 'Basic ' + Buffer.from(`${this.client_id}:${this.client_secret}`).toString('base64');
-            }
+         // Check if the grant type from the credentials is supported and call the corresponding function
+         if (creds.grant_type && flows[creds.grant_type]) {
+            flows[creds.grant_type]();
+         }
+         // Check if the default grant type of the node is supported and call the corresponding function
+         else if (this.grant_type && flows[this.grant_type]) {
+            flows[this.grant_type]();
          }
 
+         // Check if client credentials should be included in the body
+         if (this.client_credentials_in_body) {
+            this.logger.debug('generateOptions: Client credentials in body detected, using credentials');
+            form.client_id = creds.client_id || this.client_id;
+            form.client_secret = creds.client_secret || this.client_secret;
+         } else {
+            // Otherwise, add the Authorization header with client credentials encoded in base64
+            headers.Authorization = 'Basic ' + Buffer.from(`${creds.client_id || this.client_id}:${creds.client_secret || this.client_secret}`).toString('base64');
+         }
+
+         // Set the URL to the access token URL from the message if available, otherwise use the default
+         url = msg.oauth2Request ? msg.oauth2Request.access_token_url || this.access_token_url : this.access_token_url;
+
+         // Log the final generated options
          this.logger.debug('generateOptions: Returning options', { method: 'POST', url, headers, form });
+         // Return the HTTP request options
          return {
             method: 'POST',
             url: url,

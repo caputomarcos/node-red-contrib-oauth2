@@ -29,7 +29,8 @@
       "client_credentials_in_body": "Embedded Credentials",
       "proxy-config": "Proxy Configuration",
       "use-proxy": "Use proxy",
-      "senderr": "Only send non-2xx responses to Catch node"
+      "senderr": "Only send non-2xx responses to Catch node",
+      "refresh_token": "Refresh Token"
     },
     "placeholder": {
       "name": "oauth2",
@@ -49,13 +50,15 @@
       "resource": "resource",
       "state": "state",
       "rejectUnauthorized": "rejectUnauthorized",
-      "headers": "headers"
+      "headers": "headers",
+      "refresh_token": "refresh_token"
     },
     "opts": {
       "client_credentials": "Client Credentials",
       "password_credentials": "Password",
       "authorization_code": "Authorization Code",
       "implicit_flow": "Implicit Flow",
+      "refresh_token": "Refresh Token",
       "set_by_credentials": "- Set by msg.oauth2Request -"
     }
   }

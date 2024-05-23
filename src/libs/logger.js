@@ -2,7 +2,7 @@ const loggerStatusActive = { fill: 'yellow', shape: 'ring', text: 'Logging' };
 const loggerStatusOff = { fill: 'green', shape: 'ring', text: '' };
 const { inspect } = require('util');
 
-function Logger(label = '***', active = true, count = 111, msg) {
+function Logger(label = '***', active = true, count = null, msg) {
    this.consoleFunction = console.log;
    this.sendFunction = this.sendConsole;
    this.type = 'debug';
@@ -18,15 +18,26 @@ Logger.prototype.objectDump = function (o) {
 };
 Logger.prototype.send = function (message, type, node, sendFunction = this.sendFunction) {
    if (!this.active) return this;
-   if (--this.count) {
+
+   const sendMessage = (msg) => {
       try {
-         sendFunction.apply(this, [message instanceof Object ? JSON.stringify(message) : message, type, node]);
+         sendFunction.call(this, msg instanceof Object ? JSON.stringify(msg) : msg, type, node);
       } catch (ex) {
-         sendFunction.apply(this, [ex.message, type, node]);
+         sendFunction.call(this, ex.message, type, node);
       }
-   } else {
-      this.setOff();
+   };
+
+   if (!this.count) {
+      sendMessage(message);
    }
+
+   if (this.count > 0) {
+      sendMessage(message);
+      if (--this.count === 0) {
+         this.setOff();
+      }
+   }
+
    return this;
 };
 Logger.prototype.sendConsole = function (message, type = this.type, consoleFunction = this.consoleFunction) {

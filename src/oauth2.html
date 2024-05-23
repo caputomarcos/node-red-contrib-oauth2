@@ -17,6 +17,7 @@
          <option value="password" data-i18n="oauth2.opts.password_credentials"></option>
          <option value="authorization_code" data-i18n="oauth2.opts.authorization_code"></option>
          <option value="implicit_flow" data-i18n="oauth2.opts.implicit_flow"></option>
+         <option value="refresh_token" data-i18n="oauth2.opts.refresh_token"></option>
          <option value="set_by_credentials" data-i18n="oauth2.opts.set_by_credentials"></option>
       </select>
    </div>
@@ -53,7 +54,11 @@
       <label for="node-input-client_secret"><i class="fa fa-lock fa-fw"></i> <span data-i18n="oauth2.label.client_secret"></span></label>
       <input type="password" id="node-input-client_secret" data-i18n="[placeholder]oauth2.placeholder.client_secret" style="width:70%;" />
    </div>
-
+   <!-- node-refresh_token -->
+   <div class="form-row" id="node-refresh_token">
+      <label for="node-input-refresh_token"><i class="fa fa-lock fa-fw"></i> <span data-i18n="oauth2.label.refresh_token"></span></label>
+      <input type="password" id="node-input-refresh_token" data-i18n="[placeholder]oauth2.placeholder.refresh_token" style="width:70%;" />
+   </div>
    <div class="form-row" id="node-access_type">
       <label for="node-input-access_type"><i class="fa fa-link fa-fw"></i> <span data-i18n="oauth2.label.access_type"></span></label>
       <input type="text" id="node-input-access_type" data-i18n="[placeholder]oauth2.placeholder.access_type" style="width:70%;" />
@@ -192,6 +197,7 @@
             client_secret: { value: '' },
             response_type: { value: '' },
             access_type: { value: '' },
+            refresh_token: { value: '' },
             prompt: { value: '' },
             scope: { value: '' },
             resource: { value: '' },
@@ -247,6 +253,7 @@
             });
 
             const elementMapping = {
+               refresh_token: ['#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-refresh_token', '#node-scope', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
                set_by_credentials: ['#node-rejectUnauthorized', '#node-client_credentials_in_body'],
                client_credentials: ['#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
                password: ['#node-password_credentials', '#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
