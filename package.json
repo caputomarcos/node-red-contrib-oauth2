@@ -65,6 +65,12 @@
     "lint": "prettier --plugin-search-dir . --check ./src/. && npx eslint ./src/.",
     "format": "prettier --plugin-search-dir . --write ./src/.",
     "doc": "jsdoc -c jsdoc.json",
-    "test": "mocha \"test/**/*_spec.js\""
+    "test1": "mocha \"test/**/*_spec.js\"",
+    "test": "mocha --recursive",
+    "coverage": "nyc npm test"
+  },
+  "nyc": {
+    "reporter": ["html", "text"],
+    "report-dir": "./coverage"
   }
 }
