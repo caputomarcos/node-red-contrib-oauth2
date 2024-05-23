@@ -104,23 +104,33 @@
       <label for="node-input-senderr" style="width: auto;" data-i18n="oauth2.label.senderr"></label>
    </div>
 
+   <!-- node-debug -->
+   <div class="form-row">
+      <input type="checkbox" id="node-input-debug" style="display: inline-block; width: auto; vertical-align: top;" />
+      <label for="node-input-debug" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.debug"></span></label>
+      <div abria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
+         <i class="fa fa-exclamation-circle fa-fw"></i><b>Debug Mode</b> -
+         <span data-i18n="oauth2.tips.debug"></span>
+      </div>
+   </div>
+
    <!-- node-client_credentials_in_body -->
    <div class="form-row" id="node-client_credentials_in_body">
       <input type="checkbox" id="node-input-client_credentials_in_body" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
-      <label for="node-input-client_credentials_in_body" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.client_credentials_in_body_label"></span></label>
+      <label for="node-input-client_credentials_in_body" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.client_credentials_in_body"></span></label>
       <div abria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
          <i class="fa fa-exclamation-circle fa-fw"></i><b>Embedded Credentials</b> -
-         <span data-i18n="oauth2.label.client_credentials_in_body"></span>
+         <span data-i18n="oauth2.tips.client_credentials_in_body"></span>
       </div>
    </div>
 
    <!-- node-rejectUnauthorized -->
    <div class="form-row" id="node-rejectUnauthorized">
       <input type="checkbox" id="node-input-rejectUnauthorized" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
-      <label for="node-input-rejectUnauthorized" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.rejectUnauthorized_label"></span></label>
+      <label for="node-input-rejectUnauthorized" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.rejectUnauthorized"></span></label>
       <div aria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
          <i class="fa fa-exclamation-circle fa-fw"></i><b>Reject Unauthorized</b> -
-         <span data-i18n="oauth2.label.rejectUnauthorized"></span>
+         <span data-i18n="oauth2.tips.rejectUnauthorized"></span>
       </div>
    </div>
 
@@ -191,6 +201,7 @@
                required: false,
                label: RED._('node-red:oauth2.label.proxy-config')
             },
+            debug: { value: false },
             senderr: { value: false },
             client_credentials_in_body: { value: false },
             rejectUnauthorized: { value: true },

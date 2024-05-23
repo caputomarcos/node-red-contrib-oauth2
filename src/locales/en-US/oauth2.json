@@ -1,7 +1,13 @@
 {
   "oauth2": {
     "oauth2": "oauth2",
+    "tips": {
+      "debug": "Check the box to enable debug mode with extra logs.",
+      "client_credentials_in_body": "Ensure that the client credentials are included in the token request body for authentication purposes.",
+      "rejectUnauthorized": "The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it."
+    },
     "label": {
+      "debug": "Debug Mode.",
       "grant_type": "Grant Type",
       "name": "Name",
       "container": "Container",
@@ -19,10 +25,8 @@
       "scope": "Scope",
       "resource": "Resource",
       "state": "State",
-      "rejectUnauthorized": "The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.",
-      "rejectUnauthorized_label": "Reject Unauthorized",
-      "client_credentials_in_body": "Ensure that the client credentials are included in the token request body for authentication purposes.",
-      "client_credentials_in_body_label": "Embedded Credentials",
+      "rejectUnauthorized": "Reject Unauthorized",
+      "client_credentials_in_body": "Embedded Credentials",
       "proxy-config": "Proxy Configuration",
       "use-proxy": "Use proxy",
       "senderr": "Only send non-2xx responses to Catch node"

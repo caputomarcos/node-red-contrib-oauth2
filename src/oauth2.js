@@ -6,6 +6,8 @@ module.exports = function (RED) {
    const http = require('http');
    const https = require('https');
 
+   const Logger = require('node-red-contrib-oauth2/src/libs/logger');
+
    /**
     * Class representing an OAuth2 Node.
     */
@@ -16,7 +18,8 @@ module.exports = function (RED) {
        */
       constructor(config) {
          RED.nodes.createNode(this, config);
-
+         this.logger = new Logger({ name: 'identifier', count: 10, active: config.debug || false, label: 'debug' });
+         this.logger.debug('Constructor: Initializing node with config', config);
          // Node configuration properties
          this.name = config.name || '';
          this.container = config.container || '';
@@ -39,9 +42,12 @@ module.exports = function (RED) {
          this.prox = process.env.http_proxy || process.env.HTTP_PROXY || config.proxy;
          this.noprox = (process.env.no_proxy || process.env.NO_PROXY || '').split(',');
 
+         this.logger.debug('Constructor: Finished setting up node properties');
+
          // Register the input handler
          this.on('input', this.onInput.bind(this));
          this.host = RED.settings.uiHost || 'localhost';
+         this.logger.debug('Constructor: Node input handler registered');
       }
 
       /**
@@ -51,28 +57,32 @@ module.exports = function (RED) {
        * @param {Function} done - Function to indicate processing is complete.
        */
       async onInput(msg, send, done) {
-         // console.log('OAuth2Node received input:', msg);
+         // this.debug ? this.logger.setOn() : this.logger.setOff();
+         this.logger.debug('onInput: Received message', msg);
 
          const options = this.generateOptions(msg); // Generate request options
-         // console.log('Generated options:', options);
+         this.logger.debug('onInput: Generated request options', options);
 
          this.configureProxy(); // Configure proxy settings
-         // console.log('Configured proxy settings:', this.proxy);
+         this.logger.debug('onInput: Configured proxy settings', this.prox);
 
          delete msg.oauth2Request; // Remove oauth2Request from msg
+         this.logger.debug('onInput: Removed oauth2Request from message');
+
          options.form = this.cleanForm(options.form); // Clean the form data
+         this.logger.debug('onInput: Cleaned form data', options.form);
 
          try {
-            // console.log('Making POST request...');
             const response = await this.makePostRequest(options); // Make the POST request
-            // console.log('Received response:', response);
+            this.logger.debug('onInput: POST request response', response);
             this.handleResponse(response, msg, send); // Handle the response
          } catch (error) {
-            // console.error('Error making POST request:', error);
+            this.logger.error('onInput: Error making POST request', error);
             this.handleError(error, msg, send); // Handle any errors
          }
+
          done(); // Indicate that processing is complete
-         // console.log('Finished processing input.');
+         this.logger.debug('onInput: Finished processing input');
       }
 
       /**
@@ -81,6 +91,8 @@ module.exports = function (RED) {
        * @returns {Object} - The request options.
        */
       generateOptions(msg) {
+         this.logger.debug('generateOptions: Configuring options with message', msg);
+
          let form = {};
          let url = this.access_token_url;
          let headers = {
@@ -148,6 +160,7 @@ module.exports = function (RED) {
             }
          }
 
+         this.logger.debug('generateOptions: Returning options', { method: 'POST', url, headers, form });
          return {
             method: 'POST',
             url: url,
@@ -171,6 +184,8 @@ module.exports = function (RED) {
             username: proxyURL.username || null,
             password: proxyURL.password || null
          };
+
+         this.logger.debug('configureProxy: Proxy configured', this.proxy);
       }
 
       /**
@@ -179,7 +194,9 @@ module.exports = function (RED) {
        * @returns {Object} - The cleaned form data.
        */
       cleanForm(form) {
-         return Object.fromEntries(Object.entries(form).filter(([, value]) => value !== undefined && value !== ''));
+         const cleanedForm = Object.fromEntries(Object.entries(form).filter(([, value]) => value !== undefined && value !== ''));
+         this.logger.debug('cleanForm: Cleaned form data', cleanedForm);
+         return cleanedForm;
       }
 
       /**
@@ -188,6 +205,8 @@ module.exports = function (RED) {
        * @returns {Promise<Object>} - The response from the request.
        */
       async makePostRequest(options) {
+         this.logger.debug('makePostRequest: Making POST request with options', options);
+
          const axiosOptions = {
             method: options.method,
             url: options.url,
@@ -203,7 +222,10 @@ module.exports = function (RED) {
             axiosOptions.httpsAgent = new HttpsProxyAgent(this.proxy);
          }
 
+         this.logger.debug('makePostRequest: Axios request options prepared', axiosOptions);
+
          return axios(axiosOptions).catch((error) => {
+            this.logger.error('makePostRequest: Error during POST request', error);
             throw error;
          });
       }
@@ -215,13 +237,18 @@ module.exports = function (RED) {
        * @param {Function} send - Function to send messages.
        */
       handleResponse(response, msg, send) {
+         this.logger.debug('handleResponse: Handling response', response);
+
          if (!response || !response.data) {
+            this.logger.warn('handleResponse: Invalid response data', response);
             this.handleError({ message: 'Invalid response data' }, msg, send);
             return;
          }
+
          msg.oauth2Response = response.data || {};
          msg.headers = response.headers || {}; // Include headers in the message
          this.setStatus('green', `HTTP ${response.status}, ok`);
+         this.logger.debug('handleResponse: Response data set in message', msg);
          send(msg);
       }
 
@@ -232,14 +259,19 @@ module.exports = function (RED) {
        * @param {Function} send - Function to send messages.
        */
       handleError(error, msg, send) {
+         this.logger.error('handleError: Handling error', error);
+
          const status = error.response ? error.response.status : error.code;
          const message = error.response ? error.response.statusText : error.message;
          const data = error.response && error.response.data ? error.response.data : {};
          const headers = error.response ? error.response.headers : {};
          msg.oauth2Error = { status, message, data, headers };
          this.setStatus('red', `HTTP ${status}, ${message}`);
-         if (this.sendErrorsToCatch) send([null, msg]);
-         else {
+         this.logger.debug('handleError: Error data set in message', msg);
+
+         if (this.sendErrorsToCatch) {
+            send([null, msg]);
+         } else {
             this.error(msg);
             send([null, msg]);
          }
@@ -251,6 +283,7 @@ module.exports = function (RED) {
        * @param {string} text - The status text.
        */
       setStatus(color, text) {
+         this.logger.debug('setStatus: Setting status', { color, text });
          this.status({ fill: color, shape: 'dot', text });
          setTimeout(() => {
             this.status({});

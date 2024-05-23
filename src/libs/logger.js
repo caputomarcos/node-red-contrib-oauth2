@@ -75,7 +75,7 @@ Logger.prototype.set = function (active, count) {
    }
    if (active !== undefined) this.active = active;
    this.showNodeStatus();
-   this.sendConsole('logging turning ' + (this.active ? 'on logging next ' + this.count + ' log points' : 'off'));
+   // this.sendConsole('logging turning ' + (this.active ? 'on logging next ' + this.count + ' log points' : 'off'));
    return this;
 };
 Logger.prototype.setOff = function () {
