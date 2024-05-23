@@ -1,6 +1,5 @@
 const helper = require('node-red-node-test-helper');
 const OAuth2Node = require('node-red-contrib-oauth2/src/oauth2.js');
-const should = require('should');
 
 helper.init(require.resolve('node-red'));
 
