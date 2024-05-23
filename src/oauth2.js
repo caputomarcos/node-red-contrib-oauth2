@@ -1,5 +1,3 @@
-const { count } = require('console');
-
 module.exports = function (RED) {
    'use strict';
 

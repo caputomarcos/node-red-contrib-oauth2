@@ -14,10 +14,16 @@ function Logger(label = '***', active = true, count = null, msg) {
    return msg ? this.sendInfo(msg) : this;
 }
 Logger.prototype.objectDump = function (o) {
-   return o ? this.send(inspect(o, { showHidden: true, depth: null })) : this;
+   if (typeof o !== 'object' || o === null) {
+      this.send('Invalid object', 'error');
+      return this;
+   }
+   this.send(inspect(o, { showHidden: true, depth: null }), 'info');
+   return this;
 };
+
 Logger.prototype.send = function (message, type, node, sendFunction = this.sendFunction) {
-   if (!this.active) return this;
+   if (!this.active || !type || message == null) return this;
 
    const sendMessage = (msg) => {
       try {
@@ -40,6 +46,7 @@ Logger.prototype.send = function (message, type, node, sendFunction = this.sendF
 
    return this;
 };
+
 Logger.prototype.sendConsole = function (message, type = this.type, consoleFunction = this.consoleFunction) {
    const ts = new Date().toString().split(' ');
    consoleFunction.apply(this, [[parseInt(ts[2], 10), ts[1], ts[4]].join(' ') + ' - [' + type + '] ' + this.label + ' ' + message]);
