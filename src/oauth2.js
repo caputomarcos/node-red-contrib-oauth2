@@ -2,10 +2,9 @@ module.exports = function (RED) {
    'use strict';
 
    const axios = require('axios');
-   const { URL } = require('url');
    const http = require('http');
    const https = require('https');
-
+   const { URLSearchParams } = require('url'); // Use URLSearchParams for form data
    const Logger = require('node-red-contrib-oauth2/src/libs/logger');
 
    /**
@@ -20,6 +19,7 @@ module.exports = function (RED) {
          RED.nodes.createNode(this, config);
          this.logger = new Logger({ name: 'identifier', count: null, active: config.debug || false, label: 'debug' });
          this.logger.debug('Constructor: Initializing node with config', config);
+
          // Node configuration properties
          this.name = config.name || '';
          this.container = config.container || '';
@@ -330,11 +330,15 @@ module.exports = function (RED) {
     * @param {Object} res - The response object.
     */
    RED.httpAdmin.get('/oauth2/credentials/:token', (req, res) => {
-      const credentials = RED.nodes.getCredentials(req.params.token);
-      if (credentials) {
-         res.json({ code: credentials.code, redirect_uri: credentials.redirect_uri });
-      } else {
-         res.send('oauth2.error.no-credentials');
+      try {
+         const credentials = RED.nodes.getCredentials(req.params.token);
+         if (credentials) {
+            res.json({ code: credentials.code, redirect_uri: credentials.redirect_uri });
+         } else {
+            res.status(404).send('oauth2.error.no-credentials');
+         }
+      } catch (error) {
+         res.status(500).send('oauth2.error.server-error');
       }
    });
 
@@ -356,25 +360,25 @@ module.exports = function (RED) {
          RED.nodes.addCredentials(node_id, credentials);
 
          res.send(`
-         <HTML>
-           <HEAD>
-             <script language="javascript" type="text/javascript">
-               function closeWindow() {
-                 window.open('', '_parent', '');
-                 window.close();
-               }
-               function delay() {
-                 setTimeout("closeWindow()", 1000);
-               }
-             </script>
-           </HEAD>
-           <BODY onload="javascript:delay();">
-             <p>Success! This page can be closed if it doesn't do so automatically.</p>
-           </BODY>
-         </HTML>
-       `);
+               <HTML>
+                   <HEAD>
+                       <script language="javascript" type="text/javascript">
+                           function closeWindow() {
+                               window.open('', '_parent', '');
+                               window.close();
+                           }
+                           function delay() {
+                               setTimeout("closeWindow()", 1000);
+                           }
+                       </script>
+                   </HEAD>
+                   <BODY onload="javascript:delay();">
+                       <p>Success! This page can be closed if it doesn't do so automatically.</p>
+                   </BODY>
+               </HTML>
+           `);
       } else {
-         res.send('oauth2.error.no-credentials');
+         res.status(400).send('oauth2.error.no-credentials');
       }
    });
 
