@@ -1,11 +1,12 @@
 {
   "useTabs": false,
+  "tabWidth": 3,
   "singleQuote": true,
   "trailingComma": "none",
   "semi": true,
   "printWidth": 250,
   "pluginSearchDirs": [
-    "."
+     "."
   ],
   "overrides": []
 }
