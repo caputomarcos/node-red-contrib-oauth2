@@ -1,8 +1,8 @@
 SHELL=/bin/bash
 
 PROJECT_NAME=$(shell basename $(PWD))
-REGISTRY_HOST=registry.b2w.io
-REGISTRY_GROUP=b2wdigital
+REGISTRY_HOST=
+REGISTRY_GROUP=
 
 RELEASE_SUPPORT := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))/.make-release-support
 IMAGE=$(shell tr '[:upper:]' '[:lower:]' <<< $(PROJECT_NAME))
