@@ -38,16 +38,15 @@ check-status:
 
 tag: TAG=$(shell . $(RELEASE_SUPPORT); getTag $(VERSION))
 tag: check-status
+	@echo "Current version: $(VERSION)"  # Debug statement
+	@echo "Current tag: $(TAG)"  # Debug statement
 	@. $(RELEASE_SUPPORT) ; ! tagExists $(TAG) || (echo "ERROR: tag $(TAG) for version $(VERSION) already tagged in git" >&2 && exit 1) ;
 	@. $(RELEASE_SUPPORT) ; setRelease $(VERSION)
 	git add .release package.json
-	@jq --arg version "$(VERSION)" '.version = $version' package.json > package.tmp && mv package.tmp package.json
+	@sed -i.bak 's/"version": "[^"]*"/"version": "$(VERSION)"/' package.json && rm package.json.bak
 	git commit -m "bumped to version $(VERSION)"
 	git tag $(TAG)
 	@[ -n "$(shell git remote -v)" ] && git push --tags
-
-release: check-status check-release ## Perform release tasks
-	npm run release
 
 tag-major-release: VERSION := $(shell . $(RELEASE_SUPPORT); nextMajorLevel)
 tag-major-release: .release tag

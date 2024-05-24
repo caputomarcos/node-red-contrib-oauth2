@@ -71,8 +71,7 @@
     "doc": "jsdoc -c jsdoc.json",
     "test1": "mocha \"test/**/*_spec.js\"",
     "test": "mocha --recursive --async-stack-traces --full-trace",
-    "coverage": "nyc npm test && nyc report --reporter=text-summary --reporter=html",
-    "release": "echo 'Custom release script logic here'"
+    "coverage": "nyc npm test && nyc report --reporter=text-summary --reporter=html"
   },
   "nyc": {
     "reporter": [
