@@ -71,3 +71,33 @@ test: ## Run tests
 
 coverage: ## Generate test coverage
 	npm run coverage
+
+PID_FILE=proxy.pid
+
+start: ## Start the proxy server
+	@echo "Starting proxy server..." 
+	@nohup node test/utils/proxy.js > proxy.log 2>&1 & echo $$! > $(PID_FILE) 
+	@echo "Proxy server started with PID $$(cat $(PID_FILE))"
+
+stop: ## Stop the proxy server
+	@if [ -f $(PID_FILE) ]; then \
+		echo "Stopping proxy server..."; \
+		PID=$$(cat $(PID_FILE)); \
+		kill $$PID && rm -f $(PID_FILE); \
+		echo "Proxy server stopped"; \
+	else \
+		echo "Proxy server is not running"; \
+	fi
+
+status: ## Check the status of the proxy server
+	@if [ -f $(PID_FILE) ]; then \
+		PID=$$(cat $(PID_FILE)); \
+		if ps -p $$PID > /dev/null; then \
+			echo "Proxy server is running with PID $$PID"; \
+		else \
+			echo "Proxy server is not running, but PID file exists"; \
+		fi \
+	else \
+		echo "Proxy server is not running"; \
+	fi
+
