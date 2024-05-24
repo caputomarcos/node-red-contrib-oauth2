@@ -28,10 +28,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>OAuth2Node<span class="signature">(oauth2Node)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>OAuth2Node<span class="signature">(config)</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">OAuth2Node class represents a custom node used in the Node-RED flow-based programming platform.
-The node handles authentication with OAuth 2.0 servers by generating tokens required for API access.</div>
+            <div class="class-description">Class representing an OAuth2 Node.</div>
         
     
 </header>
@@ -46,7 +45,7 @@ The node handles authentication with OAuth 2.0 servers by generating tokens requ
     
 
     
-    <h4 class="name" id="OAuth2Node"><span class="type-signature"></span>new OAuth2Node<span class="signature">(oauth2Node)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="OAuth2Node"><span class="type-signature"></span>new OAuth2Node<span class="signature">(config)</span><span class="type-signature"></span></h4>
     
 
     
@@ -54,7 +53,7 @@ The node handles authentication with OAuth 2.0 servers by generating tokens requ
 
 
 <div class="description">
-    Constructor for OAuth2Node.
+    Create an OAuth2Node.
 </div>
 
 
@@ -90,7 +89,7 @@ The node handles authentication with OAuth 2.0 servers by generating tokens requ
 
         <tr>
             
-                <td class="name"><code>oauth2Node</code></td>
+                <td class="name"><code>config</code></td>
             
 
             <td class="type">
@@ -106,7 +105,7 @@ The node handles authentication with OAuth 2.0 servers by generating tokens requ
 
             
 
-            <td class="description last">The configuration for the node.</td>
+            <td class="description last">Node configuration object.</td>
         </tr>
 
     
@@ -147,7 +146,7 @@ The node handles authentication with OAuth 2.0 servers by generating tokens requ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line16">line 16</a>
+        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line13">line 13</a>
     </li></ul></dd>
     
 
@@ -203,7 +202,7 @@ The node handles authentication with OAuth 2.0 servers by generating tokens requ
     
 
     
-    <h4 class="name" id="configureProxySettings"><span class="type-signature"></span>configureProxySettings<span class="signature">(oauth2Node)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="cleanForm"><span class="type-signature"></span>cleanForm<span class="signature">(form)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
 
     
@@ -211,8 +210,7 @@ The node handles authentication with OAuth 2.0 servers by generating tokens requ
 
 
 <div class="description">
-    Configures the proxy settings for the node.
-Checks environment variables and node-specific settings for proxy configurations.
+    Cleans form data by removing undefined or empty values.
 </div>
 
 
@@ -248,7 +246,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
         <tr>
             
-                <td class="name"><code>oauth2Node</code></td>
+                <td class="name"><code>form</code></td>
             
 
             <td class="type">
@@ -264,7 +262,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The configuration for the node.</td>
+            <td class="description last">The form data.</td>
         </tr>
 
     
@@ -305,7 +303,117 @@ Checks environment variables and node-specific settings for proxy configurations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line67">line 67</a>
+        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line229">line 229</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - The cleaned form data.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="configureProxy"><span class="type-signature"></span>configureProxy<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Configures proxy settings.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line209">line 209</a>
     </li></ul></dd>
     
 
@@ -349,7 +457,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
 
 <div class="description">
-    Generates the options object for the HTTP request.
+    Generates options for the HTTP request.
 </div>
 
 
@@ -401,7 +509,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The input message object.</td>
+            <td class="description last">Input message object.</td>
         </tr>
 
     
@@ -442,7 +550,7 @@ Checks environment variables and node-specific settings for proxy configurations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line96">line 96</a>
+        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line94">line 94</a>
     </li></ul></dd>
     
 
@@ -471,7 +579,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
         
 <div class="param-desc">
-    The options object for the HTTP request.
+    - The request options.
 </div>
 
 
@@ -500,7 +608,7 @@ Checks environment variables and node-specific settings for proxy configurations
     
 
     
-    <h4 class="name" id="handleError"><span class="type-signature"></span>handleError<span class="signature">(error, msg, send, done)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="handleError"><span class="type-signature"></span>handleError<span class="signature">(error, msg, send)</span><span class="type-signature"></span></h4>
     
 
     
@@ -508,7 +616,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
 
 <div class="description">
-    Handles errors that occur during the HTTP request.
+    Handles errors from the POST request.
 </div>
 
 
@@ -583,7 +691,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The input message object.</td>
+            <td class="description last">Input message object.</td>
         </tr>
 
     
@@ -606,30 +714,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The callback function for sending messages to next nodes.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>done</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The callback function to end the node's processing.</td>
+            <td class="description last">Function to send messages.</td>
         </tr>
 
     
@@ -670,7 +755,7 @@ Checks environment variables and node-specific settings for proxy configurations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line243">line 243</a>
+        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line294">line 294</a>
     </li></ul></dd>
     
 
@@ -706,7 +791,7 @@ Checks environment variables and node-specific settings for proxy configurations
     
 
     
-    <h4 class="name" id="handleResponse"><span class="type-signature"></span>handleResponse<span class="signature">(response, msg, send, done)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="handleResponse"><span class="type-signature"></span>handleResponse<span class="signature">(response, msg, send)</span><span class="type-signature"></span></h4>
     
 
     
@@ -714,7 +799,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
 
 <div class="description">
-    Handles the response from the OAuth2 server.
+    Handles the response from the POST request.
 </div>
 
 
@@ -766,7 +851,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The response from the OAuth2 server.</td>
+            <td class="description last">The response object.</td>
         </tr>
 
     
@@ -789,7 +874,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The input message object.</td>
+            <td class="description last">Input message object.</td>
         </tr>
 
     
@@ -812,30 +897,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The callback function for sending messages to next nodes.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>done</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The callback function to end the node's processing.</td>
+            <td class="description last">Function to send messages.</td>
         </tr>
 
     
@@ -876,7 +938,7 @@ Checks environment variables and node-specific settings for proxy configurations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line224">line 224</a>
+        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line272">line 272</a>
     </li></ul></dd>
     
 
@@ -920,7 +982,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
 
 <div class="description">
-    Makes a POST request to the OAuth2 server.
+    Makes a POST request.
 </div>
 
 
@@ -972,7 +1034,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The options object for the HTTP request.</td>
+            <td class="description last">The request options.</td>
         </tr>
 
     
@@ -1013,7 +1075,7 @@ Checks environment variables and node-specific settings for proxy configurations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line201">line 201</a>
+        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line240">line 240</a>
     </li></ul></dd>
     
 
@@ -1042,7 +1104,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
         
 <div class="param-desc">
-    The response from the OAuth2 server.
+    - The response from the request.
 </div>
 
 
@@ -1071,7 +1133,7 @@ Checks environment variables and node-specific settings for proxy configurations
     
 
     
-    <h4 class="name" id="setCredentialsFromMessage"><span class="type-signature"></span>setCredentialsFromMessage<span class="signature">(msg, form, headers)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="onInput"><span class="type-signature">(async) </span>onInput<span class="signature">(msg, send, done)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1079,7 +1141,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
 
 <div class="description">
-    Sets credentials from the message payload.
+    Handles input messages.
 </div>
 
 
@@ -1131,20 +1193,20 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The input message object.</td>
+            <td class="description last">Input message object.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>form</code></td>
+                <td class="name"><code>send</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">function</span>
 
 
             
@@ -1154,20 +1216,20 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The form data object.</td>
+            <td class="description last">Function to send messages.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>headers</code></td>
+                <td class="name"><code>done</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">function</span>
 
 
             
@@ -1177,7 +1239,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The headers object.</td>
+            <td class="description last">Function to indicate processing is complete.</td>
         </tr>
 
     
@@ -1218,7 +1280,7 @@ Checks environment variables and node-specific settings for proxy configurations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line129">line 129</a>
+        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line60">line 60</a>
     </li></ul></dd>
     
 
@@ -1254,304 +1316,7 @@ Checks environment variables and node-specific settings for proxy configurations
     
 
     
-    <h4 class="name" id="setCredentialsFromNode"><span class="type-signature"></span>setCredentialsFromNode<span class="signature">(form, headers)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Sets credentials from the node configuration.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>form</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The form data object.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>headers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The headers object.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line158">line 158</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="setHeaders"><span class="type-signature"></span>setHeaders<span class="signature">(headers)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Sets additional headers for the HTTP request.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>headers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The headers object.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line188">line 188</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="setStatus"><span class="type-signature"></span>setStatus<span class="signature">(status, text)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setStatus"><span class="type-signature"></span>setStatus<span class="signature">(color, text)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1595,7 +1360,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
         <tr>
             
-                <td class="name"><code>status</code></td>
+                <td class="name"><code>color</code></td>
             
 
             <td class="type">
@@ -1611,7 +1376,7 @@ Checks environment variables and node-specific settings for proxy configurations
 
             
 
-            <td class="description last">The status color.</td>
+            <td class="description last">The color of the status indicator.</td>
         </tr>
 
     
@@ -1675,7 +1440,7 @@ Checks environment variables and node-specific settings for proxy configurations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line265">line 265</a>
+        <a href="oauth2.js.html">oauth2.js</a>, <a href="oauth2.js.html#line318">line 318</a>
     </li></ul></dd>
     
 
@@ -1727,7 +1492,7 @@ Checks environment variables and node-specific settings for proxy configurations
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Mon May 20 2024 18:52:34 GMT-0300 (Brasilia Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Fri May 24 2024 08:34:19 GMT-0300 (Brasilia Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
