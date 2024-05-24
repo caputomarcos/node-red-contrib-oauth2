@@ -38,11 +38,7 @@ module.exports = function (RED) {
          this.client_credentials_in_body = config.client_credentials_in_body || false;
          this.headers = config.headers || {};
          this.sendErrorsToCatch = config.senderr || false;
-
-         // Proxy settings from environment variables or configuration
-         this.prox = process.env.http_proxy || process.env.HTTP_PROXY || config.proxy;
-         this.noprox = (process.env.no_proxy || process.env.NO_PROXY || '').split(',');
-
+         this.proxy = config.proxy || false;
          this.logger.debug('Constructor: Finished setting up node properties');
 
          // Register the input handler
@@ -207,19 +203,53 @@ module.exports = function (RED) {
        * Configures proxy settings.
        */
       configureProxy() {
-         if (!this.prox) return;
+         // Proxy settings from environment variables or configuration
+         const noProxyEnv = process.env.no_proxy || process.env.NO_PROXY || '';
+         const noProxyList = noProxyEnv.split(',').filter((entry) => entry);
 
-         const proxyURL = new URL(this.prox);
-         this.proxy = {
-            protocol: proxyURL.protocol,
-            hostname: proxyURL.hostname,
-            port: proxyURL.port,
-            username: proxyURL.username || null,
-            password: proxyURL.password || null
-         };
+         if (!this.proxy && !process.env.http_proxy && !process.env.HTTP_PROXY) {
+            return;
+         }
+
+         let proxy = '';
+         let proxyConfig = {};
+
+         if (this.proxy) {
+            proxyConfig = RED.nodes.getNode(this.proxy);
+         } else {
+            proxy = process.env.http_proxy || process.env.HTTP_PROXY;
+         }
+
+         if (proxyConfig || proxy) {
+            const proxyURL = new URL(proxyConfig?.url || proxy);
+            this.noproxy = proxyConfig?.noproxy || noProxyList;
+            this.proxy = {
+               protocol: proxyURL.protocol,
+               hostname: proxyURL.hostname,
+               port: proxyURL.port,
+               username: proxyURL.username || proxyConfig?.credentials?.username || null,
+               password: proxyURL.password || proxyConfig?.credentials?.password || null
+            };
+         }
 
          this.logger.debug('configureProxy: Proxy configured', this.proxy);
       }
+
+      /**
+       * Checks if the URL should bypass the proxy.
+       */
+      shouldBypassProxy = (url, noProxyList) => {
+         const parsedUrl = new URL(url);
+         const hostname = parsedUrl.hostname;
+
+         return noProxyList.some((entry) => {
+            if (entry === '*') {
+               return true;
+            } else {
+               return hostname.endsWith(entry);
+            }
+         });
+      };
 
       /**
        * Cleans form data by removing undefined or empty values.
@@ -244,15 +274,26 @@ module.exports = function (RED) {
             method: options.method,
             url: options.url,
             headers: options.headers,
-            data: new URLSearchParams(options.form).toString(),
-            proxy: false,
-            httpAgent: new http.Agent({ rejectUnauthorized: options.rejectUnauthorized }),
-            httpsAgent: new https.Agent({ rejectUnauthorized: options.rejectUnauthorized })
+            data: new URLSearchParams(options.form).toString()
          };
 
-         if (this.proxy) {
-            const HttpsProxyAgent = require('https-proxy-agent');
-            axiosOptions.httpsAgent = new HttpsProxyAgent(this.proxy);
+         if (!options.rejectUnauthorized) {
+            axiosOptions.httpAgent = new http.Agent({ rejectUnauthorized: options.rejectUnauthorized });
+            axiosOptions.httpsAgent = new https.Agent({ rejectUnauthorized: options.rejectUnauthorized });
+         }
+
+         if (this.proxy && !this.shouldBypassProxy(options.url, this.noproxy)) {
+            axiosOptions.proxy = {
+               protocol: this.proxy.protocol,
+               host: this.proxy.hostname,
+               port: this.proxy.port,
+               auth: {
+                  username: this.proxy.username,
+                  password: this.proxy.password
+               }
+            };
+         } else {
+            axiosOptions.proxy = false; // Disable proxy if URL is in the NO_PROXY list
          }
 
          this.logger.debug('makePostRequest: Axios request options prepared', axiosOptions);
@@ -385,12 +426,14 @@ module.exports = function (RED) {
    // Register the OAuth2Node node type
    RED.nodes.registerType('oauth2', OAuth2Node, {
       credentials: {
-         clientId: { type: 'text' },
-         clientSecret: { type: 'password' },
-         accessToken: { type: 'password' },
-         refreshToken: { type: 'password' },
-         expireTime: { type: 'password' },
-         code: { type: 'password' }
+         client_id: { type: 'text' },
+         client_secret: { type: 'text' },
+         access_token: { type: 'text' },
+         username: { type: 'text' },
+         password: { type: 'text' },
+         refresh_token: { type: 'text' },
+         expire_time: { type: 'text' },
+         open_authentication: { type: 'text' }
       }
    });
 };

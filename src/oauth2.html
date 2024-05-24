@@ -93,7 +93,7 @@
    <div class="form-row" id="node-open_authentication">
       <label for="node-input-open_authentication"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.open_authentication"></span></label>
       <a class="red-ui-button fa fa-key" id="authorizeButton" href="#" target="_blank"></a>
-      <input type="text" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication" style="width:62%;margin-top: -2px;" disabled />
+      <input type="password" id="node-input-open_authentication" data-i18n="[placeholder]oauth2.placeholder.open_authentication" style="width:62%;margin-top: -2px;" disabled />
    </div>
 
    <div class="form-row">
@@ -213,6 +213,16 @@
             rejectUnauthorized: { value: true },
             headers: { value: {} }
          },
+         credentials: {
+            client_id: { type: 'text' },
+            client_secret: { type: 'text' },
+            access_token: { type: 'text' },
+            username: { type: 'text' },
+            password: { type: 'text' },
+            refresh_token: { type: 'text' },
+            expire_time: { type: 'text' },
+            open_authentication: { type: 'text' }
+         },
          inputs: 1,
          outputs: 1,
          icon: 'oauth2.svg',
@@ -306,7 +316,7 @@
                      $('#node-input-open_authentication').val(data.code);
                      delete window.configNodeIntervalId;
                   } else {
-                     window.configNodeIntervalId = window.setTimeout(pollCredentials, 5000);
+                     window.configNodeIntervalId = window.setTimeout(pollCredentials, 1000);
                   }
                });
             }
