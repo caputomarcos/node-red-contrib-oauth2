@@ -10,7 +10,7 @@ IMAGE=$(shell tr '[:upper:]' '[:lower:]' <<< $(PROJECT_NAME))
 VERSION=$(shell . $(RELEASE_SUPPORT) ; getVersion)
 TAG=$(shell . $(RELEASE_SUPPORT); getTag)
 
-.PHONY: help version release lint test coverage
+.PHONY: help version release lint test coverage start stop status log
 
 help:
 	@echo 'Usage: make <target>'
@@ -43,7 +43,6 @@ tag: check-status
 	@. $(RELEASE_SUPPORT) ; ! tagExists $(TAG) || (echo "ERROR: tag $(TAG) for version $(VERSION) already tagged in git" >&2 && exit 1) ;
 	@. $(RELEASE_SUPPORT) ; setRelease $(VERSION)
 	git add .release package.json
-	@sed -i.bak 's/"version": "[^"]*"/"version": "$(VERSION)"/' package.json && rm package.json.bak
 	git commit -m "bumped to version $(VERSION)"
 	git tag $(TAG)
 	@[ -n "$(shell git remote -v)" ] && git push --tags
