@@ -5,3 +5,5 @@
 index.html
 coverage
 .nyc_output
+proxy.pid
+proxy.log
