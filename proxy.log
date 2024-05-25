@@ -1,11 +1,1 @@
-Internal server error occurred Error: listen EADDRINUSE: address already in use 0.0.0.0:8080
-    at Server.setupListenHandle [as _listen2] (node:net:1898:16)
-    at listenInCluster (node:net:1946:12)
-    at doListen (node:net:2116:7)
-    at process.processTicksAndRejections (node:internal/process/task_queues:83:21) {
-  code: 'EADDRINUSE',
-  errno: -98,
-  syscall: 'listen',
-  address: '0.0.0.0',
-  port: 8080
-}
+Server listening on 0.0.0.0:8080

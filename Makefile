@@ -75,16 +75,21 @@ coverage: ## Generate test coverage
 PID_FILE=proxy.pid
 
 start: ## Start the proxy server
-	@echo "Starting proxy server..." 
-	@nohup node test/utils/proxy.js > proxy.log 2>&1 & echo $$! > $(PID_FILE) 
+	@echo "Starting proxy server..."
+	@nohup node test/utils/proxy.js > proxy.log 2>&1 & echo $$! > $(PID_FILE)
 	@echo "Proxy server started with PID $$(cat $(PID_FILE))"
 
 stop: ## Stop the proxy server
 	@if [ -f $(PID_FILE) ]; then \
 		echo "Stopping proxy server..."; \
 		PID=$$(cat $(PID_FILE)); \
-		kill $$PID && rm -f $(PID_FILE); \
-		echo "Proxy server stopped"; \
+		if kill $$PID 2>/dev/null; then \
+			rm -f $(PID_FILE); \
+			echo "Proxy server stopped"; \
+		else \
+			echo "Proxy server not running, removing stale PID file"; \
+			rm -f $(PID_FILE); \
+		fi \
 	else \
 		echo "Proxy server is not running"; \
 	fi
