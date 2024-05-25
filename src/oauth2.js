@@ -4,7 +4,7 @@ module.exports = function (RED) {
    const axios = require('axios');
    const http = require('http');
    const https = require('https');
-   const { URLSearchParams } = require('url'); // Use URLSearchParams for form data
+   const { URLSearchParams } = require('url');
    const Logger = require('node-red-contrib-oauth2/src/libs/logger');
 
    /**
@@ -40,6 +40,7 @@ module.exports = function (RED) {
          this.headers = config.headers || {};
          this.sendErrorsToCatch = config.senderr || false;
          this.proxy = config.proxy || false;
+         this.force = config.force || false;
          this.logger.debug('Constructor: Finished setting up node properties');
 
          // Register the input handler
@@ -61,11 +62,12 @@ module.exports = function (RED) {
          this.logger.debug('onInput: Received message', msg);
 
          // Check if access token is stored and still valid
-         if (this.credentials.access_token && this.credentials.expire_time) {
+         if (!this.force && this.credentials.access_token && this.credentials.expire_time) {
             const currentTime = Math.floor(Date.now() / 1000);
             if (currentTime < this.credentials.expire_time) {
                this.logger.debug('onInput: Using stored access token');
-               msg.oauth2Response = { access_token: this.credentials.access_token };
+               msg = { ...msg, oauth2Response: this.credentials.oauth2Response, headers: this.credentials.headers };
+               this.setStatus('green', 'Access token still valid!');
                send(msg);
                done();
                return;
@@ -252,8 +254,11 @@ module.exports = function (RED) {
 
       /**
        * Checks if the URL should bypass the proxy.
+       * @param {string} url - The URL to check.
+       * @param {string[]} noProxyList - The list of domains to bypass the proxy.
+       * @returns {boolean} - True if the URL should bypass the proxy, otherwise false.
        */
-      shouldBypassProxy = (url, noProxyList) => {
+      shouldBypassProxy(url, noProxyList) {
          const parsedUrl = new URL(url);
          const hostname = parsedUrl.hostname;
 
@@ -264,7 +269,7 @@ module.exports = function (RED) {
                return hostname.endsWith(entry);
             }
          });
-      };
+      }
 
       /**
        * Cleans form data by removing undefined or empty values.
@@ -334,15 +339,17 @@ module.exports = function (RED) {
             return;
          }
 
-         const expireTime = Math.floor(Date.now() / 1000) + (response.data.expires_in || 3600);
-         this.credentials.access_token = response.data.access_token;
-         this.credentials.expire_time = expireTime;
-         RED.nodes.addCredentials(this.id, this.credentials);
-
          msg.oauth2Response = { ...(response.data || {}), access_token_url: this.access_token_url || '', authorization_endpoint: this.authorization_endpoint || '' };
          msg.headers = response.headers || {}; // Include headers in the message
          this.setStatus('green', `HTTP ${response.status}, ok`);
          this.logger.debug('handleResponse: Response data set in message', msg);
+
+         const expireTime = Math.floor(Date.now() / 1000) + (response.data.expires_in || 3600);
+         this.credentials.access_token = response.data.access_token;
+         this.credentials.expire_time = expireTime;
+         this.credentials = { ...this.credentials, oauth2Response: msg.oauth2Response, headers: msg.headers };
+         RED.nodes.addCredentials(this.id, this.credentials);
+
          send(msg);
       }
 
@@ -421,23 +428,23 @@ module.exports = function (RED) {
          RED.nodes.addCredentials(node_id, credentials);
 
          res.send(`
-               <HTML>
-                   <HEAD>
-                       <script language="javascript" type="text/javascript">
-                           function closeWindow() {
-                               window.open('', '_parent', '');
-                               window.close();
-                           }
-                           function delay() {
-                               setTimeout("closeWindow()", 1000);
-                           }
-                       </script>
-                   </HEAD>
-                   <BODY onload="javascript:delay();">
-                       <p>Success! This page can be closed if it doesn't do so automatically.</p>
-                   </BODY>
-               </HTML>
-           `);
+            <HTML>
+               <HEAD>
+                  <script language="javascript" type="text/javascript">
+                     function closeWindow() {
+                        window.open('', '_parent', '');
+                        window.close();
+                     }
+                     function delay() {
+                        setTimeout("closeWindow()", 1000);
+                     }
+                  </script>
+               </HEAD>
+               <BODY onload="javascript:delay();">
+                  <p>Success! This page can be closed if it doesn't do so automatically.</p>
+               </BODY>
+            </HTML>
+         `);
       } else {
          res.status(400).send('oauth2.error.no-credentials');
       }
