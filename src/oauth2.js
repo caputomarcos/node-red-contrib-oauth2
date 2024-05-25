@@ -46,6 +46,9 @@ module.exports = function (RED) {
          this.on('input', this.onInput.bind(this));
          this.host = RED.settings.uiHost || 'localhost';
          this.logger.debug('Constructor: Node input handler registered');
+
+         // Load credentials from Node-RED
+         this.credentials = RED.nodes.getCredentials(this.id) || {};
       }
 
       /**
@@ -55,8 +58,19 @@ module.exports = function (RED) {
        * @param {Function} done - Function to indicate processing is complete.
        */
       async onInput(msg, send, done) {
-         // this.debug ? this.logger.setOn() : this.logger.setOff();
          this.logger.debug('onInput: Received message', msg);
+
+         // Check if access token is stored and still valid
+         if (this.credentials.access_token && this.credentials.expire_time) {
+            const currentTime = Math.floor(Date.now() / 1000);
+            if (currentTime < this.credentials.expire_time) {
+               this.logger.debug('onInput: Using stored access token');
+               msg.oauth2Response = { access_token: this.credentials.access_token };
+               send(msg);
+               done();
+               return;
+            }
+         }
 
          const options = this.generateOptions(msg); // Generate request options
          this.logger.debug('onInput: Generated request options', options);
@@ -320,7 +334,11 @@ module.exports = function (RED) {
             return;
          }
 
-         // msg.oauth2Response = response.data || {};
+         const expireTime = Math.floor(Date.now() / 1000) + (response.data.expires_in || 3600);
+         this.credentials.access_token = response.data.access_token;
+         this.credentials.expire_time = expireTime;
+         RED.nodes.addCredentials(this.id, this.credentials);
+
          msg.oauth2Response = { ...(response.data || {}), access_token_url: this.access_token_url || '', authorization_endpoint: this.authorization_endpoint || '' };
          msg.headers = response.headers || {}; // Include headers in the message
          this.setStatus('green', `HTTP ${response.status}, ok`);
