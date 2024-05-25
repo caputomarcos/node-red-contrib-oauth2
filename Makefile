@@ -73,10 +73,11 @@ coverage: ## Generate test coverage
 	npm run coverage
 
 PID_FILE=proxy.pid
+LOG_FILE=proxy.log
 
 start: ## Start the proxy server
 	@echo "Starting proxy server..."
-	@nohup node test/utils/proxy.js > proxy.log 2>&1 & echo $$! > $(PID_FILE)
+	@nohup node test/utils/proxy.js > $(LOG_FILE) 2>&1 & echo $$! > $(PID_FILE)
 	@echo "Proxy server started with PID $$(cat $(PID_FILE))"
 
 stop: ## Stop the proxy server
@@ -106,3 +107,5 @@ status: ## Check the status of the proxy server
 		echo "Proxy server is not running"; \
 	fi
 
+log: ## Tail the proxy server logs
+	@tail -f $(LOG_FILE)

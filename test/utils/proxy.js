@@ -1,149 +1,227 @@
 const net = require('net');
+const tls = require('tls');
 const zlib = require('zlib');
+const fs = require('fs');
 
-// Authentication settings
-const AUTH_USER = 'user';
-const AUTH_PASS = 'password';
-const AUTH_STRING = Buffer.from(`${AUTH_USER}:${AUTH_PASS}`).toString('base64');
+class ProxyServer {
+   constructor(authUser, authPass, serverHost, serverPort, proxyHttpHost, proxyHttpPort, proxyHttpsHost, proxyHttpsPort, httpsOptions = null) {
+      this.AUTH_STRING = Buffer.from(`${authUser}:${authPass}`).toString('base64');
+      this.SERVER_HOST = serverHost;
+      this.SERVER_PORT = serverPort;
+      this.PROXY_HTTP_HOST = proxyHttpHost;
+      this.PROXY_HTTP_PORT = proxyHttpPort;
+      this.PROXY_HTTPS_HOST = proxyHttpsHost;
+      this.PROXY_HTTPS_PORT = proxyHttpsPort;
+      this.httpsOptions = httpsOptions;
+   }
 
-// Function to verify authentication
-/**
- * Checks if the provided data string contains valid authentication.
- * @param {string} dataString - The data string from the client.
- * @returns {boolean} - True if authenticated, otherwise false.
- */
-const isAuthenticated = (dataString) => {
-   const authHeader = dataString.split('\r\n').find((line) => line.startsWith('Proxy-Authorization: '));
-   if (!authHeader) return false;
+   isAuthenticated(dataString) {
+      const authHeader = dataString.split('\r\n').find((line) => line.startsWith('Proxy-Authorization: '));
+      if (!authHeader) return false;
 
-   const authToken = authHeader.split(' ')[2];
-   return authToken === AUTH_STRING;
-};
+      const authToken = authHeader.split(' ')[2];
+      return authToken === this.AUTH_STRING;
+   }
 
-// Function to decompress gzip data
-const decompressGzip = (data, callback) => {
-   zlib.gunzip(data, (err, decompressed) => {
-      if (err) {
-         console.error('Failed to decompress data:', err);
-         callback(err, null);
-      } else {
-         callback(null, decompressed.toString());
-      }
-   });
-};
+   decompressGzip(data, callback) {
+      zlib.gunzip(data, (err, decompressed) => {
+         if (err) {
+            console.error('Failed to decompress data:', err);
+            callback(err, null);
+         } else {
+            callback(null, decompressed.toString());
+         }
+      });
+   }
 
-// Target server settings
-const SERVER_PORT = 8088;
-const SERVER_ADDRESS = '127.0.0.1';
+   handleClientConnection(clientToProxySocket, isHttps) {
+      console.log(`Client connected to proxy (${isHttps ? 'HTTPS' : 'HTTP'})`);
 
-// Proxy server settings
-const PROXY_PORT = 8080;
-const PROXY_HOST = '0.0.0.0';
+      clientToProxySocket.once('data', (data) => {
+         const dataString = data.toString();
+         const isTLSConnection = dataString.indexOf('CONNECT') !== -1;
 
-// Create proxy server
-const server = net.createServer((clientToProxySocket) => {
-   console.log('Client connected to proxy');
+         console.log('Received data from client:', dataString);
 
-   clientToProxySocket.once('data', (data) => {
-      const dataString = data.toString();
-      const isTLSConnection = dataString.indexOf('CONNECT') !== -1;
+         if (!this.isAuthenticated(dataString)) {
+            console.log('Authentication failed');
+            clientToProxySocket.write('HTTP/1.1 407 Proxy Authentication Required\r\nProxy-Authenticate: Basic realm="Access to internal site"\r\n\r\n');
+            clientToProxySocket.end();
+            return;
+         }
 
-      console.log('Received data from client:', dataString);
+         console.log('Authentication successful');
 
-      // Verify authentication
-      if (!isAuthenticated(dataString)) {
-         console.log('Authentication failed');
-         clientToProxySocket.write('HTTP/1.1 407 Proxy Authentication Required\r\nProxy-Authenticate: Basic realm="Access to internal site"\r\n\r\n');
-         clientToProxySocket.end();
-         return;
-      }
+         if (isTLSConnection) {
+            this.handleTlsConnection(clientToProxySocket, dataString);
+         } else {
+            this.handleHttpConnection(clientToProxySocket, data);
+         }
+      });
+   }
 
-      console.log('Authentication successful');
+   handleTlsConnection(clientToProxySocket, dataString) {
+      // eslint-disable-next-line no-unused-vars
+      const [_, targetHost, targetPort] = dataString.split(' ');
 
-      console.log(`Connecting to server at ${SERVER_ADDRESS}:${SERVER_PORT}`);
+      console.log(`Handling TLS connection to ${targetHost}:${targetPort}`);
 
-      // Create a connection from the proxy to the target server
+      clientToProxySocket.write('HTTP/1.1 200 OK\r\n\r\n');
       const proxyToServerSocket = net.createConnection(
          {
-            host: SERVER_ADDRESS,
-            port: SERVER_PORT
+            host: targetHost.split(':')[0],
+            port: targetPort.split(':')[0]
          },
          () => {
-            console.log('Proxy to server connection established');
+            console.log('TLS connection established');
+            clientToProxySocket.pipe(proxyToServerSocket);
+            proxyToServerSocket.pipe(clientToProxySocket);
          }
       );
 
-      // Handle TLS connections
-      if (isTLSConnection) {
-         console.log('Handling TLS connection');
-         clientToProxySocket.write('HTTP/1.1 200 OK\r\n\r\n');
-      } else {
-         proxyToServerSocket.write(data);
-      }
+      proxyToServerSocket.on('error', (err) => {
+         console.error('Proxy to server error (TLS):', err);
+      });
+
+      clientToProxySocket.on('error', (err) => {
+         console.error('Client to proxy error (TLS):', err);
+      });
+
+      clientToProxySocket.on('close', () => {
+         console.log('Client connection closed (TLS)');
+      });
+
+      proxyToServerSocket.on('close', () => {
+         console.log('Server connection closed (TLS)');
+      });
+   }
+
+   handleHttpConnection(clientToProxySocket, initialData) {
+      console.log(`Connecting to server at ${this.SERVER_HOST}:${this.SERVER_PORT}`);
+
+      const proxyToServerSocket = net.createConnection(
+         {
+            host: this.SERVER_HOST,
+            port: this.SERVER_PORT
+         },
+         () => {
+            console.log('Proxy to server connection established');
+            proxyToServerSocket.write(initialData);
+            clientToProxySocket.pipe(proxyToServerSocket);
+            proxyToServerSocket.pipe(clientToProxySocket);
+         }
+      );
 
       let serverResponseChunks = [];
       let headersReceived = false;
       let headers = '';
 
       proxyToServerSocket.on('data', (chunk) => {
-         const chunkString = chunk.toString();
+         serverResponseChunks.push(chunk);
 
          if (!headersReceived) {
-            headers += chunkString;
-            const headerEndIndex = headers.indexOf('\r\n\r\n');
+            const chunkString = Buffer.concat(serverResponseChunks).toString();
+            const headerEndIndex = chunkString.indexOf('\r\n\r\n');
             if (headerEndIndex !== -1) {
                headersReceived = true;
-               console.log('Received headers from server:', headers.slice(0, headerEndIndex));
-               serverResponseChunks.push(chunk.slice(headerEndIndex + 4));
+               headers = chunkString.slice(0, headerEndIndex + 4);
+               console.log('Received headers from server:', headers);
+
+               const body = chunk.slice(headerEndIndex + 4);
+               serverResponseChunks = [body];
             }
          } else {
             serverResponseChunks.push(chunk);
          }
+      });
 
-         if (headersReceived) {
-            const contentEncodingHeader = headers.toLowerCase().includes('content-encoding: gzip');
-            if (contentEncodingHeader) {
-               decompressGzip(Buffer.concat(serverResponseChunks), (err, decompressedData) => {
-                  if (!err) {
-                     console.log('Decompressed server data:', decompressedData);
-                  }
-               });
-            } else {
-               console.log('Received data from server:', chunkString);
-            }
+      proxyToServerSocket.on('end', () => {
+         console.log('Server connection ended');
+
+         const responseBuffer = Buffer.concat(serverResponseChunks);
+         const contentEncodingHeader = headers.toLowerCase().includes('content-encoding: gzip');
+
+         if (contentEncodingHeader) {
+            this.decompressGzip(responseBuffer, (err, decompressedData) => {
+               if (!err) {
+                  console.log('Decompressed server data:', decompressedData);
+               } else {
+                  console.error('Failed to decompress server data:', err);
+               }
+            });
+         } else {
+            console.log('Received data from server:', responseBuffer.toString());
          }
+
+         clientToProxySocket.write(headers);
+         clientToProxySocket.write(responseBuffer);
+         clientToProxySocket.end();
+      });
+
+      proxyToServerSocket.on('close', () => {
+         console.log('Server connection closed');
       });
 
       proxyToServerSocket.on('error', (err) => {
          console.error('Proxy to server error:', err);
       });
 
-      clientToProxySocket.on('error', (err) => {
-         console.error('Client to proxy error:', err);
+      clientToProxySocket.on('end', () => {
+         console.log('Client connection ended');
       });
 
       clientToProxySocket.on('close', () => {
          console.log('Client connection closed');
       });
 
-      proxyToServerSocket.on('close', () => {
-         console.log('Server connection closed');
+      clientToProxySocket.on('error', (err) => {
+         console.error('Client to proxy error:', err);
       });
-   });
-});
-
-// Server error handling
-server.on('error', (err) => {
-   console.error('Internal server error occurred:', err);
-});
-
-// Log server start
-server.listen(
-   {
-      host: PROXY_HOST,
-      port: PROXY_PORT
-   },
-   () => {
-      console.log(`Server listening on ${PROXY_HOST}:${PROXY_PORT}`);
    }
-);
+
+   start() {
+      const httpServer = net.createServer((socket) => this.handleClientConnection(socket, false));
+      const httpsServer = this.httpsOptions ? tls.createServer(this.httpsOptions, (socket) => this.handleClientConnection(socket, true)) : null;
+
+      httpServer.on('error', (err) => {
+         console.error('Internal HTTP server error occurred:', err);
+      });
+
+      if (httpsServer) {
+         httpsServer.on('error', (err) => {
+            console.error('Internal HTTPS server error occurred:', err);
+         });
+      }
+
+      httpServer.listen(
+         {
+            host: this.PROXY_HTTP_HOST,
+            port: this.PROXY_HTTP_PORT
+         },
+         () => {
+            console.log(`HTTP Server listening on ${this.PROXY_HTTP_HOST}:${this.PROXY_HTTP_PORT}`);
+         }
+      );
+
+      if (httpsServer) {
+         httpsServer.listen(
+            {
+               host: this.PROXY_HTTPS_HOST,
+               port: this.PROXY_HTTPS_PORT
+            },
+            () => {
+               console.log(`HTTPS Server listening on ${this.PROXY_HTTPS_HOST}:${this.PROXY_HTTPS_PORT}`);
+            }
+         );
+      }
+   }
+}
+
+// HTTPS options (certificates)
+const httpsOptions = {
+   key: fs.readFileSync('./test/utils/private-key.pem'),
+   cert: fs.readFileSync('./test/utils/certificate.pem')
+};
+
+const proxyServer = new ProxyServer('user', 'password', '127.0.0.1', 8088, '0.0.0.0', 8080, '0.0.0.0', 8443, httpsOptions);
+proxyServer.start();
