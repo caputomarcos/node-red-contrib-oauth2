@@ -4,7 +4,8 @@
     "tips": {
       "debug": "Check the box to enable debug mode with extra logs.",
       "client_credentials_in_body": "Ensure that the client credentials are included in the token request body for authentication purposes.",
-      "rejectUnauthorized": "The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it."
+      "rejectUnauthorized": "The rejectUnauthorized parameter controls SSL/TLS certificate validation for the server, with true enforcing validation and false disabling it.",
+      "force": "Use the Force option to generate a new access token even if the current token is still valid. This is useful for ensuring that your token is always fresh, especially if there are changes in scopes or permissions, or if you encounter authentication issues."
     },
     "label": {
       "debug": "Debug Mode.",
@@ -30,7 +31,8 @@
       "proxy-config": "Proxy Configuration",
       "use-proxy": "Use proxy",
       "senderr": "Only send non-2xx responses to Catch node",
-      "refresh_token": "Refresh Token"
+      "refresh_token": "Refresh Token",
+      "force": "Force Token Refresh"
     },
     "placeholder": {
       "name": "oauth2",
