@@ -119,6 +119,16 @@
       </div>
    </div>
 
+      <!-- node-force -->
+      <div class="form-row">
+         <input type="checkbox" id="node-input-force" style="display: inline-block; width: auto; vertical-align: top;" />
+         <label for="node-input-force" style="width:auto;"><i class="fa fa-sign-in fa-fw"></i> <span data-i18n="oauth2.label.force"></span></label>
+         <div abria-label="Info for context store" class="form-row form-tips node-help" style="width:100%">
+            <i class="fa fa-exclamation-circle fa-fw"></i><b>Force Token Refresh</b> -
+            <span data-i18n="oauth2.tips.force"></span>
+         </div>
+      </div>
+
    <!-- node-client_credentials_in_body -->
    <div class="form-row" id="node-client_credentials_in_body">
       <input type="checkbox" id="node-input-client_credentials_in_body" autocomplete="on" style="display: inline-block; width: auto; vertical-align: top;" checked />
@@ -208,6 +218,7 @@
                label: RED._('node-red:oauth2.label.proxy-config')
             },
             debug: { value: false },
+            force: { value: false },
             senderr: { value: false },
             client_credentials_in_body: { value: false },
             rejectUnauthorized: { value: true },
