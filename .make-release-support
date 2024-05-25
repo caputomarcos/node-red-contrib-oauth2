@@ -1,104 +1,60 @@
 #!/bin/bash
 
-# Check if there are changes in the current Git repository
-function hasChanges() {
-	test -n "$(git status -s .)"
+# Function to get current version
+getVersion() {
+    grep '"version":' package.json | sed -E 's/.*"version": "(.*)".*/\1/'
 }
 
-# Get the release version from the .release file
-function getRelease() {
-	if [[ -f .release ]]; then
-    	awk -F= '/release/{print $2}' .release
-	fi
+# Function to get next major version
+nextMajorLevel() {
+    current_version=$(getVersion)
+    major=$(echo $current_version | cut -d. -f1)
+    new_major=$((major + 1))
+    echo "$new_major.0.0"
 }
 
-# Get the base tag from the .release file
-function getBaseTag() {
-	# Extract the tag value and remove the release version from it
-	sed -n -e "s/tag=\\(.*\\)$(getRelease)\$/\\1/p" .release
+# Function to get next minor version
+nextMinorLevel() {
+    current_version=$(getVersion)
+    major=$(echo $current_version | cut -d. -f1)
+    minor=$(echo $current_version | cut -d. -f2)
+    new_minor=$((minor + 1))
+    echo "$major.$new_minor.0"
 }
 
-# Get the complete tag for the current release
-function getTag() {
-	if [[ -z "$1" ]] ; then
-		# If no version number is specified, return the tag from the .release file
-		awk -F= '/tag/{print $2}' .release
-	else
-		# Otherwise, append the specified version number to the base tag
-		echo "$(getBaseTag)$1"
-	fi
+# Function to get next micro version
+nextMicroLevel() {
+    current_version=$(getVersion)
+    major=$(echo $current_version | cut -d. -f1)
+    minor=$(echo $current_version | cut -d. -f2)
+    micro=$(echo $current_version | cut -d. -f3)
+    new_micro=$((micro + 1))
+    echo "$major.$minor.$new_micro"
 }
 
-# Set the release version in the .release file and update the package.json file
-function setRelease() {
-	if [[ -n "$1" ]] ; then
-		# Replace the tag and release version in the .release file
-		sed -i.x -e "s/tag=.*/tag=$(getTag "$1")/" .release
-		sed -i.x -e "s/release=.*/release=$1/g" .release
-		# Update the version number in the package.json file
-		sed -i.x -e '0,/"version": "[^"]*"/s//"version": "'$1'"/' package.json
-		# Remove backup files created by sed
-		rm -f .release.x
-		rm -f package.json.x
-	else
-		# Print an error message if no version number is specified
-		echo "ERROR: missing release version parameter " >&2
-		return 1
-	fi
+# Function to set the release version
+setRelease() {
+    new_version=$1
+    sed -i.bak 's/"version": "[^"]*"/"version": "'$new_version'"/' package.json && rm package.json.bak
 }
 
-# Check if a tag already exists for the current release
-function tagExists() {
-	# Use the specified tag or the current tag if none is specified
-	tag=${1:-$(getTag)}
-	# Check if the tag exists in Git
-	test -n "$tag" && test -n "$(git tag | grep "^$tag\$")"
+# Function to check if tag exists
+tagExists() {
+    git rev-parse $1 >/dev/null 2>&1
 }
 
-# Check if the current Git repository differs from the current release
-function differsFromRelease() {
-	tag=$(getTag)
-	# Check if the tag does not exist or if there are differences between the current state and the tag
-	! tagExists "$tag" || test -n "$(git diff --shortstat -r "$tag" .)"
+# Function to check if current state differs from release
+differsFromRelease() {
+    ! git diff --quiet $1
 }
 
-# Get the version number for the current release
-function getVersion() {
-	result=$(getRelease)
-
-	if differsFromRelease; then
-		# Append the short hash of the latest commit if there are differences between the current state and the tag
-		result="$result-$(git rev-parse --short HEAD)"
-	fi
-
-	if hasChanges ; then
-		# Append "-dirty" if there are uncommitted changes in the Git repository
-		result="$result-dirty"
-	fi
-	echo "$result"
+# Function to check if there are uncommitted changes
+hasChanges() {
+    ! git diff-index --quiet HEAD --
 }
 
-function nextMicroLevel() {
-	version=${1:-$(getRelease)}
-	# Increment the micro-level version number by 1
-	major_and_minor=$(echo "$version" | cut -d. -f1,2)
-	micro=$(echo "$version" | cut -d. -f3)
-	version=$(printf "%s.%d" "$major_and_minor" $((micro + 1)))
-	echo "$version"
-}
-# Get the next minor-level version number for the current release
-function nextMinorLevel() {
-	version=${1:-$(getRelease)}
-	major=$(echo "$version" | cut -d. -f1);
-	minor=$(echo "$version" | cut -d. -f2);
-	version=$(printf "%d.%d.0" "$major" $((minor + 1))) ;
-	echo "$version"
-}
-
-# Get the next major-level version number for the current release
-function nextMajorLevel() {
-	version=${1:-$(getRelease)}
-	major=$(echo "$version" | cut -d. -f1);
-	version=$(printf "%d.0.0" $((major + 1)))
-	echo "$version"
+# Function to get current tag
+getTag() {
+    current_version=$(getVersion)
+    echo "v$current_version"
 }

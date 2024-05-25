@@ -50,17 +50,17 @@ tag: check-status
 
 tag-major-release: VERSION := $(shell . $(RELEASE_SUPPORT); nextMajorLevel)
 tag-major-release: .release tag
-major-release: tag-major-release release ## Major Release
+major-release: tag-major-release ## Major Release
 	@echo $(VERSION)
 
 tag-minor-release: VERSION := $(shell . $(RELEASE_SUPPORT); nextMinorLevel)
 tag-minor-release: .release tag
-minor-release: tag-minor-release release ## Minor Release
+minor-release: tag-minor-release ## Minor Release
 	@echo $(VERSION)
 
 tag-micro-release: VERSION := $(shell . $(RELEASE_SUPPORT); nextMicroLevel)
 tag-micro-release: .release tag
-micro-release: tag-micro-release release ## Micro Release
+micro-release: tag-micro-release ## Micro Release
 	@echo $(VERSION)
 
 lint: ## Lint the project
