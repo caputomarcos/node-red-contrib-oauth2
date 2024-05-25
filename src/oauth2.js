@@ -24,6 +24,7 @@ module.exports = function (RED) {
          this.name = config.name || '';
          this.container = config.container || '';
          this.access_token_url = config.access_token_url || '';
+         this.authorization_endpoint = config.authorization_endpoint || '';
          this.redirect_uri = config.redirect_uri || '';
          this.grant_type = config.grant_type || '';
          this.refresh_token = config.refresh_token || '';
@@ -319,7 +320,8 @@ module.exports = function (RED) {
             return;
          }
 
-         msg.oauth2Response = response.data || {};
+         // msg.oauth2Response = response.data || {};
+         msg.oauth2Response = { ...(response.data || {}), access_token_url: this.access_token_url || '', authorization_endpoint: this.authorization_endpoint || '' };
          msg.headers = response.headers || {}; // Include headers in the message
          this.setStatus('green', `HTTP ${response.status}, ok`);
          this.logger.debug('handleResponse: Response data set in message', msg);
