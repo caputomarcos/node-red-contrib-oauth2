@@ -20,6 +20,14 @@ module.exports = function (RED) {
          this.logger = new Logger({ name: 'identifier', count: null, active: config.debug || false, label: 'debug' });
          this.logger.debug('Constructor: Initializing node with config', config);
 
+         this.credentials_config = RED.nodes.getCredentials(config.credentials_config) || {};
+
+         if (this.credentialsConfigNode) {
+            this.logger.debug('Constructor: OAuth2 credentials node found', this.credentialsConfigNode);
+         } else {
+            this.logger.error('Constructor: OAuth2 credentials node not found');
+         }
+
          // Node configuration properties
          this.name = config.name || '';
          this.container = config.container || '';
@@ -60,7 +68,6 @@ module.exports = function (RED) {
        */
       async onInput(msg, send, done) {
          this.logger.debug('onInput: Received message', msg);
-
          // Check if access token is stored and still valid
          if (!this.force && this.credentials.access_token && this.credentials.expire_time) {
             const currentTime = Math.floor(Date.now() / 1000);

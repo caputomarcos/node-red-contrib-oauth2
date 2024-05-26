@@ -12,6 +12,7 @@
       "grant_type": "Grant Type",
       "name": "Name",
       "container": "Container",
+      "credentials_config": "Credentials",
       "access_token_url": "Access Token URL",
       "authorization_endpoint": "Authorization Endpoint",
       "redirect_uri": "Redirect URI",
@@ -61,7 +62,8 @@
       "authorization_code": "Authorization Code",
       "implicit_flow": "Implicit Flow",
       "refresh_token": "Refresh Token",
-      "set_by_credentials": "- Set by msg.oauth2Request -"
+      "set_by_credentials": "- Set by msg.oauth2Request -",
+      "set_by_config_node": "- Set by config node -"
     }
   }
 }

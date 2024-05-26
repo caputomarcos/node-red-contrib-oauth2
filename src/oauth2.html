@@ -19,7 +19,13 @@
          <option value="implicit_flow" data-i18n="oauth2.opts.implicit_flow"></option>
          <option value="refresh_token" data-i18n="oauth2.opts.refresh_token"></option>
          <option value="set_by_credentials" data-i18n="oauth2.opts.set_by_credentials"></option>
+         <option value="set_by_config_node" data-i18n="oauth2.opts.set_by_config_node"></option>
       </select>
+   </div>
+   <!-- node-input-credentials_config -->
+   <div class="form-row" id="node-credentials_config"> 
+      <label for="node-input-credentials_config"><i class="fa fa-lock"></i> <span data-i18n="oauth2.label.credentials_config"></span></label>
+      <input id="node-input-credentials_config" style="width:70%;" />
    </div>
    <!-- node-access_token_url -->
    <div class="form-row" id="node-access_token_url">
@@ -197,6 +203,7 @@
             name: { value: '' },
             container: { value: 'oauth2Response' },
             grant_type: { value: 'set_by_credentials' },
+            credentials_config: {value: '', type:"oauth2Credentials", required: false},
             access_token_url: { value: '' },
             authorization_endpoint: { value: '' },
             redirect_uri: { value: '' },
@@ -275,7 +282,6 @@
 
             const elementMapping = {
                refresh_token: ['#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-refresh_token', '#node-scope', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
-               set_by_credentials: ['#node-rejectUnauthorized', '#node-client_credentials_in_body'],
                client_credentials: ['#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
                password: ['#node-password_credentials', '#node-access_token_url', '#node-client_id', '#node-client_secret', '#node-scope', '#node-resource', '#node-state', '#node-rejectUnauthorized', '#node-client_credentials_in_body'],
                authorization_code: [
@@ -306,7 +312,9 @@
                   '#node-state',
                   '#node-rejectUnauthorized',
                   '#node-client_credentials_in_body'
-               ]
+               ],
+               set_by_credentials: ['#node-rejectUnauthorized', '#node-client_credentials_in_body'],
+               set_by_config_node: ['#node-credentials_config', '#node-rejectUnauthorized', '#node-client_credentials_in_body']
             };
 
             function updateVisibility() {

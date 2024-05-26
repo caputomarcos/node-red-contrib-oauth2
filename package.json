@@ -30,7 +30,8 @@
   "node-red": {
     "version": ">=3.0.0",
     "nodes": {
-      "oauth2": "src/oauth2.js"
+      "oauth2": "src/oauth2.js",
+      "oauth2Credentials": "src/oauth2Credentials.js"
     }
   },
   "resolutions": {
