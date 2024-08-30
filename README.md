@@ -7,7 +7,7 @@ node-red-contrib-oauth2
 =================
 The `node-red-contrib-oauth2` is a Node-RED node that provides an OAuth2 authentication flow. This node uses the OAuth2 protocol to obtain an access token, which can be used to make authenticated API requests.
 
-![image](https://github.com/caputomarcos/node-red-contrib-oauth2/assets/3945941/89f59f17-cebe-4c82-8ffd-e7c196222d65)
+![image](https://github.com/user-attachments/assets/625ab345-2997-4e51-ad8c-10589685c09b)
 
 # Install
 
