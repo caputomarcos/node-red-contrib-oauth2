@@ -344,7 +344,7 @@ module.exports = function (RED) {
          this.setStatus('green', `HTTP ${response.status}, ok`);
          this.logger.debug('handleResponse: Response data set in message', msg);
 
-         const expireTime = Math.floor(Date.now() / 1000) + (response.data.expires_in || 3600);
+         const expireTime = Math.floor(Date.now() / 1000) + parseInt(response.data.expires_in || 3600);
          this.credentials.access_token = response.data.access_token;
          this.credentials.expire_time = expireTime;
          this.credentials = { ...this.credentials, oauth2Response: msg.oauth2Response, headers: msg.headers };
