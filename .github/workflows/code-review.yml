@@ -1,0 +1,137 @@
+---
+name: Automated Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Check README.md changes
+        id: readme-check
+        run: |
+          # Get changed files in the PR
+          CHANGED_FILES=$(git diff --name-only \
+            origin/${{ github.base_ref }}...HEAD)
+          echo "Changed files: $CHANGED_FILES"
+
+          # Check if README.md is in the changed files
+          if echo "$CHANGED_FILES" | grep -q "README.md"; then
+            echo "readme_changed=true" >> $GITHUB_OUTPUT
+            echo "README.md has been modified in this PR"
+          else
+            echo "readme_changed=false" >> $GITHUB_OUTPUT
+            echo "README.md has not been modified in this PR"
+          fi
+
+          # If there are other significant changes, README might need updating
+          SIGNIFICANT_CHANGES=$(echo "$CHANGED_FILES" | \
+            grep -E '\.(js|json|html|md)$' | \
+            grep -v "README.md" | head -5)
+          if [ -n "$SIGNIFICANT_CHANGES" ] && \
+             [ "${{ steps.readme-check.outputs.readme_changed }}" = "false" ]; then
+            echo "::warning::Significant changes detected but README.md was not updated. Consider updating README.md if the changes affect functionality or documentation."
+          fi
+
+      - name: Validate front matter in markdown files
+        run: |
+          # Find all markdown files (excluding node_modules)
+          find . -name "*.md" -not -path "./node_modules/*" \
+            -not -path "./.git/*" | while read -r file; do
+            echo "Checking $file for front matter..."
+
+            # Check if file has front matter (starts with ---)
+            if head -n 1 "$file" | grep -q "^---$"; then
+              echo "Front matter detected in $file"
+
+              # Extract front matter (between first two --- lines)
+              front_matter=$(sed -n '/^---$/,/^---$/p' "$file" | \
+                sed '1d;$d')
+
+              if [ -n "$front_matter" ]; then
+                echo "Validating front matter format in $file"
+
+                # Check for unquoted values (allow booleans and numbers)
+                unquoted_lines=$(echo "$front_matter" | \
+                  grep -E '^[^:]+: [^'"'"'].*[^'"'"']$' | \
+                  grep -v -E '^[^:]+: *(true|false|[0-9]+(\.[0-9]+)?)$')
+                if [ -n "$unquoted_lines" ]; then
+                  echo "::error::In $file: All front matter values must be wrapped in single quotes (except booleans and numbers). Found unquoted values:"
+                  echo "$unquoted_lines"
+                  exit 1
+                fi
+
+                # Check for description field and ensure it's not empty
+                if echo "$front_matter" | grep -q "^description:"; then
+                  desc_value=$(echo "$front_matter" | \
+                    grep "^description:" | sed "s/^description: *//")
+                  if [ -z "$desc_value" ] || \
+                     [ "$desc_value" = "''" ] || \
+                     [ "$desc_value" = '""' ]; then
+                    echo "::error::In $file: Description field in front matter cannot be empty"
+                    exit 1
+                  fi
+                else
+                  echo "::warning::In $file: No description field found in front matter"
+                fi
+              fi
+            fi
+          done
+
+      - name: Validate .instructions.md files
+        run: |
+          # Find all .instructions.md files
+          find . -name "*.instructions.md" -not -path "./node_modules/*" \
+            -not -path "./.git/*" | while read -r file; do
+            echo "Checking $file for applyTo property..."
+
+            # Check if file has front matter
+            if head -n 1 "$file" | grep -q "^---$"; then
+              # Extract front matter
+              front_matter=$(sed -n '/^---$/,/^---$/p' "$file" | \
+                sed '1d;$d')
+
+              if [ -n "$front_matter" ]; then
+                # Check for applyTo property
+                if ! echo "$front_matter" | grep -q "^applyTo:"; then
+                  echo "::error::In $file: Missing 'applyTo' property in front matter. Instructions files must specify which file(s) they apply to."
+                  exit 1
+                else
+                  echo "✓ $file has required applyTo property"
+                fi
+              else
+                echo "::error::In $file: Instructions files must have front matter with 'applyTo' property"
+                exit 1
+              fi
+            else
+              echo "::error::In $file: Instructions files must have front matter with 'applyTo' property"
+              exit 1
+            fi
+          done
+
+      - name: Summary
+        run: |
+          echo "### Code Review Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Front matter validation completed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Instructions files validation completed" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.readme-check.outputs.readme_changed }}" = "true" ]; then
+            echo "- ✅ README.md was updated in this PR" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ⚠️ README.md was not updated (may need review)" >> $GITHUB_STEP_SUMMARY
+          fi
