@@ -178,3 +178,51 @@ return msg;
      </td>
   </tr>
 </table>
+
+# Development
+
+## GitHub Copilot Configuration
+
+This repository is configured with GitHub Copilot code agent settings for optimal Node.js development experience. The configuration enables intelligent code completion and assistance specifically tailored for Node.js runtime.
+
+## Automated Code Review
+
+This project includes automated code review checks that run on every pull request to ensure code quality and consistency:
+
+### README.md Validation
+- Detects when significant code changes are made without corresponding README.md updates
+- Warns contributors to update documentation when functionality changes
+
+### Front Matter Validation
+For markdown files with YAML front matter:
+- **Single quotes required**: All string values must be wrapped in single quotes
+- **Non-empty description**: The `description` field cannot be empty
+- **Exceptions**: Boolean values (`true`/`false`) and numbers can remain unquoted
+
+Example of properly formatted front matter:
+```yaml
+---
+title: 'Example Document'
+description: 'This document demonstrates proper front matter formatting'
+version: '1.0'
+published: true
+priority: 1
+---
+```
+
+### Instructions File Validation
+Files ending with `.instructions.md`:
+- **Required `applyTo` property**: Must specify which file(s) the instructions apply to
+- **Must have front matter**: Instructions files require YAML front matter
+- **Proper formatting**: All front matter rules apply
+
+Example instructions file:
+```yaml
+---
+description: 'Instructions for OAuth2 implementation'
+applyTo: 'src/oauth2.js'
+version: '1.0'
+---
+```
+
+These automated checks help maintain documentation quality and ensure consistent formatting across the project.
